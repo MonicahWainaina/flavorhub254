@@ -1,7 +1,88 @@
-import React from "react";
+"use client";
+import React, { useRef, useState } from "react";
 import Link from "next/link";
 
 export default function HomePage() {
+  // Carousel state for pagination dots
+  const carouselRef = useRef(null);
+  const [carouselIndex, setCarouselIndex] = useState(0);
+
+  // Carousel items
+  const featuredItems = [
+    {
+      img: "/assets/ugali-mishkaki.jpg",
+      title: "Ugali & Mishkaki",
+      mins: "30 mins",
+      liked: true,
+    },
+    {
+      img: "/assets/spaghetti-meatballs.jpg",
+      title: "Spaghetti & Meatballs",
+      mins: "25 mins",
+      liked: false,
+    },
+    {
+      img: "/assets/fried-chicken-fries.jpg",
+      title: "Fried Chicken & Fries",
+      mins: "45 mins",
+      liked: false,
+    },
+    {
+      img: "/assets/barbecue-wings.jpg",
+      title: "Barbecue Wings",
+      mins: "40 mins",
+      liked: true,
+    },
+    {
+      img: "/assets/ugali-mishkaki.jpg",
+      title: "Ugali & Mishkaki (2)",
+      mins: "30 mins",
+      liked: false,
+    },
+    {
+      img: "/assets/spaghetti-meatballs.jpg",
+      title: "Spaghetti & Meatballs (2)",
+      mins: "25 mins",
+      liked: true,
+    },
+    {
+      img: "/assets/fried-chicken-fries.jpg",
+      title: "Fried Chicken & Fries (2)",
+      mins: "45 mins",
+      liked: false,
+    },
+    {
+      img: "/assets/barbecue-wings.jpg",
+      title: "Barbecue Wings (2)",
+      mins: "40 mins",
+      liked: false,
+    },
+  ];
+
+  // Handle scroll to update dot index
+  const handleCarouselScroll = () => {
+    const el = carouselRef.current;
+    if (!el) return;
+    const scrollLeft = el.scrollLeft;
+    const cardWidth = el.firstChild?.offsetWidth || 1;
+    const gap = 36; // gap-9 = 2.25rem = 36px
+    const index = Math.round(scrollLeft / (cardWidth + gap));
+    setCarouselIndex(index);
+  };
+
+  const scrollCarousel = (direction) => {
+    const el = carouselRef.current;
+    if (!el) return;
+    const cardWidth = el.firstChild?.offsetWidth || 1;
+    const gap = 36; // gap-9 = 2.25rem = 36px
+    const scrollAmount = cardWidth + gap;
+    if (direction === "left") {
+      el.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+    } else {
+      el.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    }
+  };
+
   return (
     <>
       {/* Header */}
@@ -20,9 +101,9 @@ export default function HomePage() {
           <div className="hidden md:flex flex-1 items-center justify-end gap-x-8 ml-8">
             {/* Navigation */}
             <nav className="flex gap-x-6">
-              <Link href="/" className="capitalize hover:text-green-500 transition text-base">home</Link>
-              <Link href="/browse" className="capitalize hover:text-green-500 transition text-base">browse recipes</Link>
-              <Link href="/ai-recipe" className="capitalize hover:text-green-500 transition text-base">ai recipe generator</Link>
+              <Link href="/" className="capitalize hover:text-green-500 transition text-base">Home</Link>
+              <Link href="/browse" className="capitalize hover:text-green-500 transition text-base">Browse recipes</Link>
+              <Link href="/ai-recipe" className="capitalize hover:text-green-500 transition text-base">AI recipe generator</Link>
             </nav>
             {/* Search & Login/Signup */}
             <div className="flex items-center gap-x-3">
@@ -47,7 +128,7 @@ export default function HomePage() {
                 />
               </div>
               <button className="px-4 py-2 rounded-lg bg-green-700 text-white hover:bg-green-800 transition text-base font-semibold lowercase">
-                login/signup
+                Login/Signup
               </button>
             </div>
           </div>
@@ -85,8 +166,8 @@ export default function HomePage() {
                 style={{ background: "transparent", aspectRatio: "4/2" }}
               />
               {/* Button */}
-              <button className="bg-green-700 hover:bg-green-800 text-white px-6 py-3 rounded-lg font-semibold text-base sm:text-lg shadow-lg transition lowercase relative z-10 mt-2 w-full sm:w-auto">
-                explore recipes <span className="ml-2">&raquo;&raquo;</span>
+              <button className="bg-green-700 hover:bg-green-800 text-white px-6 py-3 rounded-lg font-semibold text-base sm:text-lg shadow-lg transition relative z-10 mt-2 w-full sm:w-auto">
+                Explore Recipes <span className="ml-2">&raquo;&raquo;</span>
               </button>
             </div>
           </div>
@@ -160,19 +241,117 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Featured Recipes Carousel Section */}
+      <section className="w-full mt-8 sm:mt-10 px-4">
+        <div className="max-w-7xl mx-auto">
+          {/* Section Title */}
+          <div className="flex items-center mb-6">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mr-1 sm:mr-2">
+              What are You Cooking Today
+            </h2>
+            <img 
+              src="/assets/chili-splash.png" 
+              alt="" 
+              className="w-20 h-20 sm:w-30 sm:h-30 -ml-3 sm:-ml-5"
+              style={{ marginLeft: '-16px' }}
+            />
+          </div>
+          {/* Carousel */}
+          <div className="relative">
+            {/* Carousel Controls */}
+            <button
+              className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-[#a8323e] bg-opacity-90 rounded-full p-3 shadow hover:bg-[#d32f2f] transition hidden sm:block"
+              onClick={() => scrollCarousel("left")}
+              type="button"
+            >
+              <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button
+              className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-[#a8323e] bg-opacity-90 rounded-full p-3 shadow hover:bg-[#d32f2f] transition hidden sm:block"
+              onClick={() => scrollCarousel("right")}
+              type="button"
+            >
+              <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+            {/* Carousel Items */}
+            <div
+              ref={carouselRef}
+              onScroll={handleCarouselScroll}
+              className="flex gap-9 overflow-x-auto scrollbar-hide pb-2 pl-4 pr-4 sm:pl-16 sm:pr-16 snap-x snap-mandatory"
+              style={{ scrollSnapType: "x mandatory" }}
+            >
+              {featuredItems.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="bg-[#232323] rounded-xl w-[260px] flex-shrink-0 shadow-lg overflow-visible relative pt-0 snap-start"
+                >
+                  <div className="relative">
+                    <img
+                      src={item.img}
+                      alt={item.title}
+                      className="w-full h-[200px] object-cover rounded-t-xl -mt-4"
+                    />
+                  </div>
+                  <div className="p-4 pt-2">
+                    <h3 className="text-white font-semibold text-lg mb-1">{item.title}</h3>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-300 text-sm">{item.mins}</span>
+                      <button>
+                        <svg
+                          className={`w-6 h-6 ${item.liked ? "text-red-500" : "text-gray-400"}`}
+                          fill={item.liked ? "currentColor" : "none"}
+                          stroke="currentColor"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M3 8.25C3 5.35 5.52 3 8.5 3c1.74 0 3.41.81 4.5 2.09C14.09 3.81 15.76 3 17.5 3 20.48 3 23 5.35 23 8.25c0 3.78-3.4 6.86-8.55 11.54a1.25 1.25 0 01-1.7 0C6.4 15.11 3 12.03 3 8.25z"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {/* Pagination Dots */}
+            <div className="flex justify-center mt-3 gap-2 sm:hidden">
+              {featuredItems.map((_, i) => (
+                <span
+                  key={i}
+                  className={`h-2 w-2 rounded-full transition-all duration-200 ${i === carouselIndex ? "bg-[#a8323e] scale-125" : "bg-gray-400"}`}
+                />
+              ))}
+            </div>
+            {/* Browse More Recipes Button */}
+            <div className="flex justify-center mt-6">
+              <button className="bg-[#a8323e] hover:bg-[#d32f2f] text-white px-6 py-2 rounded-lg font-semibold text-base shadow transition">
+                Browse more recipes &raquo;
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Ask FlavorBot Button */}
       <button
-        className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 bg-green-700 hover:bg-green-800 text-white flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 rounded-xl shadow-lg z-50 lowercase"
+        className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 bg-green-700 hover:bg-green-800 text-white flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 rounded-xl shadow-lg z-50"
         style={{ fontWeight: 600, fontSize: '1.1rem' }}
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="#fff"/>
+          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth={2} fill="#fff"/>
           <rect x="8" y="8" width="8" height="8" rx="2" fill="#4ade80" />
           <circle cx="10" cy="12" r="1" fill="#222" />
           <circle cx="14" cy="12" r="1" fill="#222" />
           <rect x="11" y="14" width="2" height="1" rx="0.5" fill="#222" />
         </svg>
-        ask flavorbot
+        Ask Flavorbot
       </button>
     </>
   );
