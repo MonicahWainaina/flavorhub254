@@ -70,17 +70,28 @@ export default function HomePage() {
     setCarouselIndex(index);
   };
 
-  const scrollCarousel = (direction) => {
-    const el = carouselRef.current;
+  // Category carousel state
+  const categoryRef = useRef(null);
+
+  const categories = [
+    { title: "Breakfast", img: "/assets/category-breakfast.jpg" },
+    { title: "Main Dish", img: "/assets/category-main.jpg" },
+    { title: "Dessert", img: "/assets/category-dessert.jpg" },
+    { title: "Fast Food", img: "/assets/category-fastfood.jpg" },
+    // Duplicates for testing carousel scroll
+    { title: "Breakfast", img: "/assets/category-breakfast.jpg" },
+    { title: "Main Dish", img: "/assets/category-main.jpg" },
+    { title: "Dessert", img: "/assets/category-dessert.jpg" },
+    { title: "Fast Food", img: "/assets/category-fastfood.jpg" }
+  ];
+
+  const scrollCarousel = (direction, ref = carouselRef) => {
+    const el = ref.current;
     if (!el) return;
     const cardWidth = el.firstChild?.offsetWidth || 1;
-    const gap = 36; // gap-9 = 2.25rem = 36px
+    const gap = 36;
     const scrollAmount = cardWidth + gap;
-    if (direction === "left") {
-      el.scrollBy({ left: -scrollAmount, behavior: "smooth" });
-    } else {
-      el.scrollBy({ left: scrollAmount, behavior: "smooth" });
-    }
+    el.scrollBy({ left: direction === "left" ? -scrollAmount : scrollAmount, behavior: "smooth" });
   };
 
   return (
@@ -338,6 +349,102 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* --- NEW: What You Can Do Here Section --- */}
+      <section className="w-full bg-gradient-to-br from-[#1a1a1a] to-black py-12 px-4 mt-12">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-8">
+          <div className="flex-1 flex justify-center">
+            <img src="/assets/phone-mockup.png" alt="FlavorHUB254 on phone" className="max-w-[260px] sm:max-w-[300px] object-contain" />
+          </div>
+          <div className="flex-1 text-white">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-6">What You Can Do Here</h2>
+            <ul className="space-y-4 text-base sm:text-lg">
+              <li className="flex items-start"><span className="text-green-500 mr-3 mt-1">★</span>Browse thousands of Kenyan and global recipes.</li>
+              <li className="flex items-start"><span className="text-green-500 mr-3 mt-1">★</span>Adjust ingredients to fit your needs & servings.</li>
+              <li className="flex items-start"><span className="text-green-500 mr-3 mt-1">★</span>Save your favorites and cook smarter with FlavorBot.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* --- NEW: Browse By Category Section --- */}
+      <section className="w-full py-12 px-4 bg-black">
+        <div className="max-w-7xl mx-auto relative">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white">Browse By Category</h2>
+            <button className="text-green-500 hover:text-green-400 font-semibold text-sm sm:text-base">See all &raquo;</button>
+          </div>
+          {/* Arrows for mobile scroll */}
+          <button
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-[#2e7d32] bg-opacity-80 rounded-full p-3 shadow hover:bg-green-700 transition hidden sm:block"
+            onClick={() => scrollCarousel("left", categoryRef)}
+            type="button"
+          >
+            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-[#2e7d32] bg-opacity-80 rounded-full p-3 shadow hover:bg-green-700 transition hidden sm:block"
+            onClick={() => scrollCarousel("right", categoryRef)}
+            type="button"
+          >
+            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+          {/* Mobile: horizontal scroll | Desktop: grid */}
+          <div
+            ref={categoryRef}
+            className="flex gap-6 overflow-x-auto scrollbar-hide pb-2 sm:pb-0"
+          >
+            {categories.map((cat, i) => (
+              <div
+                key={i}
+                className="bg-[#232323] rounded-xl overflow-hidden shadow hover:shadow-lg transition flex-shrink-0 w-[180px] sm:w-auto"
+              >
+                <img src={cat.img} alt={cat.title} className="w-full h-[200px] object-cover" />
+                <div className="p-4 text-center text-white font-semibold capitalize">{cat.title}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* --- NEW: Footer Section --- */}
+      <footer className="w-full bg-[#111] text-gray-400 py-10 px-4 mt-12">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8">
+          <div>
+            <div className="flex items-center space-x-2 mb-4">
+              <img src="/assets/flavorhubicon.png" alt="FlavorHUB254 Logo" className="h-12 w-12 object-contain" />
+              <span className="text-2xl font-bold text-white">
+                flavor<span style={{ color: "#D32F2F" }}>HUB</span><span style={{ color: "#2E7D32" }}>254</span>
+              </span>
+            </div>
+            <p className="text-sm leading-relaxed">Bringing Kenyan and global flavors to your kitchen with smart, adaptable recipes.</p>
+          </div>
+          <div>
+            <h3 className="text-lg sm:text-xl font-semibold text-white mb-4">Quick Links</h3>
+            <ul className="space-y-2 text-sm sm:text-base">
+              <li><Link href="/" className="hover:text-green-400 transition">Home</Link></li>
+              <li><Link href="/browse" className="hover:text-green-400 transition">Browse recipes</Link></li>
+              <li><Link href="/ai-recipe" className="hover:text-green-400 transition">AI recipe generator</Link></li>
+              <li><Link href="/about" className="hover:text-green-400 transition">About us</Link></li>
+              <li><Link href="/contact" className="hover:text-green-400 transition">Login/Signup</Link></li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="text-lg sm:text-xl font-semibold text-white mb-4">Get In Touch</h3>
+            <p className="text-sm sm:text-base mb-2">Have questions or feedback? We would love to hear from you!</p>
+            <Link href="/contact" className="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-lg text-sm sm:text-base font-semibold transition">
+              Contact Us
+            </Link>
+          </div>
+        </div>
+        <div className="border-t border-gray-700 mt-8 pt-4 text-center text-sm sm:text-base">
+          &copy; 2025 FlavorHUB254. All rights reserved. | Designed with ❤️ by Monique
+        </div>
+      </footer>
 
       {/* Ask FlavorBot Button */}
       <button
