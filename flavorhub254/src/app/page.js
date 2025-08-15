@@ -460,41 +460,44 @@ export default function HomePage() {
             </div>
             <button className="text-green-500 hover:text-green-400 font-semibold text-sm sm:text-base">See all &raquo;</button>
           </div>
-          {/* Arrows for mobile scroll */}
-          <button
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-[#2e7d32] bg-opacity-80 rounded-full p-3 shadow hover:bg-green-700 transition hidden sm:block"
-            onClick={() => scrollCarousel("left", categoryRef)}
-            type="button"
-          >
-            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          <button
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-[#2e7d32] bg-opacity-80 rounded-full p-3 shadow hover:bg-green-700 transition hidden sm:block"
-            onClick={() => scrollCarousel("right", categoryRef)}
-            type="button"
-          >
-            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-          {/* Mobile: horizontal scroll | Desktop: grid */}
-          <div
-            ref={categoryRef}
-            onScroll={handleCategoryScroll}
-            className="flex gap-6 overflow-x-auto scrollbar-hide pb-2 sm:pb-0"
-            style={{ scrollSnapType: "x mandatory" }}
-          >
-            {categories.map((cat, i) => (
-              <div
-                key={i}
-                className="bg-[#232323] rounded-xl overflow-hidden shadow hover:shadow-lg transition flex-shrink-0 w-[180px] sm:w-auto snap-start"
-              >
-                <img src={cat.img} alt={cat.title} className="w-full h-[200px] object-cover" />
-                <div className="p-4 text-center text-white font-semibold capitalize">{cat.title}</div>
-              </div>
-            ))}
+          {/* Centered arrow buttons */}
+          <div className="relative flex items-center">
+            <button
+              className="absolute left-0 z-10 bg-[#2e7d32] bg-opacity-80 rounded-full p-3 shadow hover:bg-green-700 transition hidden sm:flex items-center justify-center"
+              style={{ top: "50%", transform: "translateY(-50%)" }}
+              onClick={() => scrollCarousel("left", categoryRef)}
+              type="button"
+            >
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <div
+              ref={categoryRef}
+              onScroll={handleCategoryScroll}
+              className="flex gap-6 overflow-x-auto scrollbar-hide pb-2 sm:pb-0 w-full"
+              style={{ scrollSnapType: "x mandatory" }}
+            >
+              {categories.map((cat, i) => (
+                <div
+                  key={i}
+                  className="bg-[#232323] rounded-xl overflow-hidden shadow hover:shadow-lg transition flex-shrink-0 w-[180px] sm:w-auto snap-start"
+                >
+                  <img src={cat.img} alt={cat.title} className="w-full h-[200px] object-cover" />
+                  <div className="p-4 text-center text-white font-semibold capitalize">{cat.title}</div>
+                </div>
+              ))}
+            </div>
+            <button
+              className="absolute right-0 z-10 bg-[#2e7d32] bg-opacity-80 rounded-full p-3 shadow hover:bg-green-700 transition hidden sm:flex items-center justify-center"
+              style={{ top: "50%", transform: "translateY(-50%)" }}
+              onClick={() => scrollCarousel("right", categoryRef)}
+              type="button"
+            >
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
           </div>
           {/* Pagination Dots for Category Carousel (mobile only) */}
           <div className="flex justify-center mt-3 gap-2 sm:hidden">
@@ -509,6 +512,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+
       {/* --- FIGMA-STYLE FOOTER --- */}
       <footer className="w-full bg-[#111] text-white py-12 px-4 mt-12 relative overflow-hidden">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-5 relative z-10">
