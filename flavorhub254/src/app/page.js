@@ -359,9 +359,9 @@ export default function HomePage() {
           <div className="flex-1 text-white">
             <h2 className="text-2xl sm:text-3xl font-bold mb-6">What You Can Do Here</h2>
             <ul className="space-y-4 text-base sm:text-lg">
-              <li className="flex items-start"><span className="text-green-500 mr-3 mt-1">★</span>Browse thousands of Kenyan and global recipes.</li>
-              <li className="flex items-start"><span className="text-green-500 mr-3 mt-1">★</span>Adjust ingredients to fit your needs & servings.</li>
-              <li className="flex items-start"><span className="text-green-500 mr-3 mt-1">★</span>Save your favorites and cook smarter with FlavorBot.</li>
+              <li className="flex items-start"><span className="text-green-500 mr-3 mt-1">★</span>Discover, save and try out a growing variety of recipes local and global</li>
+              <li className="flex items-start"><span className="text-green-500 mr-3 mt-1">★</span>Adjust ingredient amounts and change serving sizes based on what you have</li>
+              <li className="flex items-start"><span className="text-green-500 mr-3 mt-1">★</span>Generate custom recipes, ask cooking questions or get ideas with FlavorBot</li>
             </ul>
           </div>
         </div>
