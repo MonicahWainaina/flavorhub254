@@ -72,6 +72,7 @@ export default function HomePage() {
 
   // Category carousel state
   const categoryRef = useRef(null);
+  const [categoryIndex, setCategoryIndex] = useState(0);
 
   const categories = [
     { title: "Breakfast", img: "/assets/category-breakfast.jpg" },
@@ -92,6 +93,17 @@ export default function HomePage() {
     const gap = 36;
     const scrollAmount = cardWidth + gap;
     el.scrollBy({ left: direction === "left" ? -scrollAmount : scrollAmount, behavior: "smooth" });
+  };
+
+  // Handle scroll to update category dot index
+  const handleCategoryScroll = () => {
+    const el = categoryRef.current;
+    if (!el) return;
+    const scrollLeft = el.scrollLeft;
+    const cardWidth = el.firstChild?.offsetWidth || 1;
+    const gap = 24; // gap-6 = 1.5rem = 24px
+    const index = Math.round(scrollLeft / (cardWidth + gap));
+    setCategoryIndex(index);
   };
 
   return (
@@ -151,7 +163,7 @@ export default function HomePage() {
       </header>
 
   {/* Hero + Cards Section */}
-      <section className="w-full bg-gradient-to-br from-[#232323] to-black py-8 sm:py-12 min-h-[90vh] pt-28 sm:pt-32">
+      <section className="w-full bg-gradient-to-br from-[#232323] to-black py-8 sm:py-12 min-h-[90vh] pt-28 sm:pt-34">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row px-4 relative gap-10">
           {/* Left: Hero */}
           <div className="flex-1 flex flex-col items-start justify-start z-10 relative mb-10 md:mb-0">
@@ -353,21 +365,32 @@ export default function HomePage() {
 
     
       {/* --- NEW: What You Can Do Here Section --- */}
-      <section className="w-full bg-gradient-to-br from-[#1a1a1a] to-black py-16 px-4 mt-12">
+      <section className="w-full bg-gradient-to-br from-[#1a1a1a] to-black py-16 px-4 mt-12 overflow-visible">
         <div className="max-w-7xl mx-auto">
           {/* Title row */}
-          <div className="flex items-start mb-2">
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mr-3 whitespace-nowrap">
-              What&nbsp; You Can Do Here
-            </h2>
-            {/* Lemon leaves above phone image */}
-            <div className="relative" style={{ minWidth: 120 , transform:"rotate(-18deg)"}}>
-              <img
-                src="/assets/lemonleaves.png"
-                alt="Lemon Leaves"
-                className="w-20 h-20 sm:w-30 sm:h-24 object-contain absolute left-0 -top-8"
-                style={{ zIndex: 2 }}
-              />
+          <div className="flex items-start mb-2 overflow-visible relative">
+            <div className="flex items-center overflow-visible w-full">
+              <h2 className="text-2xl sm:text-4xl font-bold text-white mr-2 sm:mr-3 whitespace-nowrap z-10">
+                What&nbsp; You Can Do Here
+              </h2>
+              {/* Lemon leaves above phone image */}
+              <div
+                className="relative"
+                style={{
+                  minWidth: 80,
+                  transform: "rotate(-18deg)",
+                  marginLeft: "-10px",
+                  zIndex: 2,
+                  top: "-12px",
+                }}
+              >
+                <img
+                  src="/assets/lemonleaves.png"
+                  alt="Lemon Leaves"
+                  className="w-14 h-14 sm:w-20 sm:h-20 object-contain absolute left-0 -top-4 sm:-top-8"
+                  style={{ zIndex: 2 }}
+                />
+              </div>
             </div>
           </div>
           {/* Row: Phone image and features side by side */}
@@ -459,16 +482,29 @@ export default function HomePage() {
           {/* Mobile: horizontal scroll | Desktop: grid */}
           <div
             ref={categoryRef}
+            onScroll={handleCategoryScroll}
             className="flex gap-6 overflow-x-auto scrollbar-hide pb-2 sm:pb-0"
+            style={{ scrollSnapType: "x mandatory" }}
           >
             {categories.map((cat, i) => (
               <div
                 key={i}
-                className="bg-[#232323] rounded-xl overflow-hidden shadow hover:shadow-lg transition flex-shrink-0 w-[180px] sm:w-auto"
+                className="bg-[#232323] rounded-xl overflow-hidden shadow hover:shadow-lg transition flex-shrink-0 w-[180px] sm:w-auto snap-start"
               >
                 <img src={cat.img} alt={cat.title} className="w-full h-[200px] object-cover" />
                 <div className="p-4 text-center text-white font-semibold capitalize">{cat.title}</div>
               </div>
+            ))}
+          </div>
+          {/* Pagination Dots for Category Carousel (mobile only) */}
+          <div className="flex justify-center mt-3 gap-2 sm:hidden">
+            {categories.map((_, i) => (
+              <span
+                key={i}
+                className={`h-2 w-2 rounded-full transition-all duration-200 ${
+                  i === categoryIndex ? "bg-green-700 scale-125" : "bg-gray-400"
+                }`}
+              />
             ))}
           </div>
         </div>
@@ -540,7 +576,8 @@ export default function HomePage() {
         </div>
       </footer>
 
-      {/* Ask FlavorBot Button */}
+      
+    {/* Ask FlavorBot Button */}
       <button
         className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 bg-green-700 hover:bg-green-800 text-white flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 rounded-xl shadow-lg z-50"
         style={{ fontWeight: 600, fontSize: '1.1rem' }}
