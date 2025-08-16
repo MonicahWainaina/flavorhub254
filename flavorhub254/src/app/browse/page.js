@@ -35,6 +35,83 @@ const categories = [
 	},
 ];
 
+// Sample recipes data (12 items, first 6 real, next 6 unique placeholders)
+const recipes = [
+	{
+		title: "Barbecue wings",
+		img: "/assets/barbecue-wings.jpg",
+		rating: 5.0,
+		time: 35,
+	},
+	{
+		title: "Spaghetti & Meatballs",
+		img: "/assets/spaghetti-meatballs.jpg",
+		rating: 4.0,
+		time: 20,
+	},
+	{
+		title: "Red Velvet",
+		img: "/assets/red-velvet.jpg",
+		rating: 3.0,
+		time: 45,
+	},
+	{
+		title: "Samosas",
+		img: "/assets/samosas.jpg",
+		rating: 5.0,
+		time: 30,
+	},
+	{
+		title: "BlackForest Cake",
+		img: "/assets/blackforest-cake.jpg",
+		rating: 3.0,
+		time: 45,
+	},
+	{
+		title: "Mandazi",
+		img: "/assets/mandazi.jpg",
+		rating: 3.0,
+		time: 20,
+	},
+	// Second half: unique titles and placeholder images
+	{
+		title: "Veggie Delight",
+		img: "/assets/spaghetti-meatballs.jpg",
+		rating: 4.5,
+		time: 25,
+	},
+	{
+		title: "Tropical Fruit Tart",
+		img: "/assets/spaghetti-meatballs.jpg",
+		rating: 4.2,
+		time: 40,
+	},
+	{
+		title: "Classic Ugali",
+		img: "/assets/spaghetti-meatballs.jpg",
+		rating: 4.8,
+		time: 15,
+	},
+	{
+		title: "Choco Banana Bread",
+		img: "/assets/spaghetti-meatballs.jpg",
+		rating: 4.0,
+		time: 50,
+	},
+	{
+		title: "Zesty Lemon Pie",
+		img: "/assets/spaghetti-meatballs.jpg",
+		rating: 3.9,
+		time: 35,
+	},
+	{
+		title: "Mango Lassi",
+		img:"/assets/spaghetti-meatballs.jpg",
+		rating: 4.7,
+		time: 10,
+	},
+];
+
 export default function BrowsePage() {
 	const carouselRef = useRef(null);
 	const [activeIndex, setActiveIndex] = useState(0);
@@ -77,6 +154,16 @@ export default function BrowsePage() {
 		newIndex = Math.max(0, Math.min(categories.length - 1, newIndex));
 		scrollToCard(newIndex);
 	};
+
+	// Carousel state for recipes grid
+	const [recipePage, setRecipePage] = useState(0);
+	const recipesPerPage = 6; // 3x2 grid
+	const totalPages = Math.ceil(recipes.length / recipesPerPage);
+
+	const paginatedRecipes = recipes.slice(
+		recipePage * recipesPerPage,
+		(recipePage + 1) * recipesPerPage
+	);
 
 	return (
 		<main className="min-h-screen bg-[#181818] px-0 py-0">
@@ -288,6 +375,170 @@ export default function BrowsePage() {
 					))}
 				</div>
 			</section>
+			{/* Divider Line for Recipes Section */}
+			<div className="flex justify-center my-8">
+				<div className="h-1 w-24 bg-[#3CB371] rounded-full opacity-80"></div>
+			</div>
+			<h2 className="text-3xl font-extrabold text-white text-center mb-6">
+				Recipes
+			</h2>
+
+			{/* Recipes Section */}
+			<section className="w-full px-2 sm:px-8 flex flex-col sm:flex-row gap-8">
+				{/* Filter Sidebar */}
+				<aside className="sm:w-1/4 w-full bg-[#181818] rounded-xl p-6 shadow-lg flex flex-col gap-6">
+					<h3 className="text-xl font-bold text-white mb-2">
+						Filter By Ingredients
+					</h3>
+					<form className="flex flex-col gap-4">
+						{/* Vegetables */}
+						<div>
+							<span className="font-semibold text-white">Vegetables</span>
+							<div className="flex flex-col gap-1 mt-1">
+								<label className="text-white">
+									<input type="checkbox" /> Tomato
+								</label>
+								<label className="text-white">
+									<input type="checkbox" /> Spinach
+								</label>
+								<label className="text-white">
+									<input type="checkbox" /> Kale
+								</label>
+								<label className="text-white">
+									<input type="checkbox" /> Potatoes
+								</label>
+							</div>
+						</div>
+						{/* Meats */}
+						<div>
+							<span className="font-semibold text-white">Meats</span>
+							<div className="flex flex-col gap-1 mt-1">
+								<label className="text-white">
+									<input type="checkbox" /> Chicken
+								</label>
+								<label className="text-white">
+									<input type="checkbox" /> Beef
+								</label>
+								<label className="text-white">
+									<input type="checkbox" /> Goat
+								</label>
+								<label className="text-white">
+									<input type="checkbox" /> Fish
+								</label>
+							</div>
+						</div>
+						{/* Dairy */}
+						<div>
+							<span className="font-semibold text-white">Dairy</span>
+							<div className="flex flex-col gap-1 mt-1">
+								<label className="text-white">
+									<input type="checkbox" /> Eggs
+								</label>
+								<label className="text-white">
+									<input type="checkbox" /> Milk
+								</label>
+								<label className="text-white">
+									<input type="checkbox" /> Cheese
+								</label>
+							</div>
+						</div>
+						<button
+							type="submit"
+							className="mt-4 bg-[#3CB371] text-white px-4 py-2 rounded-lg font-bold hover:bg-[#2e8b57] transition"
+						>
+							Apply Filter
+						</button>
+					</form>
+				</aside>
+
+				{/* Recipe Cards Grid Carousel */}
+				<div className="sm:w-3/4 w-full flex flex-col">
+					<div className="flex items-center justify-end mb-4">
+						{/* Carousel Arrows */}
+						<div className="flex gap-2">
+							<button
+								aria-label="Previous"
+								className="bg-[#3CB371] rounded-full p-2 text-white hover:bg-[#2e8b57] transition disabled:opacity-50"
+								onClick={() => setRecipePage((p) => Math.max(0, p - 1))}
+								disabled={recipePage === 0}
+							>
+								<svg
+									width="24"
+									height="24"
+									fill="none"
+									stroke="currentColor"
+									strokeWidth="3"
+									viewBox="0 0 24 24"
+								>
+									<path d="M15 19l-7-7 7-7" />
+								</svg>
+							</button>
+							<button
+								aria-label="Next"
+								className="bg-[#3CB371] rounded-full p-2 text-white hover:bg-[#2e8b57] transition disabled:opacity-50"
+								onClick={() => setRecipePage((p) => Math.min(totalPages - 1, p + 1))}
+								disabled={recipePage === totalPages - 1}
+							>
+								<svg
+									width="24"
+									height="24"
+									fill="none"
+									stroke="currentColor"
+									strokeWidth="3"
+									viewBox="0 0 24 24"
+								>
+									<path d="M9 5l7 7-7 7" />
+								</svg>
+							</button>
+						</div>
+					</div>
+					{/* Grid of Recipe Cards */}
+					<div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+						{paginatedRecipes.map((recipe, idx) => (
+							<div key={idx} className="bg-[#a94f4f] rounded-2xl p-4 flex flex-col shadow-lg">
+								<div className="flex items-center justify-between mb-2">
+									<span className="font-bold text-white">{recipe.title}</span>
+									<span className="text-yellow-300 font-bold">
+										({recipe.rating.toFixed(1)})
+									</span>
+								</div>
+								<Image
+									src={recipe.img}
+									alt={recipe.title}
+									width={300}
+									height={180}
+									className="rounded-xl mb-2 object-cover"
+								/>
+								<div className="flex items-center justify-between">
+									<span className="text-white">{recipe.time} mins</span>
+									<button className="bg-white rounded-full p-1 text-[#a94f4f] font-bold">
+										♡
+									</button>
+								</div>
+								<button className="mt-3 bg-white text-[#a94f4f] px-4 py-2 rounded-lg font-bold">
+									View Recipe
+								</button>
+							</div>
+						))}
+					</div>
+					{/* Pagination Dots */}
+					<div className="flex justify-center mt-4 gap-2">
+						{Array.from({ length: totalPages }).map((_, idx) => (
+							<button
+								key={idx}
+								className={`w-3 h-3 rounded-full transition-all duration-200 ${
+									idx === recipePage
+										? "bg-[#3CB371] scale-125"
+										: "bg-gray-400 opacity-60"
+								}`}
+								onClick={() => setRecipePage(idx)}
+								aria-label={`Go to page ${idx + 1}`}
+							/>
+						))}
+					</div>
+				</div>
+			</section>
+			{/* Recipes Section End */}
 		</main>
 	);
 }
