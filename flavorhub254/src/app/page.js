@@ -2,6 +2,7 @@
 import React, { useRef, useState } from "react";
 import Link from "next/link";
 
+
 export default function HomePage() {
   // Carousel state for pagination dots
   const carouselRef = useRef(null);
@@ -106,6 +107,8 @@ export default function HomePage() {
     setCategoryIndex(index);
   };
 
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+
   return (
     <>
       {/* Header */}
@@ -157,9 +160,34 @@ export default function HomePage() {
           </div>
           {/* Mobile Nav */}
           <div className="md:hidden flex items-center gap-2">
-            <button className="px-3 py-2 bg-green-600 text-white rounded-lg">Menu</button>
+            <button
+              className="px-3 py-2 bg-green-600 text-white rounded-lg"
+              onClick={() => setMobileNavOpen(true)}
+              aria-label="Open menu"
+            >
+              Menu
+            </button>
           </div>
         </div>
+        {/* Mobile Nav Overlay */}
+        {mobileNavOpen && (
+          <div className="fixed top-0 left-0 w-full bg-[#181818] bg-opacity-95 z-[999] flex flex-col items-center py-8 px-6 rounded-b-2xl shadow-lg md:hidden transition-all"
+               style={{ maxHeight: "80vh" }}>
+            <button
+              className="absolute top-4 right-6 text-white text-3xl"
+              onClick={() => setMobileNavOpen(false)}
+              aria-label="Close menu"
+            >
+              &times;
+            </button>
+            <nav className="flex flex-col gap-6 text-center mt-4 w-full">
+              <Link href="/" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>Home</Link>
+              <Link href="/browse" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>Browse recipes</Link>
+              <Link href="/ai-recipe" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>AI recipe generator</Link>
+              <Link href="/contact" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>Login/Signup</Link>
+            </nav>
+          </div>
+        )}
       </header>
 
   {/* Hero + Cards Section */}
@@ -242,11 +270,11 @@ export default function HomePage() {
                     idx < card.rating ? (
                       <svg key={idx} className="w-5 h-5 inline" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.921-.755 1.688-1.54 1.118l-3.38-2.455a1 1 0 00-1.175 0l-3.38 2.455c-.784.57-1.838-.197-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.049 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z" />
-                      </svg>
+                    </svg>
                     ) : (
                       <svg key={idx} className="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 20 20">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.921-.755 1.688-1.54 1.118l-3.38-2.455a1 1 0 00-1.175 0l-3.38 2.455c-.784.57-1.838-.197-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.049 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z" />
-                      </svg>
+                    </svg>
                     )
                   )}
                   <span className="text-gray-700 ml-2">({card.reviews})</span>
@@ -582,9 +610,9 @@ export default function HomePage() {
       </footer>
 
       
-    {/* Ask FlavorBot Button */}
+    {/* Ask Flavorbot Button */}
       <button
-        className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 bg-green-700 hover:bg-green-800 text-white flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 rounded-xl shadow-lg z-50"
+        className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 bg-green-700 hover:bg-green-800 text-white flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 rounded-xl shadow-lg z-[1000]"
         style={{ fontWeight: 600, fontSize: '1.1rem' }}
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
