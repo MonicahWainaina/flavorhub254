@@ -116,6 +116,7 @@ export default function BrowsePage() {
 	const carouselRef = useRef(null);
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false); // NEW
+	const [favoriteStates, setFavoriteStates] = useState(Array(recipes.length).fill(false));
 
 	// Responsive card width (match min-w-[260px] in px)
 	const CARD_WIDTH = 260 + 24; // card width + gap (gap-6 = 24px)
@@ -164,6 +165,12 @@ export default function BrowsePage() {
 		recipePage * recipesPerPage,
 		(recipePage + 1) * recipesPerPage
 	);
+
+	const toggleFavorite = (idx) => {
+		setFavoriteStates((prev) =>
+			prev.map((val, i) => (i === idx ? !val : val))
+		);
+	};
 
 	return (
 		<main className="min-h-screen bg-[#181818] px-0 py-0">
@@ -390,6 +397,7 @@ export default function BrowsePage() {
 					<h3 className="text-xl font-bold text-white mb-2">
 						Filter By Ingredients
 					</h3>
+					<hr className="border-t border-white/30 mb-2" />
 					<form className="flex flex-col gap-4">
 						{/* Vegetables */}
 						<div>
@@ -494,32 +502,85 @@ export default function BrowsePage() {
 					</div>
 					{/* Grid of Recipe Cards */}
 					<div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-						{paginatedRecipes.map((recipe, idx) => (
-							<div key={idx} className="bg-[#a94f4f] rounded-2xl p-4 flex flex-col shadow-lg">
-								<div className="flex items-center justify-between mb-2">
-									<span className="font-bold text-white">{recipe.title}</span>
-									<span className="text-yellow-300 font-bold">
-										({recipe.rating.toFixed(1)})
-									</span>
+						{paginatedRecipes.map((recipe, idx) => {
+							const globalIdx = recipePage * recipesPerPage + idx;
+							const isFav = favoriteStates[globalIdx];
+							return (
+								<div
+									key={idx}
+									className="flex bg-[#a94f4f] rounded-[2.5rem] shadow-lg overflow-hidden min-h-[170px] max-h-[190px]"
+									style={{ minWidth: 0 }}
+								>
+									{/* Left: Card Content */}
+									<div className="flex flex-col justify-between p-4 flex-1 min-w-0">
+										<div>
+											<span className="font-bold text-white text-base block mb-1">{recipe.title}</span>
+											<div className="flex items-center gap-2 mb-1">
+												{/* Star SVG */}
+												<svg width="18" height="18" fill="#FFD700" viewBox="0 0 20 20">
+													<path d="M10 15l-5.878 3.09 1.122-6.545L.488 6.91l6.561-.955L10 0l2.951 5.955 6.561.955-4.756 4.635 1.122 6.545z"/>
+												</svg>
+												<span className="text-yellow-300 font-bold text-sm">({recipe.rating.toFixed(1)})</span>
+											</div>
+										</div>
+										<div className="flex items-center gap-3 mb-1">
+											{/* Clock SVG */}
+											<svg width="16" height="16" fill="none" stroke="#fff" strokeWidth="2" viewBox="0 0 24 24">
+												<circle cx="12" cy="12" r="10" />
+												<path d="M12 6v6l4 2" />
+											</svg>
+											<span className="text-white text-sm">{recipe.time} mins</span>
+											{/* Heart-in-Circle SVG Button */}
+											<button
+												type="button"
+												className="ml-2 rounded-full p-1.5 bg-white border border-black flex items-center justify-center transition hover:bg-[#3CB371] group"
+												onClick={() => toggleFavorite(globalIdx)}
+												aria-label="Toggle favorite"
+												style={{ width: 32, height: 32 }}
+											>
+												<svg
+													width="22"
+													height="22"
+													viewBox="0 0 24 24"
+													fill="none"
+													xmlns="http://www.w3.org/2000/svg"
+												>
+													<circle
+														cx="12"
+														cy="12"
+														r="10"
+														stroke="#fff"
+														strokeWidth="2"
+														fill="#fff"
+													/>
+													<path
+														d="M12 17s-4.5-3.2-4.5-6.2C7.5 8.57 9.07 7 11 7c.88 0 1.74.39 2.3 1.02C14.26 7.39 15.12 7 16 7c1.93 0 3.5 1.57 3.5 3.8 0 3-4.5 6.2-4.5 6.2z"
+														fill={isFav ? "#181818" : "none"}
+														stroke="#181818"
+														strokeWidth="1.5"
+														strokeLinejoin="round"
+													/>
+												</svg>
+											</button>
+										</div>
+										<hr className="border-t border-white/30 my-2" />
+										<button className="bg-white text-black px-4 py-2 rounded-lg font-bold w-fit text-sm shadow transition hover:bg-[#3CB371] hover:text-white">
+											View Recipe
+										</button>
+									</div>
+									{/* Right: Image */}
+									<div className="flex-shrink-0 w-[48%] h-full relative">
+										<Image
+											src={recipe.img}
+											alt={recipe.title}
+											fill
+											className="object-cover h-full w-full rounded-r-[2.5rem] rounded-l-[2.5rem]"
+											style={{ minHeight: 170, maxHeight: 190 }}
+										/>
+									</div>
 								</div>
-								<Image
-									src={recipe.img}
-									alt={recipe.title}
-									width={300}
-									height={180}
-									className="rounded-xl mb-2 object-cover"
-								/>
-								<div className="flex items-center justify-between">
-									<span className="text-white">{recipe.time} mins</span>
-									<button className="bg-white rounded-full p-1 text-[#a94f4f] font-bold">
-										♡
-									</button>
-								</div>
-								<button className="mt-3 bg-white text-[#a94f4f] px-4 py-2 rounded-lg font-bold">
-									View Recipe
-								</button>
-							</div>
-						))}
+							);
+						})}
 					</div>
 					{/* Pagination Dots */}
 					<div className="flex justify-center mt-4 gap-2">
