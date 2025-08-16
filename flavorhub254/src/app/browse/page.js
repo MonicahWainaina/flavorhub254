@@ -63,7 +63,7 @@ const recipes = [
 	},
 	{
 		title: "BlackForest Cake",
-		img: "/assets/blackforest-cake.jpg",
+		img: "/assets/blackforest.jpg",
 		rating: 3.0,
 		time: 45,
 	},
@@ -76,37 +76,37 @@ const recipes = [
 	// Second half: unique titles and placeholder images
 	{
 		title: "Veggie Delight",
-		img: "/assets/spaghetti-meatballs.jpg",
+		img: "/assets/vegis.jpg",
 		rating: 4.5,
 		time: 25,
 	},
 	{
 		title: "Tropical Fruit Tart",
-		img: "/assets/spaghetti-meatballs.jpg",
+		img: "/assets/matoke.jpg",
 		rating: 4.2,
 		time: 40,
 	},
 	{
 		title: "Classic Ugali",
-		img: "/assets/spaghetti-meatballs.jpg",
+		img: "/assets/ugali-mishkaki.jpg",
 		rating: 4.8,
 		time: 15,
 	},
 	{
 		title: "Choco Banana Bread",
-		img: "/assets/spaghetti-meatballs.jpg",
+		img: "/assets/vanilla.jpg",
 		rating: 4.0,
 		time: 50,
 	},
 	{
 		title: "Zesty Lemon Pie",
-		img: "/assets/spaghetti-meatballs.jpg",
+		img: "/assets/pilau.jpg",
 		rating: 3.9,
 		time: 35,
 	},
 	{
 		title: "Mango Lassi",
-		img:"/assets/spaghetti-meatballs.jpg",
+		img:"/assets/stew.jpg",
 		rating: 4.7,
 		time: 10,
 	},
@@ -508,11 +508,21 @@ export default function BrowsePage() {
 							return (
 								<div
 									key={idx}
-									className="flex bg-[#a94f4f] rounded-[2.5rem] shadow-lg overflow-hidden min-h-[170px] max-h-[190px]"
+									className="flex flex-col sm:flex-row bg-[#a94f4f] rounded-[2.5rem] shadow-lg overflow-hidden min-h-[220px] max-h-[340px] sm:min-h-[170px] sm:max-h-[190px]"
 									style={{ minWidth: 0 }}
 								>
-									{/* Left: Card Content */}
-									<div className="flex flex-col justify-between p-4 flex-1 min-w-0">
+									{/* Image */}
+									<div className="relative w-full h-[120px] sm:w-[48%] sm:h-full flex-shrink-0">
+										<Image
+											src={recipe.img}
+											alt={recipe.title}
+											fill
+											className="object-cover w-full h-full sm:rounded-r-[2.5rem] sm:rounded-l-[2.5rem] rounded-t-[2.5rem] sm:rounded-t-none"
+											style={{ minHeight: 0, maxHeight: '100%' }}
+										/>
+									</div>
+									{/* Content */}
+									<div className="flex flex-col justify-between pt-3 px-3 pb-4 sm:p-4 flex-1 min-w-0">
 										<div>
 											<span className="font-bold text-white text-base block mb-1">{recipe.title}</span>
 											<div className="flex items-center gap-2 mb-1">
@@ -567,16 +577,6 @@ export default function BrowsePage() {
 										<button className="bg-white text-black px-4 py-2 rounded-lg font-bold w-fit text-sm shadow transition hover:bg-[#3CB371] hover:text-white">
 											View Recipe
 										</button>
-									</div>
-									{/* Right: Image */}
-									<div className="flex-shrink-0 w-[48%] h-full relative">
-										<Image
-											src={recipe.img}
-											alt={recipe.title}
-											fill
-											className="object-cover h-full w-full rounded-r-[2.5rem] rounded-l-[2.5rem]"
-											style={{ minHeight: 170, maxHeight: 190 }}
-										/>
 									</div>
 								</div>
 							);
