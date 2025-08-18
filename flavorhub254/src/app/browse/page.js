@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
+import FavoriteButton from "@/components/FavoriteButton";
 
 function useRecipesPerPage() {
     const [recipesPerPage, setRecipesPerPage] = useState(4); // default mobile
@@ -709,29 +710,8 @@ export default function BrowsePage() {
                                             </svg>
                                             <span className="text-white text-sm">{recipe.time} mins</span>
                                             {/* Heart-in-Circle SVG Button */}
-                                            <button
-                                                type="button"
-                                                className="ml-2 rounded-full p-1.5 bg-white border border-black flex items-center justify-center transition hover:bg-[#3CB371] group"
-                                                onClick={() => toggleFavorite(globalIdx)}
-                                                aria-label="Toggle favorite"
-                                                style={{ width: 32, height: 32 }}
-                                            >
-                                                <svg
-                                                    width="22"
-                                                    height="22"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                >
-                                                    <path
-                                                        d="M12 17s-4.5-3.2-4.5-6.2C7.5 8.57 9.07 7 11 7c.88 0 1.74.39 2.3 1.02C14.26 7.39 15.12 7 16 7c1.93 0 3.5 1.57 3.5 3.8 0 3-4.5 6.2-4.5 6.2z"
-                                                        fill={isFav ? "#181818" : "none"}
-                                                        stroke="#181818"
-                                                        strokeWidth="1.5"
-                                                        strokeLinejoin="round"
-                                                    />
-                                                </svg>
-                                            </button>
+                                            <FavoriteButton
+                                            />
                                         </div>
                                         <hr className="border-t border-white/30 my-2" />
                                         <button className="bg-white text-black px-4 py-2 rounded-lg font-bold w-fit text-sm shadow transition hover:bg-[#3CB371] hover:text-white">
