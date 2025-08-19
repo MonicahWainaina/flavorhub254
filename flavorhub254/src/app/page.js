@@ -129,12 +129,25 @@ export default function HomePage() {
         <span style={{ color: "#2E7D32" }}>254</span>
       </span>
     </Link>
+    <Link
+      href="/"
+      className="flex items-center space-x-1 cursor-pointer"
+      style={{ userSelect: "none" }}
+    >
+      <img src="/assets/flavorhubicon.png" alt="FlavorHUB254 Logo" className="h-12 w-12 sm:h-16 sm:w-16 object-contain" />
+      <span className="text-2xl sm:text-3xl font-bold leading-none">
+        flavor
+        <span style={{ color: "#D32F2F" }}>HUB</span>
+        <span style={{ color: "#2E7D32" }}>254</span>
+      </span>
+    </Link>
           {/* Navigation & Actions */}
           <div className="hidden md:flex flex-1 items-center justify-end gap-x-8 ml-8">
             {/* Navigation */}
             <nav className="flex gap-x-6">
               <Link href="/" className="capitalize hover:text-green-500 transition text-base">Home</Link>
               <Link href="/browse" className="capitalize hover:text-green-500 transition text-base">Browse recipes</Link>
+              <Link href="/flavorbot" className="capitalize hover:text-green-500 transition text-base">AI recipe generator</Link>
               <Link href="/flavorbot" className="capitalize hover:text-green-500 transition text-base">AI recipe generator</Link>
             </nav>
             {/* Search & Login/Signup */}
@@ -159,6 +172,11 @@ export default function HomePage() {
                   style={{ minWidth: 160 }}
                 />
               </div>
+              <Link href="/login">
+                <button className="px-4 py-2 rounded-lg bg-green-700 text-white hover:bg-green-800 transition text-base font-semibold lowercase">
+                  Login/Signup
+                </button>
+              </Link>
               <Link href="/login">
                 <button className="px-4 py-2 rounded-lg bg-green-700 text-white hover:bg-green-800 transition text-base font-semibold lowercase">
                   Login/Signup
@@ -191,6 +209,8 @@ export default function HomePage() {
             <nav className="flex flex-col gap-6 text-center mt-4 w-full">
               <Link href="/" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>Home</Link>
               <Link href="/browse" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>Browse recipes</Link>
+              <Link href="/flavorbot" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>AI recipe generator</Link>
+              <Link href="/login" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>Login/Signup</Link>
               <Link href="/flavorbot" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>AI recipe generator</Link>
               <Link href="/login" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>Login/Signup</Link>
             </nav>
