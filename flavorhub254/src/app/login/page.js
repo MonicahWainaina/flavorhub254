@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { FaUser, FaLock, FaBars, FaTimes } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
+import Link from "next/link";
 
 export default function LoginPage() {
   const [navOpen, setNavOpen] = useState(false);
@@ -21,22 +22,23 @@ export default function LoginPage() {
 
       {/* Header/Nav */}
       <header className="relative z-20 flex items-center justify-between px-4 sm:px-8 py-4 h-16 md:h-28">
-        <div className="flex items-center space-x-3">
-          <img
-            src="/assets/flavorhubicon.png"
-            alt="logo"
-            className="h-12 w-12 md:h-24 md:w-24 object-contain"
-          />
-          <span className="text-white text-2xl md:text-4xl font-bold leading-none">
-            flavor<span className="text-red-500">HUB</span>
-            <span className="text-green-500">254</span>
-          </span>
-        </div>
+          <Link
+            href="/"
+            className="flex items-center space-x-1 cursor-pointer"
+            style={{ userSelect: "none" }}
+          >
+            <img src="/assets/flavorhubicon.png" alt="FlavorHUB254 Logo" className="h-12 w-12 sm:h-16 sm:w-16 object-contain" />
+            <span className="text-2xl sm:text-3xl font-bold leading-none">
+              flavor
+              <span style={{ color: "#D32F2F" }}>HUB</span>
+              <span style={{ color: "#2E7D32" }}>254</span>
+            </span>
+          </Link>
         {/* Desktop nav */}
         <nav className="space-x-10 hidden md:flex">
-          <a href="#" className="text-white text-lg font-medium hover:text-green-400">Home</a>
-          <a href="#" className="text-white text-lg font-medium hover:text-green-400">Browse recipes</a>
-          <a href="#" className="text-white text-lg font-medium hover:text-green-400">AI Recipe generator</a>
+          <Link href="/" className="text-white text-lg font-medium hover:text-green-400">Home</Link>
+          <Link href="/browse" className="text-white text-lg font-medium hover:text-green-400">Browse recipes</Link>
+          <Link href="/flavorbot" className="text-white text-lg font-medium hover:text-green-400">AI Recipe generator</Link>
         </nav>
         {/* Hamburger menu for mobile */}
         <button
@@ -49,27 +51,27 @@ export default function LoginPage() {
         {/* Mobile nav dropdown */}
         {navOpen && (
           <nav className="absolute right-4 top-full mt-2 bg-black bg-opacity-90 rounded-lg shadow-lg flex flex-col gap-4 py-4 px-8 md:hidden z-30">
-            <a
-              href="#"
+            <Link
+              href="/"
               className="text-white text-lg font-semibold hover:text-green-400"
               onClick={() => setNavOpen(false)}
             >
               Home
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              href="/browse"
               className="text-white text-lg font-semibold hover:text-green-400"
               onClick={() => setNavOpen(false)}
             >
               Browse recipes
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              href="/flavorbot"
               className="text-white text-lg font-semibold hover:text-green-400"
               onClick={() => setNavOpen(false)}
             >
               AI Recipe generator
-            </a>
+            </Link>
           </nav>
         )}
       </header>
