@@ -1,16 +1,22 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const router = useRouter();
 
   return (
     // Header
     <header className="w-full text-[var(--foreground)] shadow-md bg-transparent absolute top-0 left-0 z-50">
       <div className="max-w-7xl mx-auto flex items-center px-4 py-4 sm:py-6 justify-between">
         {/* Logo & Brand */}
-        <div className="flex items-center space-x-1">
+        <div
+          className="flex items-center space-x-1 cursor-pointer"
+          onClick={() => router.push("/")}
+          style={{ userSelect: "none" }}
+        >
           <img src="/assets/flavorhubicon.png" alt="FlavorHUB254 Logo" className="h-12 w-12 sm:h-16 sm:w-16 object-contain" />
           <span className="text-2xl sm:text-3xl font-bold leading-none">
             flavor
@@ -22,9 +28,9 @@ export default function Header() {
         <div className="hidden md:flex flex-1 items-center justify-end gap-x-8 ml-8">
           {/* Navigation */}
           <nav className="flex gap-x-6">
-            <Link href="/" className="capitalize hover:text-green-500 transition text-base">Home</Link>
-            <Link href="/browse" className="capitalize hover:text-green-500 transition text-base">Browse recipes</Link>
-            <Link href="/ai-recipe" className="capitalize hover:text-green-500 transition text-base">AI recipe generator</Link>
+            <span className="capitalize hover:text-green-500 transition text-base cursor-pointer" onClick={() => router.push("/")}>Home</span>
+            <span className="capitalize hover:text-green-500 transition text-base cursor-pointer" onClick={() => router.push("/browse")}>Browse recipes</span>
+            <span className="capitalize hover:text-green-500 transition text-base cursor-pointer" onClick={() => router.push("/flavorbot")}>AI recipe generator</span>
           </nav>
           {/* Search & Login/Signup */}
           <div className="flex items-center gap-x-3">
@@ -76,10 +82,10 @@ export default function Header() {
             &times;
           </button>
           <nav className="flex flex-col gap-6 text-center mt-4 w-full">
-            <Link href="/" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>Home</Link>
-            <Link href="/browse" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>Browse recipes</Link>
-            <Link href="/ai-recipe" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>AI recipe generator</Link>
-            <Link href="/contact" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>Login/Signup</Link>
+            <span className="text-xl text-white font-semibold cursor-pointer" onClick={() => { router.push("/"); setMobileNavOpen(false); }}>Home</span>
+            <span className="text-xl text-white font-semibold cursor-pointer" onClick={() => { router.push("/browse"); setMobileNavOpen(false); }}>Browse recipes</span>
+            <span className="text-xl text-white font-semibold cursor-pointer" onClick={() => { router.push("/flavorbot"); setMobileNavOpen(false); }}>AI recipe generator</span>
+            <span className="text-xl text-white font-semibold cursor-pointer" onClick={() => { router.push("/contact"); setMobileNavOpen(false); }}>Login/Signup</span>
           </nav>
         </div>
       )}
