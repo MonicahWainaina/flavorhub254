@@ -408,27 +408,27 @@ export default function FavoritesPage() {
 								☰
 							</button>
 							{/* Nav */}
-							<nav className="hidden sm:flex  items-center gap-12 text-white font-bold text-xl">
+							<nav className="hidden sm:flex  items-center gap-12 text-white font-bold text-3xl">
 								<Link
 									href="/"
-									className="hover:text-[#3CB371] transition"
+									className="capitalize hover:text-green-500 transition text-base"
 								>
 									Home
 								</Link>
 								<Link
 									href="/browse"
-									className="hover:text-[#3CB371] transition"
+									className="capitalize hover:text-green-500 transition text-base"
 								>
 									Browse Recipes
 								</Link>
 								<Link
-									href="/ai-recipe"
-									className="hover:text-[#3CB371] transition"
+									href="/flavorbot"
+									className="capitalize hover:text-green-500 transition text-base"
 								>
 									AI Recipe generator
 								</Link>
-								<button className="ml-6 bg-[#3CB371] text-white px-7 py-3 rounded-lg font-bold text-lg hover:bg-[#2e8b57] transition">
-									Log Out
+								<button className="px-4 py-2 rounded-lg bg-green-700 text-white hover:bg-green-800 transition text-base font-semibold lowercase">
+									Login/Signup
 								</button>
 							</nav>
 						</div>
@@ -457,7 +457,7 @@ export default function FavoritesPage() {
 									Browse Recipes
 								</Link>
 								<Link
-									href="/ai-recipe"
+									href="/flavorbot"
 									className="hover:text-[#3CB371] transition"
 									onClick={() => setMobileMenuOpen(false)}
 								>
@@ -473,7 +473,7 @@ export default function FavoritesPage() {
 						)}
 						{/* Hero Content */}
 						<div className="flex flex-col items-center justify-center h-[200px] sm:h-[340px] mt-4 sm:mt-8 px-2">
-							<h1 className="text-3xl sm:text-6xl font-extrabold text-white mb-4 sm:mb-8 text-center drop-shadow-2xl">
+							<h1 className="text-3xl sm:text-5xl font-extrabold text-white mb-4 sm:mb-8 text-center drop-shadow-2xl">
 								Your Favourite Recipes
 							</h1>
 							{/* Search Bar */}
