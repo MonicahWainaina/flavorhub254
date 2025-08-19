@@ -394,9 +394,11 @@ export default function BrowsePage() {
                                 >
                                     AI Recipe generator
                                 </Link>
-                                <button className="px-4 py-2 rounded-lg bg-green-700 text-white hover:bg-green-800 transition text-base font-semibold lowercase">
-                                    login/signup
-                                </button>
+                                <Link href="/login">
+                                    <button className="px-4 py-2 rounded-lg bg-green-700 text-white hover:bg-green-800 transition text-base font-semibold lowercase">
+                                    Login/Signup
+                                    </button>
+                                </Link>
                             </nav>
                         </div>
                         {/* Mobile Menu */}
@@ -424,12 +426,14 @@ export default function BrowsePage() {
                                 >
                                     AI Recipe generator
                                 </Link>
-                                <button
-                                    className="bg-[#3CB371] text-white px-7 py-3 rounded-lg font-bold text-lg hover:bg-[#2e8b57] transition"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                >
-                                    login/signup
-                                </button>
+                                <Link href="/login">
+                                    <button
+                                        className="bg-[#3CB371] text-white px-7 py-3 rounded-lg font-bold text-lg hover:bg-[#2e8b57] transition"
+                                        onClick={() => setMobileMenuOpen(false)}
+                                    >
+                                        login/signup
+                                    </button>
+                                </Link>
                             </div>
                         )}
                         {/* Hero Content */}
