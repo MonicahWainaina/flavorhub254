@@ -22,14 +22,18 @@ function FlavorBotHeader({ isLoggedIn, onLogout }) {
     <header className="w-full text-[var(--foreground)] shadow-md bg-transparent absolute top-0 left-0 z-50">
       <div className="max-w-7xl mx-auto flex items-center px-4 py-4 sm:py-6 justify-between">
         {/* Logo & Brand */}
-        <div className="flex items-center space-x-1">
-          <img src="/assets/flavorhubicon.png" alt="FlavorHUB254 Logo" className="h-12 w-12 sm:h-16 sm:w-16 object-contain" />
-          <span className="text-2xl sm:text-3xl font-bold leading-none">
-            flavor
-            <span style={{ color: "#D32F2F" }}>HUB</span>
-            <span style={{ color: "#2E7D32" }}>254</span>
-          </span>
-        </div>
+            <Link
+              href="/"
+              className="flex items-center space-x-1 cursor-pointer"
+              style={{ userSelect: "none" }}
+            >
+              <img src="/assets/flavorhubicon.png" alt="FlavorHUB254 Logo" className="h-12 w-12 sm:h-16 sm:w-16 object-contain" />
+              <span className="text-2xl sm:text-3xl font-bold leading-none">
+                flavor
+                <span style={{ color: "#D32F2F" }}>HUB</span>
+                <span style={{ color: "#2E7D32" }}>254</span>
+              </span>
+            </Link>
         {/* Navigation & Actions */}
         <div className="hidden md:flex flex-1 items-center justify-end gap-x-8 ml-8">
           {/* Navigation */}
@@ -105,7 +109,7 @@ export default function FlavorBotPage() {
   const inputRef = useRef(null);
 
   // Simulate logged-in state and user
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const user = { name: "Jane" };
 
   // Example previous chats
