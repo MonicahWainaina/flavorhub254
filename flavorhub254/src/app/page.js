@@ -157,9 +157,11 @@ export default function HomePage() {
                   style={{ minWidth: 160 }}
                 />
               </div>
-              <button className="px-4 py-2 rounded-lg bg-green-700 text-white hover:bg-green-800 transition text-base font-semibold lowercase">
-                Login/Signup
-              </button>
+              <Link href="/login">
+                <button className="px-4 py-2 rounded-lg bg-green-700 text-white hover:bg-green-800 transition text-base font-semibold lowercase">
+                  Login/Signup
+                </button>
+              </Link>
             </div>
           </div>
           {/* Mobile Nav */}
@@ -188,7 +190,7 @@ export default function HomePage() {
               <Link href="/" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>Home</Link>
               <Link href="/browse" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>Browse recipes</Link>
               <Link href="/flavorbot" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>AI recipe generator</Link>
-              <Link href="/contact" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>Login/Signup</Link>
+              <Link href="/login" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>Login/Signup</Link>
             </nav>
           </div>
         )}
