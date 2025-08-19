@@ -358,7 +358,7 @@ export default function BrowsePage() {
                     {/* Gradient Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/40 to-black/80">
                         {/* Header inside overlay */}
-                        <div className="flex items-center justify-between px-4 sm:px-12 pt-3 sm:pt-5 bg-black/60 sm:bg-black/12 rounded-b-xl ">
+                        <div className="flex items-center justify-between px-4 sm:px-15 pt-3 sm:pt-5 bg-black/60 sm:bg-black/12 rounded-b-xl ">
                             {/* Logo */}
                             <Link
                             href="/"
@@ -434,7 +434,7 @@ export default function BrowsePage() {
                         )}
                         {/* Hero Content */}
                         <div className="flex flex-col items-center justify-center h-[200px] sm:h-[340px] mt-4 sm:mt-8 px-2">
-                            <h1 className="text-3xl sm:text-6xl font-extrabold text-white mb-4 sm:mb-8 text-center drop-shadow-2xl">
+                            <h1 className="text-3xl sm:text-5xl font-extrabold text-white mb-4 sm:mb-8 text-center drop-shadow-2xl">
                                 Browse & Cook
                             </h1>
                             {/* Search Bar */}
