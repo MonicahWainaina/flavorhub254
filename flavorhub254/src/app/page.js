@@ -115,21 +115,25 @@ export default function HomePage() {
       <header className="w-full text-[var(--foreground)] shadow-md bg-transparent absolute top-0 left-0 z-50">
         <div className="max-w-7xl mx-auto flex items-center px-4 py-4 sm:py-6 justify-between">
           {/* Logo & Brand */}
-          <div className="flex items-center space-x-1">
-            <img src="/assets/flavorhubicon.png" alt="FlavorHUB254 Logo" className="h-12 w-12 sm:h-16 sm:w-16 object-contain" />
-            <span className="text-2xl sm:text-3xl font-bold leading-none">
-              flavor
-              <span style={{ color: "#D32F2F" }}>HUB</span>
-              <span style={{ color: "#2E7D32" }}>254</span>
-            </span>
-          </div>
+    <Link
+      href="/"
+      className="flex items-center space-x-1 cursor-pointer"
+      style={{ userSelect: "none" }}
+    >
+      <img src="/assets/flavorhubicon.png" alt="FlavorHUB254 Logo" className="h-12 w-12 sm:h-16 sm:w-16 object-contain" />
+      <span className="text-2xl sm:text-3xl font-bold leading-none">
+        flavor
+        <span style={{ color: "#D32F2F" }}>HUB</span>
+        <span style={{ color: "#2E7D32" }}>254</span>
+      </span>
+    </Link>
           {/* Navigation & Actions */}
           <div className="hidden md:flex flex-1 items-center justify-end gap-x-8 ml-8">
             {/* Navigation */}
             <nav className="flex gap-x-6">
               <Link href="/" className="capitalize hover:text-green-500 transition text-base">Home</Link>
               <Link href="/browse" className="capitalize hover:text-green-500 transition text-base">Browse recipes</Link>
-              <Link href="/ai-recipe" className="capitalize hover:text-green-500 transition text-base">AI recipe generator</Link>
+              <Link href="/flavorbot" className="capitalize hover:text-green-500 transition text-base">AI recipe generator</Link>
             </nav>
             {/* Search & Login/Signup */}
             <div className="flex items-center gap-x-3">
@@ -183,7 +187,7 @@ export default function HomePage() {
             <nav className="flex flex-col gap-6 text-center mt-4 w-full">
               <Link href="/" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>Home</Link>
               <Link href="/browse" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>Browse recipes</Link>
-              <Link href="/ai-recipe" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>AI recipe generator</Link>
+              <Link href="/flavorbot" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>AI recipe generator</Link>
               <Link href="/contact" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>Login/Signup</Link>
             </nav>
           </div>
@@ -569,7 +573,7 @@ export default function HomePage() {
             <ul className="space-y-3 text-base">
               <li><Link href="/" className="hover:text-green-400 transition">Home</Link></li>
               <li><Link href="/browse" className="hover:text-green-400 transition">Browse Recipes</Link></li>
-              <li><Link href="/ai-recipe" className="hover:text-green-400 transition">Ask FlavorBot</Link></li>
+              <li><Link href="/flavorbot" className="hover:text-green-400 transition">Ask FlavorBot</Link></li>
               <li><Link href="/contact" className="hover:text-green-400 transition">Login/ Sign Up</Link></li>
             </ul>
           </div> 
