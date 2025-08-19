@@ -29,7 +29,7 @@ export default function Footer() {
           <ul className="space-y-3 text-base">
             <li><Link href="/" className="hover:text-green-400 transition">Home</Link></li>
             <li><Link href="/browse" className="hover:text-green-400 transition">Browse Recipes</Link></li>
-            <li><Link href="/ai-recipe" className="hover:text-green-400 transition">Ask FlavorBot</Link></li>
+            <li><Link href="/flavorbot" className="hover:text-green-400 transition">Ask FlavorBot</Link></li>
             <li><Link href="/contact" className="hover:text-green-400 transition">Login/ Sign Up</Link></li>
           </ul>
         </div> 
