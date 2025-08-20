@@ -3,10 +3,58 @@ import { useState } from "react";
 import { FaUser, FaLock, FaBars, FaTimes } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { auth, db } from "@/lib/firebase";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { setDoc, doc } from "firebase/firestore";
 
 export default function LoginPage() {
   const [navOpen, setNavOpen] = useState(false);
   const [isSignup, setIsSignup] = useState(false);
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    if (!email || !password || (isSignup && !username)) {
+      setError("Please fill in all required fields.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      if (isSignup) {
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        // Save username to Firestore
+        await setDoc(doc(db, "users", userCredential.user.uid), {
+          username,
+          email,
+          createdAt: new Date(),
+        });
+      } else {
+        await signInWithEmailAndPassword(auth, email, password);
+      }
+      router.push("/");
+    } catch (err) {
+      setError(err.message.replace("Firebase:", "").replace("auth/", ""));
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="relative min-h-screen flex flex-col">
@@ -22,23 +70,42 @@ export default function LoginPage() {
 
       {/* Header/Nav */}
       <header className="relative z-20 flex items-center justify-between px-4 sm:px-8 py-4 h-16 md:h-28">
-          <Link
-            href="/"
-            className="flex items-center space-x-1 cursor-pointer"
-            style={{ userSelect: "none" }}
-          >
-            <img src="/assets/flavorhubicon.png" alt="FlavorHUB254 Logo" className="h-12 w-12 sm:h-16 sm:w-16 object-contain" />
-            <span className="text-2xl sm:text-3xl font-bold leading-none">
-              flavor
-              <span style={{ color: "#D32F2F" }}>HUB</span>
-              <span style={{ color: "#2E7D32" }}>254</span>
-            </span>
-          </Link>
+        <Link
+          href="/"
+          className="flex items-center space-x-1 cursor-pointer"
+          style={{ userSelect: "none" }}
+        >
+          <img
+            src="/assets/flavorhubicon.png"
+            alt="FlavorHUB254 Logo"
+            className="h-12 w-12 sm:h-16 sm:w-16 object-contain"
+          />
+          <span className="text-2xl sm:text-3xl font-bold leading-none">
+            flavor
+            <span style={{ color: "#D32F2F" }}>HUB</span>
+            <span style={{ color: "#2E7D32" }}>254</span>
+          </span>
+        </Link>
         {/* Desktop nav */}
         <nav className="space-x-10 hidden md:flex">
-          <Link href="/" className="text-white text-lg font-medium hover:text-green-400">Home</Link>
-          <Link href="/browse" className="text-white text-lg font-medium hover:text-green-400">Browse recipes</Link>
-          <Link href="/flavorbot" className="text-white text-lg font-medium hover:text-green-400">AI Recipe generator</Link>
+          <Link
+            href="/"
+            className="text-white text-lg font-medium hover:text-green-400"
+          >
+            Home
+          </Link>
+          <Link
+            href="/browse"
+            className="text-white text-lg font-medium hover:text-green-400"
+          >
+            Browse recipes
+          </Link>
+          <Link
+            href="/flavorbot"
+            className="text-white text-lg font-medium hover:text-green-400"
+          >
+            AI Recipe generator
+          </Link>
         </nav>
         {/* Hamburger menu for mobile */}
         <button
@@ -84,31 +151,39 @@ export default function LoginPage() {
             <h1 className="text-3xl font-bold text-white mb-8">
               {isSignup ? "Sign Up" : "Login"}
             </h1>
-            <form className="space-y-5">
+            <form className="space-y-5" onSubmit={handleSubmit}>
               <div className="flex items-center bg-white rounded-md px-3 py-3">
                 <FaUser className="text-gray-400 mr-2" />
                 <input
                   type="text"
                   placeholder="Username"
                   className="bg-transparent outline-none flex-1 text-gray-700"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  disabled={!isSignup}
+                  required={isSignup}
                 />
               </div>
-              {isSignup && (
-                <div className="flex items-center bg-white rounded-md px-3 py-3">
-                  <MdEmail className="text-gray-400 mr-2" />
-                  <input
-                    type="email"
-                    placeholder="Email"
-                    className="bg-transparent outline-none flex-1 text-gray-700"
-                  />
-                </div>
-              )}
+              <div className="flex items-center bg-white rounded-md px-3 py-3">
+                <MdEmail className="text-gray-400 mr-2" />
+                <input
+                  type="email"
+                  placeholder="Email"
+                  className="bg-transparent outline-none flex-1 text-gray-700"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
               <div className="flex items-center bg-white rounded-md px-3 py-3">
                 <FaLock className="text-gray-400 mr-2" />
                 <input
                   type="password"
                   placeholder="Password"
                   className="bg-transparent outline-none flex-1 text-gray-700"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
                 />
               </div>
               {!isSignup && (
@@ -117,14 +192,18 @@ export default function LoginPage() {
                     <input type="checkbox" className="mr-2" />
                     Remember me
                   </label>
-                  <a href="#" className="hover:underline">Forgot Password?</a>
+                  <a href="#" className="hover:underline">
+                    Forgot Password?
+                  </a>
                 </div>
               )}
+              {error && <p className="text-red-500">{error}</p>}
               <button
                 type="submit"
                 className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 rounded-md transition"
+                disabled={loading}
               >
-                {isSignup ? "Sign Up" : "Sign In"}
+                {loading ? "Please wait..." : isSignup ? "Sign Up" : "Sign In"}
               </button>
             </form>
             <p className="mt-8 text-center text-white text-sm">
