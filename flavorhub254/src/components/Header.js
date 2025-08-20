@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 export default function Header({
   navLinks = [
@@ -21,6 +22,10 @@ export default function Header({
   if (user) {
     links.push({ href: "/favourites", label: "Favourite Recipes" });
   }
+
+  // Filter out the current page
+  const pathname = usePathname();
+  const filteredLinks = links.filter((link) => link.href !== pathname);
 
   return (
     <header className="w-full shadow-md bg-transparent absolute top-0 left-0 z-50">
@@ -44,7 +49,7 @@ export default function Header({
         <div className="hidden md:flex flex-1 items-center justify-end gap-x-8 ml-8">
           {/* Navigation */}
           <nav className="flex gap-x-6 items-center">
-            {links.map((link) => (
+            {filteredLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -127,7 +132,7 @@ export default function Header({
             &times;
           </button>
           <nav className="flex flex-col gap-6 text-center mt-4 w-full">
-            {links.map((link) => (
+            {filteredLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}

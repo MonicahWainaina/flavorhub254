@@ -5,6 +5,7 @@ import { useState, useRef, useEffect } from "react";
 import FavoriteButton from "@/components/FavoriteButton";
 import Header from "@/components/Header";
 import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation"; // <-- Add this
 
 // Dummy favorite recipes (replace with real data)
 const favoriteRecipes = [
@@ -272,7 +273,9 @@ const categories = [
 ];
 
 export default function FavoritesPage() {
-    const { username } = useAuth();
+    const { user, loading, username } = useAuth(); // <-- Use user and loading
+    const router = useRouter(); // <-- Add this
+
     // Carousel logic (same as browse)
     const carouselRef = useRef(null);
     const [activeIndex, setActiveIndex] = useState(0);
@@ -371,12 +374,25 @@ export default function FavoritesPage() {
 		return 0;
 	});
 
+	// --- PROTECT PAGE: redirect if not logged in ---
+	useEffect(() => {
+		if (!loading && !user) {
+			router.replace("/login");
+		}
+	}, [user, loading, router]);
+
+	if (loading || !user) {
+		return (
+			<div className="flex items-center justify-center min-h-screen bg-[#181818]">
+				<span className="text-white text-xl">Loading...</span>
+			</div>
+		);
+	}
+    // --- END PROTECTION ---
+
 	return (
 		<>
-			<Header
-	
-				showSearch
-			/>
+			<Header/>
 			<main className="min-h-screen bg-[#181818] px-0 py-0">
 				{/* Hero Section */}
 				<section className="w-full rounded-none shadow-lg relative">
