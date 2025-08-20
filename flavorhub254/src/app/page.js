@@ -1,7 +1,6 @@
 "use client";
 import React, { useRef, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 
 export default function HomePage() {
@@ -109,7 +108,6 @@ export default function HomePage() {
   };
 
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
-  const router = useRouter();
 
   return (
     <>
@@ -129,25 +127,12 @@ export default function HomePage() {
         <span style={{ color: "#2E7D32" }}>254</span>
       </span>
     </Link>
-    <Link
-      href="/"
-      className="flex items-center space-x-1 cursor-pointer"
-      style={{ userSelect: "none" }}
-    >
-      <img src="/assets/flavorhubicon.png" alt="FlavorHUB254 Logo" className="h-12 w-12 sm:h-16 sm:w-16 object-contain" />
-      <span className="text-2xl sm:text-3xl font-bold leading-none">
-        flavor
-        <span style={{ color: "#D32F2F" }}>HUB</span>
-        <span style={{ color: "#2E7D32" }}>254</span>
-      </span>
-    </Link>
           {/* Navigation & Actions */}
           <div className="hidden md:flex flex-1 items-center justify-end gap-x-8 ml-8">
             {/* Navigation */}
             <nav className="flex gap-x-6">
               <Link href="/" className="capitalize hover:text-green-500 transition text-base">Home</Link>
               <Link href="/browse" className="capitalize hover:text-green-500 transition text-base">Browse recipes</Link>
-              <Link href="/flavorbot" className="capitalize hover:text-green-500 transition text-base">AI recipe generator</Link>
               <Link href="/flavorbot" className="capitalize hover:text-green-500 transition text-base">AI recipe generator</Link>
             </nav>
             {/* Search & Login/Signup */}
@@ -172,11 +157,6 @@ export default function HomePage() {
                   style={{ minWidth: 160 }}
                 />
               </div>
-              <Link href="/login">
-                <button className="px-4 py-2 rounded-lg bg-green-700 text-white hover:bg-green-800 transition text-base font-semibold lowercase">
-                  Login/Signup
-                </button>
-              </Link>
               <Link href="/login">
                 <button className="px-4 py-2 rounded-lg bg-green-700 text-white hover:bg-green-800 transition text-base font-semibold lowercase">
                   Login/Signup
@@ -211,8 +191,6 @@ export default function HomePage() {
               <Link href="/browse" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>Browse recipes</Link>
               <Link href="/flavorbot" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>AI recipe generator</Link>
               <Link href="/login" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>Login/Signup</Link>
-              <Link href="/flavorbot" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>AI recipe generator</Link>
-              <Link href="/login" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>Login/Signup</Link>
             </nav>
           </div>
         )}
@@ -245,10 +223,7 @@ export default function HomePage() {
                 style={{ background: "transparent", aspectRatio: "4/2" }}
               />
               {/* Button */}
-              <button
-                className="bg-green-700 hover:bg-green-800 text-white px-6 py-3 rounded-lg font-semibold text-base sm:text-lg shadow-lg transition relative z-10 mt-2 w-full sm:w-auto"
-                onClick={() => router.push("/browse")}
-              >
+              <button className="bg-green-700 hover:bg-green-800 text-white px-6 py-3 rounded-lg font-semibold text-base sm:text-lg shadow-lg transition relative z-10 mt-2 w-full sm:w-auto">
                 Explore Recipes <span className="ml-2">&raquo;&raquo;</span>
               </button>
             </div>
@@ -313,10 +288,7 @@ export default function HomePage() {
                 <hr className="w-11/12 border-t border-black my-2" />
                 <div className="flex flex-col sm:flex-row justify-between items-center w-full px-1 mt-1 gap-2">
                   <span className="text-gray-700 text-base">{card.mins}</span>
-                  <button
-                    className="bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded-lg text-base font-semibold ml-0 sm:ml-2 capitalize w-full sm:w-auto"
-                    onClick={() => router.push("/browse")}
-                  >
+                  <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded-lg text-base font-semibold ml-0 sm:ml-2 capitalize w-full sm:w-auto">
                     View Recipe
                   </button>
                 </div>
@@ -603,7 +575,6 @@ export default function HomePage() {
             <ul className="space-y-3 text-base">
               <li><Link href="/" className="hover:text-green-400 transition">Home</Link></li>
               <li><Link href="/browse" className="hover:text-green-400 transition">Browse Recipes</Link></li>
-              <li><Link href="/flavorbot" className="hover:text-green-400 transition">Ask FlavorBot</Link></li>
               <li><Link href="/flavorbot" className="hover:text-green-400 transition">Ask FlavorBot</Link></li>
               <li><Link href="/contact" className="hover:text-green-400 transition">Login/ Sign Up</Link></li>
             </ul>
