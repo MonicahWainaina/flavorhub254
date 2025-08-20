@@ -27,7 +27,7 @@ export default function RecipePage({ params }) {
 
       {/* Content (Header, Main, Footer) */}
       <div className="relative z-10 flex flex-col min-h-screen">
-        <Header />
+        <Header showSearch/>
 
         <main className="flex-1 flex flex-col items-center pt-28 pb-12 px-2 sm:px-4">
           <section className="w-full max-w-6xl flex flex-col md:flex-row gap-12 bg-[#a94f4f]/90 rounded-3xl shadow-2xl border border-white/20 p-4 sm:p-10 backdrop-blur-sm">
