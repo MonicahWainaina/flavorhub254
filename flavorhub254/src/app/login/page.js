@@ -152,6 +152,7 @@ export default function LoginPage() {
               {isSignup ? "Sign Up" : "Login"}
             </h1>
             <form className="space-y-5" onSubmit={handleSubmit}>
+            {isSignup && (
               <div className="flex items-center bg-white rounded-md px-3 py-3">
                 <FaUser className="text-gray-400 mr-2" />
                 <input
@@ -160,10 +161,10 @@ export default function LoginPage() {
                   className="bg-transparent outline-none flex-1 text-gray-700"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  disabled={!isSignup}
-                  required={isSignup}
+                  required
                 />
               </div>
+            )}
               <div className="flex items-center bg-white rounded-md px-3 py-3">
                 <MdEmail className="text-gray-400 mr-2" />
                 <input
