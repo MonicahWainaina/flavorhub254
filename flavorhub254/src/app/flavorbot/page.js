@@ -1,6 +1,8 @@
 "use client";
 import { useRef, useState } from "react";
 import Link from "next/link";
+import Header from "@/components/Header";
+import { useAuth } from "@/context/AuthContext";
 
 // Placeholder bot SVG icon (Heroicons)
 function BotIcon({ className = "w-10 h-10" }) {
@@ -15,104 +17,11 @@ function BotIcon({ className = "w-10 h-10" }) {
   );
 }
 
-// Header styled like recipe page, with conditional nav items
-function FlavorBotHeader({ isLoggedIn, onLogout }) {
-  const [mobileNavOpen, setMobileNavOpen] = useState(false);
-  return (
-    <header className="w-full text-[var(--foreground)] shadow-md bg-transparent absolute top-0 left-0 z-50">
-      <div className="max-w-7xl mx-auto flex items-center px-4 py-4 sm:py-6 justify-between">
-        {/* Logo & Brand */}
-            <Link
-              href="/"
-              className="flex items-center space-x-1 cursor-pointer"
-              style={{ userSelect: "none" }}
-            >
-              <img src="/assets/flavorhubicon.png" alt="FlavorHUB254 Logo" className="h-12 w-12 sm:h-16 sm:w-16 object-contain" />
-              <span className="text-2xl sm:text-3xl font-bold leading-none">
-                flavor
-                <span style={{ color: "#D32F2F" }}>HUB</span>
-                <span style={{ color: "#2E7D32" }}>254</span>
-              </span>
-            </Link>
-        {/* Navigation & Actions */}
-        <div className="hidden md:flex flex-1 items-center justify-end gap-x-8 ml-8">
-          {/* Navigation */}
-          <nav className="flex gap-x-6">
-            <Link href="/" className="capitalize hover:text-green-500 transition text-lg font-semibold">Home</Link>
-            <Link href="/browse" className="capitalize hover:text-green-500 transition text-lg font-semibold">Browse recipes</Link>
-            {isLoggedIn && (
-              <Link href="/favourites" className="capitalize hover:text-green-500 transition text-lg font-semibold">Favourite Recipes</Link>
-            )}
-          </nav>
-          {/* Login/Signup or Logout */}
-          <div className="flex items-center gap-x-3">
-            {isLoggedIn ? (
-              <button
-                className="px-5 py-2 rounded-lg bg-green-700 text-white hover:bg-green-800 transition text-lg font-semibold lowercase"
-                onClick={onLogout}
-              >
-                Log Out
-              </button>
-            ) : (
-              <button className="px-5 py-2 rounded-lg bg-green-700 text-white hover:bg-green-800 transition text-lg font-semibold lowercase">
-                Login/Signup
-              </button>
-            )}
-          </div>
-        </div>
-        {/* Mobile Nav */}
-        <div className="md:hidden flex items-center gap-2">
-          <button
-            className="px-3 py-2 bg-green-600 text-white rounded-lg"
-            onClick={() => setMobileNavOpen(true)}
-            aria-label="Open menu"
-          >
-            Menu
-          </button>
-        </div>
-      </div>
-      {/* Mobile Nav Overlay */}
-      {mobileNavOpen && (
-        <div className="fixed top-0 left-0 w-full bg-[#181818] bg-opacity-95 z-[999] flex flex-col items-center py-8 px-6 rounded-b-2xl shadow-lg md:hidden transition-all"
-             style={{ maxHeight: "80vh" }}>
-          <button
-            className="absolute top-4 right-6 text-white text-3xl"
-            onClick={() => setMobileNavOpen(false)}
-            aria-label="Close menu"
-          >
-            &times;
-          </button>
-          <nav className="flex flex-col gap-6 text-center mt-4 w-full">
-            <Link href="/" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>Home</Link>
-            <Link href="/browse" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>Browse recipes</Link>
-            {isLoggedIn && (
-              <Link href="/favourites" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>Favourite Recipes</Link>
-            )}
-            {isLoggedIn ? (
-              <button
-                className="text-xl text-white font-semibold"
-                onClick={() => { setMobileNavOpen(false); onLogout(); }}
-              >
-                Log Out
-              </button>
-            ) : (
-              <Link href="/contact" className="text-xl text-white font-semibold" onClick={() => setMobileNavOpen(false)}>Login/Signup</Link>
-            )}
-          </nav>
-        </div>
-      )}
-    </header>
-  );
-}
-
 export default function FlavorBotPage() {
   const inputRef = useRef(null);
+  const { user, username } = useAuth();
 
-  // Simulate logged-in state and user
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const user = { name: "Jane" };
-
-  // Example previous chats
+  // Example previous chats (replace with real data)
   const previousChats = [
     { id: 1, title: "Avocado lemon smoothie has..." },
     { id: 2, title: "Quick chicken dinner..." },
@@ -130,9 +39,6 @@ export default function FlavorBotPage() {
     "Give me a Kenyan street food recipe",
   ];
 
-  // Simulate login/logout for demo
-  const handleLogout = () => setIsLoggedIn(false);
-
   return (
     <div className="relative min-h-screen flex flex-col bg-[#181818]">
       {/* Background image */}
@@ -147,7 +53,12 @@ export default function FlavorBotPage() {
       </div>
 
       <div className="relative z-10 flex flex-col min-h-screen">
-        <FlavorBotHeader isLoggedIn={isLoggedIn} onLogout={handleLogout} />
+        <Header
+          navLinks={[
+            { href: "/", label: "Home" },
+            { href: "/browse", label: "Browse recipes" },
+          ]}
+        />
 
         <main className="flex-1 flex flex-col items-center justify-center pt-20 sm:pt-28 pb-8 px-2 sm:px-4">
           <div className="flex w-full max-w-5xl relative">
@@ -157,7 +68,7 @@ export default function FlavorBotPage() {
               <div className="flex flex-col items-center w-full mb-6">
                 <div className="flex items-center gap-3 mb-2">
                   <h1 className="text-3xl sm:text-4xl font-extrabold text-white text-center">
-                    {isLoggedIn ? `Welcome ${user.name}` : "Welcome to FlavorBot"}
+                    {user ? `Welcome ${username || user.email}` : "Welcome to FlavorBot"}
                   </h1>
                   <span className="inline-block align-middle">
                     <BotIcon className="w-10 h-10 text-green-400" />
@@ -213,7 +124,7 @@ export default function FlavorBotPage() {
               </div>
             </div>
             {/* Chats Sidebar (right) - only show if logged in */}
-            {isLoggedIn && (
+            {user && (
               <>
                 <aside className="hidden md:block w-72 bg-black/80 rounded-xl ml-8 p-4 shadow-lg max-h-[70vh] overflow-y-auto">
                   <h2 className="text-white font-bold mb-4">Chats</h2>
