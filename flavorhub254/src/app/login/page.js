@@ -152,21 +152,19 @@ export default function LoginPage() {
               {isSignup ? "Sign Up" : "Login"}
             </h1>
             <form className="space-y-5" onSubmit={handleSubmit}>
+            {isSignup && (
               <div className="flex items-center bg-white rounded-md px-3 py-3">
-              {isSignup && (
-                <div className="flex items-center bg-white rounded-md px-3 py-3">
-                  <FaUser className="text-gray-400 mr-2" />
-                  <input
-                    type="text"
-                    placeholder="Username"
-                    className="bg-transparent outline-none flex-1 text-gray-700"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                  />
-                </div>
-              )}
+                <FaUser className="text-gray-400 mr-2" />
+                <input
+                  type="text"
+                  placeholder="Username"
+                  className="bg-transparent outline-none flex-1 text-gray-700"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                />
               </div>
+            )}
               <div className="flex items-center bg-white rounded-md px-3 py-3">
                 <MdEmail className="text-gray-400 mr-2" />
                 <input
