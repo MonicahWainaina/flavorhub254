@@ -2,7 +2,10 @@
 import React, { useRef, useState } from "react";
 import Header from "@/components/Header";
 import Link from "next/link";
+import { useEffect } from "react";
+import { collection, getDocs } from "firebase/firestore";
 import { useAuth } from "@/context/AuthContext";
+import Image from "next/image";
 import { db } from "@/lib/firebase";
 import { setDoc, doc } from "firebase/firestore";
 
@@ -75,41 +78,60 @@ export default function HomePage() {
     setCarouselIndex(index);
   };
 
-  // Category carousel state
-  const categoryRef = useRef(null);
-  const [categoryIndex, setCategoryIndex] = useState(0);
 
-  const categories = [
-    { title: "Breakfast", img: "/assets/category-breakfast.jpg" },
-    { title: "Main Dish", img: "/assets/category-main.jpg" },
-    { title: "Dessert", img: "/assets/category-dessert.jpg" },
-    { title: "Fast Food", img: "/assets/category-fastfood.jpg" },
-    // Duplicates for testing carousel scroll
-    { title: "Breakfast", img: "/assets/category-breakfast.jpg" },
-    { title: "Main Dish", img: "/assets/category-main.jpg" },
-    { title: "Dessert", img: "/assets/category-dessert.jpg" },
-    { title: "Fast Food", img: "/assets/category-fastfood.jpg" }
-  ];
+    
+    const [categories, setCategories] = useState([]);
+    const categoryRef = useRef(null);
+    const [categoryIndex, setCategoryIndex] = useState(0);
 
-  const scrollCarousel = (direction, ref = carouselRef) => {
-    const el = ref.current;
-    if (!el) return;
-    const cardWidth = el.firstChild?.offsetWidth || 1;
-    const gap = 36;
-    const scrollAmount = cardWidth + gap;
-    el.scrollBy({ left: direction === "left" ? -scrollAmount : scrollAmount, behavior: "smooth" });
-  };
+    // Use the same mapping as browse page
+    const CATEGORY_IMAGES = {
+      "Kenyan Classics":  { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777091/recipe/kenyan_classics_u7hww0.png", alt: "Kenyan classics" },
+      "Airfyer Recipes":  { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777002/recipe/Airfryer_hgt5vl.png", alt: "Airfryer recipes" },
+      "Breakfast":      { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777103/recipe/breakfast_qah5se.png", alt: "Breakfast recipes" },
+      "Vegetarian":     { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777246/recipe/vegeterian_rrldtz.png", alt: "Vegetarian recipes" },
+      "Fried Foods":    { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755778571/recipe/friedfoods_vzurws.png", alt: "Fried foods" },
+      "Guilty Pleasures": { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777085/recipe/guilty_pleasures_tz38ie.png", alt: "Guilty pleasures" },
+      "One Pot Meals":    { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777171/recipe/onepot_meals_tuyv38.png", alt: "One pot meals" },
+      "Stew & Curries":   { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777070/recipe/stews_curries_jksa9a.jpg", alt: "Stew and curries" },
+      "Sweet Treats":     { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777167/recipe/sweet_treats_mojait.png", alt: "Sweet treats" },
+    };
 
-  // Handle scroll to update category dot index
-  const handleCategoryScroll = () => {
-    const el = categoryRef.current;
-    if (!el) return;
-    const scrollLeft = el.scrollLeft;
-    const cardWidth = el.firstChild?.offsetWidth || 1;
-    const gap = 24; // gap-6 = 1.5rem = 24px
-    const index = Math.round(scrollLeft / (cardWidth + gap));
-    setCategoryIndex(index);
-  };
+    const FALLBACK_IMAGE = { url: "/assets/placeholder.jpg", alt: "Recipe image" };
+
+    // Fetch categories from Firestore on mount
+    useEffect(() => {
+      async function fetchCategories() {
+        const querySnapshot = await getDocs(collection(db, "recipes"));
+        const allCategories = querySnapshot.docs.map(doc => doc.data().category);
+        const unique = Array.from(new Set(allCategories)).map(cat => ({
+          title: cat,
+          img: CATEGORY_IMAGES[cat]?.url || FALLBACK_IMAGE.url,
+          alt: CATEGORY_IMAGES[cat]?.alt || cat,
+        }));
+        setCategories(unique);
+      }
+      fetchCategories();
+    }, []);
+
+    // Carousel scroll logic
+    const scrollCarousel = (direction) => {
+      const el = categoryRef.current;
+      if (!el) return;
+      const cardWidth = el.firstChild?.offsetWidth || 1;
+      const gap = 24;
+      const scrollAmount = cardWidth + gap;
+      el.scrollBy({ left: direction === "left" ? -scrollAmount : scrollAmount, behavior: "smooth" });
+    };
+    const handleCategoryScroll = () => {
+      const el = categoryRef.current;
+      if (!el) return;
+      const scrollLeft = el.scrollLeft;
+      const cardWidth = el.firstChild?.offsetWidth || 1;
+      const gap = 24;
+      const index = Math.round(scrollLeft / (cardWidth + gap));
+      setCategoryIndex(index);
+    };
 
   return (
     <>
@@ -314,8 +336,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-
     
       {/* --- NEW: What You Can Do Here Section --- */}
       <section className="w-full bg-gradient-to-br from-[#1a1a1a] to-black py-16 px-4 mt-12 overflow-visible">
@@ -398,74 +418,82 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* --- NEW: Browse By Category Section --- */}
+      {/* Category Section */}
       <section className="w-full py-12 px-4 bg-black">
-        <div className="max-w-7xl mx-auto relative">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center">
-              <h2 className="text-2xl sm:text-3xl font-bold text-white mr-2">Browse By Category</h2>
-              <img 
-                src="/assets/tomatoes.png" 
-                alt="Tomatoes" 
-                className="w-16 h-16 sm:w-24 sm:h-24 object-contain"
-                style={{ marginLeft: '-8px', transform: "rotate(-18deg)" }}
-              />
-            </div>
-            <button className="text-green-500 hover:text-green-400 font-semibold text-sm sm:text-base">See all &raquo;</button>
+      <div className="max-w-7xl mx-auto relative">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mr-2">Browse By Category</h2>
+            <img 
+              src="/assets/tomatoes.png" 
+              alt="Tomatoes" 
+              className="w-16 h-16 sm:w-24 sm:h-24 object-contain"
+              style={{ marginLeft: '-8px', transform: "rotate(-18deg)" }}
+            />
           </div>
-          {/* Centered arrow buttons */}
-          <div className="relative flex items-center">
-            <button
-              className="absolute left-0 z-10 bg-[#2e7d32] bg-opacity-80 rounded-full p-3 shadow hover:bg-green-700 transition hidden sm:flex items-center justify-center"
-              style={{ top: "50%", transform: "translateY(-50%)" }}
-              onClick={() => scrollCarousel("left", categoryRef)}
-              type="button"
-            >
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-            <div
-              ref={categoryRef}
-              onScroll={handleCategoryScroll}
-              className="flex gap-6 overflow-x-auto scrollbar-hide pb-2 sm:pb-0 w-full"
-              style={{ scrollSnapType: "x mandatory" }}
-            >
-              {categories.map((cat, i) => (
-                <div
-                  key={i}
-                  className="bg-[#232323] rounded-xl overflow-hidden shadow hover:shadow-lg transition flex-shrink-0 w-[180px] sm:w-auto snap-start"
-                >
-                  <img src={cat.img} alt={cat.title} className="w-full h-[200px] object-cover" />
-                  <div className="p-4 text-center text-white font-semibold capitalize">{cat.title}</div>
-                </div>
-              ))}
-            </div>
-            <button
-              className="absolute right-0 z-10 bg-[#2e7d32] bg-opacity-80 rounded-full p-3 shadow hover:bg-green-700 transition hidden sm:flex items-center justify-center"
-              style={{ top: "50%", transform: "translateY(-50%)" }}
-              onClick={() => scrollCarousel("right", categoryRef)}
-              type="button"
-            >
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-          </div>
-          {/* Pagination Dots for Category Carousel (mobile only) */}
-          <div className="flex justify-center mt-3 gap-2 sm:hidden">
-            {categories.map((_, i) => (
-              <span
-                key={i}
-                className={`h-2 w-2 rounded-full transition-all duration-200 ${
-                  i === categoryIndex ? "bg-green-700 scale-125" : "bg-gray-400"
-                }`}
-              />
+          <Link href="/browse" className="text-green-500 hover:text-green-400 font-semibold text-sm sm:text-base">See all &raquo;</Link>
+        </div>
+        {/* Centered arrow buttons */}
+        <div className="relative flex items-center">
+          {/* Left Arrow */}
+          <button
+            className="absolute left-0 z-10 bg-[#2e7d32] bg-opacity-80 rounded-full p-3 shadow hover:bg-green-700 transition hidden sm:flex items-center justify-center"
+            style={{ top: "50%", transform: "translateY(-50%)" }}
+            onClick={() => scrollCarousel("left")}
+            type="button"
+          >
+            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <div
+            ref={categoryRef}
+            onScroll={handleCategoryScroll}
+            className="flex gap-6 overflow-x-auto scrollbar-hide pb-2 sm:pb-0 w-full"
+            style={{ scrollSnapType: "x mandatory" }}
+          >
+            {categories.map((cat, i) => (
+              <Link
+                key={cat.title}
+                href={`/browse?category=${encodeURIComponent(cat.title)}`}
+                className="bg-[#232323] rounded-xl overflow-hidden shadow hover:shadow-lg transition flex-shrink-0 w-[180px] sm:w-auto snap-start"
+              >
+                <Image
+                  src={cat.img}
+                  alt={cat.alt}
+                  width={180}
+                  height={200}
+                  className="w-full h-[200px] object-cover"
+                />
+                <div className="p-4 text-center text-white font-semibold capitalize">{cat.title}</div>
+              </Link>
             ))}
           </div>
+          {/* Right Arrow */}
+          <button
+            className="absolute right-0 z-10 bg-[#2e7d32] bg-opacity-80 rounded-full p-3 shadow hover:bg-green-700 transition hidden sm:flex items-center justify-center"
+            style={{ top: "50%", transform: "translateY(-50%)" }}
+            onClick={() => scrollCarousel("right")}
+            type="button"
+          >
+            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
         </div>
+        {/* Pagination Dots for Category Carousel (mobile only) */}
+        <div className="flex justify-center mt-3 gap-2 sm:hidden">
+          {categories.map((_, i) => (
+            <span
+              key={i}
+              className={`h-2 w-2 rounded-full transition-all duration-200 ${
+                i === categoryIndex ? "bg-green-700 scale-125" : "bg-gray-400"
+              }`}
+            />
+          ))}
+        </div>
+      </div>
       </section>
-
 
       {/* --- FIGMA-STYLE FOOTER --- */}
       <footer className="w-full bg-[#111] text-white py-12 px-4 mt-12 relative overflow-hidden">
