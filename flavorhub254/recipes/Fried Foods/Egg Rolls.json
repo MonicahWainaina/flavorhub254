@@ -1,0 +1,132 @@
+{
+  "title": "Egg Roll",
+  "slug": "egg-roll",
+  "category": "Fried Favourites",
+  "tags": [
+    "egg roll",
+    "american",
+    "fried",
+    "fusion",
+    "snack",
+    "vegetables",
+    "street food"
+  ],
+  "description": "A crispy deep-fried roll filled with seasoned vegetables and meat. These American-style egg rolls are golden, crunchy, and perfect with dipping sauces.",
+  "base_servings": 4,
+  "adjustable_servings": true,
+  "min_servings": 2,
+  "max_servings": 6,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Egg roll wrappers",
+      "amount": 4,
+      "unit": "pieces",
+      "editable": false
+    },
+    {
+      "name": "Ground chicken or pork",
+      "amount": 250,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Cabbage (shredded)",
+      "amount": 1,
+      "unit": "cup",
+      "editable": false
+    },
+    {
+      "name": "Carrots (grated)",
+      "amount": 1,
+      "unit": "medium",
+      "editable": false
+    },
+    {
+      "name": "Garlic (minced)",
+      "amount": 2,
+      "unit": "cloves",
+      "editable": false
+    },
+    {
+      "name": "Soy sauce",
+      "amount": 1,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Black pepper",
+      "amount": 0.25,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 0.5,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Egg (for sealing)",
+      "amount": 1,
+      "unit": "beaten",
+      "editable": false
+    },
+    {
+      "name": "Cooking oil (for frying)",
+      "amount": 500,
+      "unit": "ml",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "In a pan, sauté garlic, ground meat, shredded cabbage, and carrots until cooked.",
+    "Add soy sauce, salt, and black pepper. Stir and let mixture cool.",
+    "Place a spoonful of filling onto each wrapper. Fold and roll tightly, sealing edges with beaten egg.",
+    "Heat oil in a frying pan over medium heat.",
+    "Deep-fry egg rolls until golden brown, about 3–5 minutes per side.",
+    "Drain on paper towels and serve hot with soy sauce, sweet chili dip, or garlic sauce."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/egg-roll.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Fry egg rolls until golden and crisp",
+        "timer": 5
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/egg-roll.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755778571/recipe/friedfoods_vzurws.png",
+    "alt": "Fried foods"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.5,
+  "time": 25
+}

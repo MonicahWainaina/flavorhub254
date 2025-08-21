@@ -1,0 +1,100 @@
+{
+  "title": "Loaded Fries",
+  "slug": "loaded-fries",
+  "category": "Guilty Pleasures",
+  "tags": [
+    "fries",
+    "loaded",
+    "fast food",
+    "guilty pleasures"
+  ],
+  "description": "Golden crispy fries topped with cheese, beef, and your favorite sauces — a comfort food classic.",
+  "base_servings": 4,
+  "adjustable_servings": true,
+  "min_servings": 2,
+  "max_servings": 8,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Frozen or fresh fries",
+      "amount": 600,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Cooked ground beef or chicken",
+      "amount": 200,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Cheddar cheese (shredded)",
+      "amount": 1,
+      "unit": "cup",
+      "editable": false
+    },
+    {
+      "name": "Sour cream",
+      "amount": 0.5,
+      "unit": "cup",
+      "editable": false
+    },
+    {
+      "name": "BBQ sauce or ketchup",
+      "amount": 0.25,
+      "unit": "cup",
+      "editable": false
+    },
+    {
+      "name": "Green onions (chopped)",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Cook fries according to package instructions or deep-fry until golden.",
+    "Spread hot fries on a serving platter.",
+    "Top with cooked beef or chicken, shredded cheese, sour cream, and BBQ sauce.",
+    "Sprinkle with chopped green onions.",
+    "Serve hot — pairs well with a chilled soda."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric",
+    "scaling_factor": "serving_based"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/loaded-fries.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": []
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/loaded-fries.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777085/recipe/guilty_pleasures_tz38ie.png",
+    "alt": "Guilty pleasures"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.6,
+  "time": 40
+}

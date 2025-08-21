@@ -1,0 +1,123 @@
+{
+  "title": "Airfryer Churros",
+  "slug": "airfryer-churros",
+  "category": "Airfryer Recipes",
+  "tags": [
+    "airfryer",
+    "churros",
+    "dessert",
+    "snack",
+    "sweet",
+    "spanish"
+  ],
+  "description": "Golden and crisp airfryer churros — no deep frying needed! Coated in cinnamon sugar for the perfect sweet crunch.",
+  "base_servings": 12,
+  "adjustable_servings": false,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "All-purpose flour",
+      "amount": 1,
+      "unit": "cup",
+      "editable": true,
+      "min": 0.75,
+      "max": 1.5
+    },
+    {
+      "name": "Water",
+      "amount": 1,
+      "unit": "cup",
+      "editable": false
+    },
+    {
+      "name": "Butter",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 0.25,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Egg",
+      "amount": 1,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Vegetable oil (for greasing)",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Sugar (for coating)",
+      "amount": 0.25,
+      "unit": "cup",
+      "editable": false
+    },
+    {
+      "name": "Ground cinnamon",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "In a saucepan, bring water, butter, and salt to a boil.",
+    "Reduce heat, add flour, and stir vigorously until dough forms a ball.",
+    "Remove from heat, let cool slightly, then beat in the egg until smooth.",
+    "Transfer dough to a piping bag fitted with a star tip.",
+    "Lightly grease airfryer basket and pipe 3–4 inch churros directly into it.",
+    "Preheat airfryer to 180°C (350°F) for 3 minutes.",
+    "Airfry churros at 180°C for 8–10 minutes or until golden and crisp.",
+    "Mix sugar and cinnamon in a bowl. Roll warm churros in the mixture to coat.",
+    "Serve with chocolate sauce or as-is — best enjoyed fresh!"
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/airfryer-churros.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Airfry the churros",
+        "timer": 10
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/airfryer-churros.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777002/recipe/Airfryer_hgt5vl.png",
+    "alt": "Airfryer recipes"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.6,
+  "time": 25
+}

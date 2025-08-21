@@ -1,0 +1,110 @@
+{
+  "title": "Githeri – Kenyan Maize and Beans Stew",
+  "slug": "githeri-kenyan-maize-and-beans-stew",
+  "category": "One Pot Meals",
+  "tags": [
+    "githeri",
+    "maize",
+    "beans",
+    "kenyan classics",
+    "one pot meals"
+  ],
+  "description": "A traditional Kenyan staple of boiled maize and beans, sautéed with onions, tomatoes, and spices for a wholesome one-pot meal.",
+  "base_servings": 6,
+  "adjustable_servings": true,
+  "min_servings": 3,
+  "max_servings": 10,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Boiled maize",
+      "amount": 3,
+      "unit": "cups",
+      "editable": true,
+      "min": 2,
+      "max": 5
+    },
+    {
+      "name": "Boiled beans",
+      "amount": 3,
+      "unit": "cups",
+      "editable": false
+    },
+    {
+      "name": "Onions (chopped)",
+      "amount": 2,
+      "unit": "medium",
+      "editable": false
+    },
+    {
+      "name": "Tomatoes (chopped)",
+      "amount": 2,
+      "unit": "medium",
+      "editable": false
+    },
+    {
+      "name": "Cooking oil",
+      "amount": 3,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": "to taste",
+      "unit": "",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Heat oil in a large pot over medium heat.",
+    "Add onions and sauté until softened.",
+    "Add tomatoes and cook until they break down.",
+    "Stir in boiled maize and beans, season with salt, and mix well.",
+    "Simmer for 5–10 minutes to allow flavors to meld.",
+    "Serve hot — goes perfectly with avocado slices or chapati."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric",
+    "scaling_factor": "ingredient_based"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/githeri-kenyan-maize-and-beans-stew.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Simmer to blend flavors",
+        "timer": 10
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/githeri-kenyan-maize-and-beans-stew.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777171/recipe/onepot_meals_tuyv38.png",
+    "alt": "One pot meals"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.7,
+  "time": 45
+}

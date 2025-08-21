@@ -1,0 +1,128 @@
+{
+  "title": "Coconut Chicken & Rice – One Pot",
+  "slug": "coconut-chicken-rice-one-pot",
+  "category": "One Pot Meals",
+  "tags": [
+    "coconut rice",
+    "chicken",
+    "one pot meals",
+    "kenyan fusion"
+  ],
+  "description": "Creamy coconut-infused rice cooked with tender chicken pieces in one pot for a comforting meal.",
+  "base_servings": 5,
+  "adjustable_servings": true,
+  "min_servings": 3,
+  "max_servings": 8,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Long grain rice (washed)",
+      "amount": 2.5,
+      "unit": "cups",
+      "editable": true,
+      "min": 2,
+      "max": 4
+    },
+    {
+      "name": "Chicken pieces (bone-in or boneless)",
+      "amount": 1,
+      "unit": "kg",
+      "editable": false
+    },
+    {
+      "name": "Coconut milk",
+      "amount": 400,
+      "unit": "ml",
+      "editable": false
+    },
+    {
+      "name": "Onion (chopped)",
+      "amount": 1,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Garlic (minced)",
+      "amount": 3,
+      "unit": "cloves",
+      "editable": false
+    },
+    {
+      "name": "Ginger (minced)",
+      "amount": 1,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Cooking oil",
+      "amount": 3,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Water or chicken stock",
+      "amount": 3,
+      "unit": "cups",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": "to taste",
+      "unit": "",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Heat oil in a large pot and sauté onions until soft.",
+    "Add garlic and ginger, cooking until fragrant.",
+    "Add chicken pieces and brown on all sides.",
+    "Pour in coconut milk and stock, bring to a boil.",
+    "Add rice, stir, reduce heat, and cover.",
+    "Cook until rice is tender and chicken is fully cooked.",
+    "Serve hot — pairs perfectly with a fresh cucumber salad."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric",
+    "scaling_factor": "ingredient_based"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/coconut-chicken-rice-one-pot.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Cook rice and chicken together",
+        "timer": 25
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/coconut-chicken-rice-one-pot.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777171/recipe/onepot_meals_tuyv38.png",
+    "alt": "One pot meals"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.7,
+  "time": 45
+}

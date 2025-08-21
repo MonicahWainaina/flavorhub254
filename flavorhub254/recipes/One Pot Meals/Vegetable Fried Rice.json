@@ -1,0 +1,115 @@
+{
+  "title": "Vegetable Fried Rice – One Pot",
+  "slug": "vegetable-fried-rice-one-pot",
+  "category": "One Pot Meals",
+  "tags": [
+    "vegetable fried rice",
+    "rice",
+    "one pot meals",
+    "vegetarian"
+  ],
+  "description": "Colorful and flavorful fried rice with mixed vegetables, all cooked in one pot for convenience.",
+  "base_servings": 4,
+  "adjustable_servings": true,
+  "min_servings": 2,
+  "max_servings": 8,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Long grain rice (washed)",
+      "amount": 2,
+      "unit": "cups",
+      "editable": true,
+      "min": 1,
+      "max": 4
+    },
+    {
+      "name": "Mixed vegetables (peas, carrots, corn)",
+      "amount": 2,
+      "unit": "cups",
+      "editable": false
+    },
+    {
+      "name": "Onion (chopped)",
+      "amount": 1,
+      "unit": "medium",
+      "editable": false
+    },
+    {
+      "name": "Garlic (minced)",
+      "amount": 2,
+      "unit": "cloves",
+      "editable": false
+    },
+    {
+      "name": "Soy sauce",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Cooking oil",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": "to taste",
+      "unit": "",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Heat oil in a large pan or wok.",
+    "Add onion and garlic, sauté until fragrant.",
+    "Add mixed vegetables and stir-fry for 3–4 minutes.",
+    "Push vegetables to the side and add rice, stirring well.",
+    "Pour in soy sauce, mix, and cook until rice is heated through.",
+    "Serve hot — goes perfectly with stir-fried tofu or grilled chicken."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric",
+    "scaling_factor": "ingredient_based"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/vegetable-fried-rice-one-pot.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Stir-fry vegetables",
+        "timer": 4
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/vegetable-fried-rice-one-pot.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777171/recipe/onepot_meals_tuyv38.png",
+    "alt": "One pot meals"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.7,
+  "time": 45
+}

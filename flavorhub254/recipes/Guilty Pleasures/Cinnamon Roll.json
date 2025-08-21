@@ -1,0 +1,151 @@
+{
+  "title": "Classic Cinnamon Rolls",
+  "slug": "classic-cinnamon-rolls",
+  "category": "Guilty Pleasures",
+  "tags": [
+    "cinnamon rolls",
+    "sweet rolls",
+    "baking",
+    "dessert",
+    "guilty pleasures"
+  ],
+  "description": "Soft, fluffy rolls swirled with cinnamon sugar and topped with a sweet glaze — perfect for breakfast or dessert.",
+  "base_servings": 12,
+  "adjustable_servings": true,
+  "min_servings": 6,
+  "max_servings": 18,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "All-purpose flour",
+      "amount": 500,
+      "unit": "g",
+      "editable": true,
+      "min": 400,
+      "max": 700
+    },
+    {
+      "name": "Granulated sugar",
+      "amount": 50,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Active dry yeast",
+      "amount": 2.25,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Whole milk (warm)",
+      "amount": 240,
+      "unit": "ml",
+      "editable": false
+    },
+    {
+      "name": "Unsalted butter (softened)",
+      "amount": 60,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Eggs",
+      "amount": 2,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Brown sugar",
+      "amount": 200,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Ground cinnamon",
+      "amount": 2.5,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Powdered sugar (for glaze)",
+      "amount": 120,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Milk (for glaze)",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "In a large bowl, mix flour, sugar, salt, and yeast.",
+    "Add warm milk, butter, and eggs. Mix to form a dough, then knead until smooth.",
+    "Place dough in a greased bowl, cover, and let rise until doubled (about 1 hour).",
+    "Roll dough into a rectangle, spread with softened butter, and sprinkle evenly with brown sugar and cinnamon.",
+    "Roll up tightly and cut into 12 equal pieces.",
+    "Arrange rolls in a greased baking dish, cover, and let rise for 30 minutes.",
+    "Preheat oven to 180°C (350°F). Bake rolls for 20–25 minutes or until golden brown.",
+    "Mix powdered sugar and milk to make glaze, then drizzle over warm rolls.",
+    "Serve warm — pairs perfectly with coffee or tea."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric",
+    "scaling_factor": "flour_anchor"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/classic-cinnamon-rolls.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "First dough rise",
+        "timer": 60
+      },
+      {
+        "step": "Second dough rise",
+        "timer": 30
+      },
+      {
+        "step": "Bake rolls",
+        "timer": 25
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/classic-cinnamon-rolls.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777085/recipe/guilty_pleasures_tz38ie.png",
+    "alt": "Guilty pleasures"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.6,
+  "time": 40
+}

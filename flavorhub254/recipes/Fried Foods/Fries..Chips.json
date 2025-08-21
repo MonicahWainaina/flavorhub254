@@ -1,0 +1,89 @@
+{
+  "title": "Kenyan Chips (French Fries)",
+  "slug": "kenyan-chips-french-fries",
+  "category": "Fried Favourites",
+  "tags": [
+    "kenyan",
+    "chips",
+    "fries",
+    "street food",
+    "snack",
+    "fried"
+  ],
+  "description": "Crispy and fluffy Kenyan-style chips — deep-fried potato sticks loved across the country. Serve with ketchup, vinegar, or as a side to smokie, choma, or eggs.",
+  "base_servings": 4,
+  "adjustable_servings": true,
+  "min_servings": 2,
+  "max_servings": 6,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Irish potatoes (peeled and cut into sticks)",
+      "amount": 6,
+      "unit": "medium",
+      "editable": false
+    },
+    {
+      "name": "Salt (for seasoning)",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Vegetable oil (for deep frying)",
+      "amount": 750,
+      "unit": "ml",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Peel and slice potatoes into evenly sized sticks. Soak in cold water for 10–15 minutes (optional for crispier fries).",
+    "Pat dry using a clean towel or paper towels.",
+    "Heat oil in a deep frying pan over medium-high heat.",
+    "Fry the chips in batches until golden and crispy (about 6–8 minutes per batch).",
+    "Remove and place on paper towels. Season immediately with salt.",
+    "Serve hot with ketchup, chili sauce, vinegar, or as a side to smokie or nyama choma."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/kenyan-chips-french-fries.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Fry chips until golden and crispy",
+        "timer": 8
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/kenyan-chips-french-fries.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755778571/recipe/friedfoods_vzurws.png",
+    "alt": "Fried foods"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.5,
+  "time": 25
+}

@@ -1,0 +1,129 @@
+{
+  "title": "Crispy Beef Samosas",
+  "slug": "crispy-beef-samosas",
+  "category": "Breakfast",
+  "tags": [
+    "breakfast",
+    "snack",
+    "fried",
+    "kenyan",
+    "samosa"
+  ],
+  "description": "Golden, crispy Kenyan samosas filled with flavorful minced beef – perfect for breakfast, snacks, or guests.",
+  "base_servings": 6,
+  "adjustable_servings": true,
+  "min_servings": 4,
+  "max_servings": 12,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Minced beef",
+      "amount": 250,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Onion (finely chopped)",
+      "amount": 1,
+      "unit": "medium",
+      "editable": false
+    },
+    {
+      "name": "Garlic (minced)",
+      "amount": 2,
+      "unit": "cloves",
+      "editable": false
+    },
+    {
+      "name": "Ginger (grated)",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Coriander (chopped)",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Black pepper",
+      "amount": 0.5,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Samosa wrappers",
+      "amount": 6,
+      "unit": "pieces",
+      "editable": false
+    },
+    {
+      "name": "Vegetable oil (for frying)",
+      "amount": 500,
+      "unit": "ml",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Heat a pan over medium heat and cook the minced beef until browned.",
+    "Add onions, garlic, and ginger. Sauté until softened and fragrant.",
+    "Season with salt, pepper, and stir in chopped coriander. Let mixture cool.",
+    "Place 1–2 tablespoons of filling in each samosa wrapper and fold into triangles.",
+    "Seal edges with a flour paste if needed.",
+    "Heat oil in a deep pan and fry samosas until golden brown and crisp.",
+    "Drain on paper towels and serve hot — best enjoyed with a cup of chai, kachumbari, or chutney."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/crispy-beef-samosas.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Cook beef filling thoroughly",
+        "timer": 10
+      },
+      {
+        "step": "Fry samosas until golden",
+        "timer": 4
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/crispy-beef-samosas.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777103/recipe/breakfast_qah5se.png",
+    "alt": "Breakfast recipes"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.8,
+  "time": 15
+}

@@ -1,0 +1,133 @@
+{
+  "title": "Kienyeji Chicken Stew",
+  "slug": "kienyeji-chicken-stew",
+  "category": "Curries & Stews",
+  "tags": [
+    "kienyeji chicken",
+    "kenyan stew",
+    "free-range",
+    "ugali",
+    "chapati",
+    "home-style"
+  ],
+  "description": "A flavorful Kenyan stew made with free-range kienyeji chicken slow-cooked in onions, tomatoes, and garlic. Best served with ugali or chapati.",
+  "base_servings": 4,
+  "adjustable_servings": true,
+  "min_servings": 2,
+  "max_servings": 6,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Kienyeji chicken (cut into pieces)",
+      "amount": 1,
+      "unit": "whole",
+      "editable": false
+    },
+    {
+      "name": "Onions (chopped)",
+      "amount": 2,
+      "unit": "medium",
+      "editable": false
+    },
+    {
+      "name": "Tomatoes (chopped)",
+      "amount": 3,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Garlic (minced)",
+      "amount": 3,
+      "unit": "cloves",
+      "editable": false
+    },
+    {
+      "name": "Ginger (grated)",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Black pepper",
+      "amount": 0.25,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Fresh coriander (chopped)",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Water",
+      "amount": 500,
+      "unit": "ml",
+      "editable": false
+    },
+    {
+      "name": "Vegetable oil",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Heat oil in a sufuria and sauté onions until softened.",
+    "Add garlic and ginger, cook briefly until aromatic.",
+    "Add chicken pieces and brown for 5–7 minutes.",
+    "Add tomatoes and salt. Cook until tomatoes break down.",
+    "Pour in water, bring to a boil, then reduce heat.",
+    "Cover and simmer for 60–75 minutes until chicken is tender and infused with flavor.",
+    "Sprinkle with black pepper and chopped coriander.",
+    "Serve hot with ugali, chapati, or rice."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/kienyeji-chicken-stew.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Simmer kienyeji chicken until tender",
+        "timer": 75
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/kienyeji-chicken-stew.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777070/recipe/stews_curries_jksa9a.jpg",
+    "alt": "Stew and curries"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.8,
+  "time": 50
+}

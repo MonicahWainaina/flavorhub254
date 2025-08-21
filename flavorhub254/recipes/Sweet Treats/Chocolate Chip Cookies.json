@@ -1,0 +1,135 @@
+{
+  "title": "Chocolate Chip Cookies",
+  "slug": "chocolate-chip-cookies",
+  "category": "Sweet Treats",
+  "tags": [
+    "cookies",
+    "chocolate",
+    "dessert",
+    "baking",
+    "snack",
+    "classic"
+  ],
+  "description": "Chewy and golden brown chocolate chip cookies with a soft center and crisp edges — the perfect classic cookie.",
+  "base_servings": 20,
+  "adjustable_servings": false,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "All-purpose flour",
+      "amount": 240,
+      "unit": "g",
+      "editable": true,
+      "min": 200,
+      "max": 300
+    },
+    {
+      "name": "Butter (softened)",
+      "amount": 170,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Brown sugar",
+      "amount": 150,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "White sugar",
+      "amount": 50,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Egg",
+      "amount": 1,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Vanilla extract",
+      "amount": 1.5,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Baking soda",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 0.5,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Chocolate chips",
+      "amount": 180,
+      "unit": "g",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "In a bowl, whisk together flour, baking soda, and salt.",
+    "In another large bowl, cream the butter, brown sugar, and white sugar until fluffy.",
+    "Add the egg and vanilla, mixing well.",
+    "Gradually mix in the dry ingredients until a soft dough forms.",
+    "Fold in the chocolate chips.",
+    "Chill the dough for 30 minutes (optional for richer flavor).",
+    "Preheat oven to 175°C (350°F) and line a baking tray with parchment paper.",
+    "Scoop tablespoon-sized portions onto the tray, spacing them out.",
+    "Bake for 10–12 minutes or until edges are golden.",
+    "Cool on tray for 5 minutes, then transfer to wire rack.",
+    "Enjoy warm with milk or as a sweet snack!"
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/chocolate-chip-cookies.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Chill the dough (optional)",
+        "timer": 30
+      },
+      {
+        "step": "Bake the cookies",
+        "timer": 12
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/chocolate-chip-cookies.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777167/recipe/sweet_treats_mojait.png",
+    "alt": "Sweet treats"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.9,
+  "time": 20
+}

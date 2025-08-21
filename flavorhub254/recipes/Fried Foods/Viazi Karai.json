@@ -1,0 +1,108 @@
+{
+  "title": "Viazi Karai",
+  "slug": "viazi-karai",
+  "category": "Fried Favourites",
+  "tags": [
+    "viazi karai",
+    "kenyan coast",
+    "fried",
+    "snack",
+    "tamarind",
+    "street food",
+    "mombasa"
+  ],
+  "description": "A Mombasa coastal favorite — pre-boiled potatoes dipped in a spiced batter and deep-fried to golden perfection. Best served with ukwaju (tamarind) sauce or coastal chili dip.",
+  "base_servings": 4,
+  "adjustable_servings": true,
+  "min_servings": 2,
+  "max_servings": 6,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Irish potatoes (peeled, boiled, and cut into chunks)",
+      "amount": 4,
+      "unit": "medium",
+      "editable": false
+    },
+    {
+      "name": "All-purpose flour",
+      "amount": 120,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Turmeric powder",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 0.5,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Water (for batter)",
+      "amount": 150,
+      "unit": "ml",
+      "editable": false
+    },
+    {
+      "name": "Vegetable oil (for deep frying)",
+      "amount": 500,
+      "unit": "ml",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Boil the potatoes in salted water until just cooked. Drain and let cool.",
+    "In a bowl, mix flour, turmeric, salt, and water to make a smooth batter.",
+    "Heat oil in a deep frying pan over medium heat.",
+    "Dip each potato chunk into the batter to coat fully.",
+    "Carefully lower into hot oil and fry until golden and crispy.",
+    "Drain on paper towels and serve hot with ukwaju (tamarind sauce) or coastal chili dip."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/viazi-karai.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Fry coated potatoes until golden and crispy",
+        "timer": 6
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/viazi-karai.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755778571/recipe/friedfoods_vzurws.png",
+    "alt": "Fried foods"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.5,
+  "time": 25
+}

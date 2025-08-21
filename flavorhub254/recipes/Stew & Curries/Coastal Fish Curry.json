@@ -1,0 +1,146 @@
+{
+  "title": "Coastal Fish Curry",
+  "slug": "coastal-fish-curry",
+  "category": "Curries & Stews",
+  "tags": [
+    "fish curry",
+    "coastal",
+    "kenyan",
+    "coconut",
+    "swahili",
+    "tilapia",
+    "rice",
+    "seafood"
+  ],
+  "description": "A coconut-rich fish curry from Kenya's coastal region, simmered in fragrant spices and served best with rice, chapati, or ugali.",
+  "base_servings": 4,
+  "adjustable_servings": true,
+  "min_servings": 2,
+  "max_servings": 6,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Firm white fish fillets (tilapia, kingfish, or snapper)",
+      "amount": 500,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Coconut milk",
+      "amount": 400,
+      "unit": "ml",
+      "editable": false
+    },
+    {
+      "name": "Onion (chopped)",
+      "amount": 1,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Tomato (chopped)",
+      "amount": 2,
+      "unit": "medium",
+      "editable": false
+    },
+    {
+      "name": "Garlic (minced)",
+      "amount": 2,
+      "unit": "cloves",
+      "editable": false
+    },
+    {
+      "name": "Ginger (grated)",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Turmeric powder",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Lime juice (or lemon juice)",
+      "amount": 1,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Black pepper",
+      "amount": 0.25,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Vegetable oil",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Fresh coriander (for garnish)",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Rinse and pat dry the fish fillets. Season lightly with salt and pepper.",
+    "Heat oil in a sufuria. Add onion, garlic, and ginger; sauté until soft.",
+    "Add tomatoes and turmeric. Cook until tomatoes break down and mixture thickens.",
+    "Pour in coconut milk and bring to a gentle simmer.",
+    "Carefully add the fish pieces. Simmer gently (do not stir too much) for 12–15 minutes until fish is cooked through.",
+    "Stir in lime juice and adjust seasoning.",
+    "Garnish with chopped coriander and serve hot with rice, ugali, or chapati."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/coastal-fish-curry.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Simmer fish gently in coconut curry",
+        "timer": 15
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/coastal-fish-curry.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777070/recipe/stews_curries_jksa9a.jpg",
+    "alt": "Stew and curries"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.8,
+  "time": 50
+}

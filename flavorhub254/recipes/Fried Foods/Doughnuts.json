@@ -1,0 +1,136 @@
+{
+  "title": "Kenyan Doughnuts",
+  "slug": "kenyan-doughnuts",
+  "category": "Fried Favourites",
+  "tags": [
+    "doughnuts",
+    "fried",
+    "kenyan",
+    "sweet treat",
+    "snack",
+    "tea-time"
+  ],
+  "description": "Soft, slightly sweet Kenyan-style doughnuts — golden brown on the outside and fluffy on the inside. Perfect with a cup of chai or for special occasions.",
+  "base_servings": 10,
+  "adjustable_servings": false,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "All-purpose flour",
+      "amount": 500,
+      "unit": "g",
+      "editable": true,
+      "min": 400,
+      "max": 700
+    },
+    {
+      "name": "Sugar",
+      "amount": 75,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Instant yeast",
+      "amount": 2.5,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Milk",
+      "amount": 200,
+      "unit": "ml",
+      "editable": false
+    },
+    {
+      "name": "Egg",
+      "amount": 1,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Butter (softened)",
+      "amount": 50,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 0.5,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Vegetable oil (for deep frying)",
+      "amount": 500,
+      "unit": "ml",
+      "editable": false
+    },
+    {
+      "name": "Granulated sugar (for coating, optional)",
+      "amount": 50,
+      "unit": "g",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "In a bowl, mix flour, sugar, yeast, and salt.",
+    "Add milk, egg, and softened butter. Mix and knead until soft and elastic.",
+    "Cover the dough and let rise for 1 hour or until doubled.",
+    "Punch down, roll out, and cut into doughnut shapes.",
+    "Let the shaped dough rest for 15–20 minutes.",
+    "Heat oil in a deep pan and fry doughnuts until golden brown (2–3 minutes per side).",
+    "Drain on paper towels. Optional: toss in granulated sugar while still warm.",
+    "Serve with a cup of Kenyan chai for the perfect tea-time treat."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/kenyan-doughnuts.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Let dough rise before shaping",
+        "timer": 60
+      },
+      {
+        "step": "Rest shaped doughnuts before frying",
+        "timer": 20
+      },
+      {
+        "step": "Fry doughnuts until golden",
+        "timer": 3
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/kenyan-doughnuts.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755778571/recipe/friedfoods_vzurws.png",
+    "alt": "Fried foods"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.5,
+  "time": 25
+}

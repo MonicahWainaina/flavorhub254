@@ -1,0 +1,122 @@
+{
+  "title": "Lasagne (Beef or Veg)",
+  "slug": "lasagne-beef-or-veg",
+  "category": "Guilty Pleasures",
+  "tags": [
+    "lasagne",
+    "beef",
+    "vegetarian option",
+    "pasta",
+    "guilty pleasures"
+  ],
+  "description": "Layers of pasta, rich sauce, and cheese — make it with beef or vegetables for a satisfying meal.",
+  "base_servings": 6,
+  "adjustable_servings": true,
+  "min_servings": 4,
+  "max_servings": 10,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Lasagne pasta sheets",
+      "amount": 12,
+      "unit": "pieces",
+      "editable": true,
+      "min": 8,
+      "max": 16
+    },
+    {
+      "name": "Ground beef or mixed vegetables",
+      "amount": 500,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Tomato sauce",
+      "amount": 2,
+      "unit": "cups",
+      "editable": false
+    },
+    {
+      "name": "Ricotta cheese",
+      "amount": 1,
+      "unit": "cup",
+      "editable": false
+    },
+    {
+      "name": "Mozzarella cheese (shredded)",
+      "amount": 2,
+      "unit": "cups",
+      "editable": false
+    },
+    {
+      "name": "Parmesan cheese (grated)",
+      "amount": 0.5,
+      "unit": "cup",
+      "editable": false
+    },
+    {
+      "name": "Olive oil",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Salt and pepper",
+      "amount": "to taste",
+      "unit": "",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Preheat oven to 180°C (350°F).",
+    "Heat olive oil in a pan and cook beef or vegetables until done. Add tomato sauce and season with salt and pepper.",
+    "Layer pasta sheets, sauce, ricotta, and mozzarella in a baking dish. Repeat layers.",
+    "Top with parmesan cheese.",
+    "Bake for 35–40 minutes until bubbly and golden.",
+    "Serve hot — pairs well with garlic bread and a side salad."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric",
+    "scaling_factor": "ingredient_based"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/lasagne-beef-or-veg.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Bake lasagne",
+        "timer": 40
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/lasagne-beef-or-veg.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777085/recipe/guilty_pleasures_tz38ie.png",
+    "alt": "Guilty pleasures"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.6,
+  "time": 40
+}

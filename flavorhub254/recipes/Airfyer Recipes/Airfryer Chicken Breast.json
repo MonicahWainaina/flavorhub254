@@ -1,0 +1,113 @@
+{
+  "title": "Airfryer Chicken Breast",
+  "slug": "airfryer-chicken-breast",
+  "category": "Airfryer Recipes",
+  "tags": [
+    "airfryer",
+    "chicken",
+    "breast",
+    "protein",
+    "healthy",
+    "easy"
+  ],
+  "description": "Moist and flavorful airfryer chicken breast — perfectly seasoned and cooked in under 20 minutes.",
+  "base_servings": 2,
+  "adjustable_servings": false,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Chicken breasts (boneless, skinless)",
+      "amount": 2,
+      "unit": "pieces",
+      "editable": true,
+      "min": 1,
+      "max": 4
+    },
+    {
+      "name": "Olive oil",
+      "amount": 1,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Black pepper",
+      "amount": 0.5,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Paprika",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Garlic powder",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Pat chicken breasts dry with a paper towel.",
+    "Rub with olive oil and season both sides with salt, pepper, paprika, and garlic powder.",
+    "Preheat the airfryer to 190°C (375°F) for 3 minutes.",
+    "Place chicken breasts in the airfryer basket in a single layer.",
+    "Airfry at 190°C for 16–18 minutes, flipping halfway through.",
+    "Let rest for 5 minutes before slicing.",
+    "Serve with veggies, salad, or rice — great for meal prep too."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/airfryer-chicken-breast.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Airfry the chicken breasts",
+        "timer": 18
+      },
+      {
+        "step": "Let chicken rest before slicing",
+        "timer": 5
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/airfryer-chicken-breast.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777002/recipe/Airfryer_hgt5vl.png",
+    "alt": "Airfryer recipes"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.6,
+  "time": 25
+}

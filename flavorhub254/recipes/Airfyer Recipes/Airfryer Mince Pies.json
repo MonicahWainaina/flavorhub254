@@ -1,0 +1,95 @@
+{
+  "title": "Airfryer Mince Pies",
+  "slug": "airfryer-mince-pies",
+  "category": "Airfryer Recipes",
+  "tags": [
+    "airfryer",
+    "dessert",
+    "mince pies",
+    "holiday",
+    "sweet",
+    "pastry"
+  ],
+  "description": "Classic fruity mince pies baked in the airfryer — golden, quick, and full of festive flavor.",
+  "base_servings": 6,
+  "adjustable_servings": false,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Ready-made pastry dough",
+      "amount": 1,
+      "unit": "pack",
+      "editable": false
+    },
+    {
+      "name": "Mincemeat filling",
+      "amount": 300,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Egg (beaten, for brushing)",
+      "amount": 1,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Icing sugar (for dusting)",
+      "amount": 1,
+      "unit": "tbsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Preheat the airfryer to 180°C (355°F) for 3 minutes.",
+    "Roll out pastry and cut out circles to fit your muffin tins or silicone molds.",
+    "Place pastry rounds into molds and add a spoonful of mincemeat to each.",
+    "Top with another smaller pastry round or star-shaped pastry lid.",
+    "Seal edges and brush tops with beaten egg.",
+    "Place the filled molds into the airfryer basket.",
+    "Airfry at 180°C for 12–15 minutes until golden.",
+    "Let cool slightly, then dust with icing sugar before serving."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/airfryer-mince-pies.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Airfry the mince pies",
+        "timer": 15
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/airfryer-mince-pies.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777002/recipe/Airfryer_hgt5vl.png",
+    "alt": "Airfryer recipes"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.6,
+  "time": 25
+}

@@ -1,0 +1,87 @@
+{
+  "title": "Vanilla Ice Cream (No-Churn)",
+  "slug": "vanilla-ice-cream-no-churn",
+  "category": "Sweet Treats",
+  "tags": [
+    "ice cream",
+    "vanilla",
+    "no-churn",
+    "dessert",
+    "frozen",
+    "easy"
+  ],
+  "description": "Creamy homemade vanilla ice cream with just three ingredients — no ice cream maker needed.",
+  "base_servings": 6,
+  "adjustable_servings": false,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Sweetened condensed milk",
+      "amount": 400,
+      "unit": "ml",
+      "editable": false
+    },
+    {
+      "name": "Heavy cream (cold)",
+      "amount": 500,
+      "unit": "ml",
+      "editable": false
+    },
+    {
+      "name": "Vanilla extract",
+      "amount": 2,
+      "unit": "tsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "In a large bowl, whip the cold heavy cream until stiff peaks form.",
+    "In another bowl, mix condensed milk and vanilla extract.",
+    "Fold the whipped cream gently into the vanilla mixture until fully combined.",
+    "Pour into a freezer-safe container and smooth the top.",
+    "Cover with a lid or cling film and freeze for at least 6 hours or overnight.",
+    "Scoop and serve — enjoy plain or topped with fruits, syrups, or nuts."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/vanilla-ice-cream-no-churn.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Freeze the ice cream mixture",
+        "timer": 360
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/vanilla-ice-cream-no-churn.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777167/recipe/sweet_treats_mojait.png",
+    "alt": "Sweet treats"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.9,
+  "time": 20
+}

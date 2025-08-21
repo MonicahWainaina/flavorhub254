@@ -1,0 +1,131 @@
+{
+  "title": "Tres Leches Cake",
+  "slug": "tres-leches-cake",
+  "category": "Guilty Pleasures",
+  "tags": [
+    "tres leches",
+    "cake",
+    "dessert",
+    "guilty pleasures"
+  ],
+  "description": "A light sponge cake soaked in three types of milk for a moist, rich, and indulgent dessert.",
+  "base_servings": 12,
+  "adjustable_servings": true,
+  "min_servings": 6,
+  "max_servings": 18,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "All-purpose flour",
+      "amount": 1,
+      "unit": "cup",
+      "editable": false
+    },
+    {
+      "name": "Baking powder",
+      "amount": 1.5,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 0.25,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Eggs",
+      "amount": 5,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Sugar",
+      "amount": 1,
+      "unit": "cup",
+      "editable": false
+    },
+    {
+      "name": "Whole milk",
+      "amount": 1,
+      "unit": "cup",
+      "editable": false
+    },
+    {
+      "name": "Sweetened condensed milk",
+      "amount": 1,
+      "unit": "can (14 oz)",
+      "editable": false
+    },
+    {
+      "name": "Evaporated milk",
+      "amount": 1,
+      "unit": "can (12 oz)",
+      "editable": false
+    },
+    {
+      "name": "Heavy cream",
+      "amount": 1,
+      "unit": "cup",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Preheat oven to 175°C (350°F). Grease and flour a 9x13 inch baking dish.",
+    "In a bowl, combine flour, baking powder, and salt.",
+    "In a separate large bowl, beat eggs with sugar until light and fluffy.",
+    "Gently fold in the flour mixture, then stir in whole milk.",
+    "Pour batter into prepared dish and bake for 30–35 minutes or until a toothpick comes out clean.",
+    "In a bowl, mix sweetened condensed milk, evaporated milk, and heavy cream.",
+    "Poke holes all over the cooled cake and slowly pour milk mixture over it.",
+    "Refrigerate for at least 4 hours or overnight before serving.",
+    "Serve chilled — pairs well with fresh berries or whipped cream."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric",
+    "scaling_factor": "serving_based"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/tres-leches-cake.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Bake cake",
+        "timer": 35
+      },
+      {
+        "step": "Refrigerate after soaking",
+        "timer": 240
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/tres-leches-cake.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777085/recipe/guilty_pleasures_tz38ie.png",
+    "alt": "Guilty pleasures"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.6,
+  "time": 40
+}

@@ -1,0 +1,137 @@
+{
+  "title": "Airfryer Beef Skewers (Mishkaki)",
+  "slug": "airfryer-beef-skewers-mishkaki",
+  "category": "Airfryer Recipes",
+  "tags": [
+    "airfryer",
+    "beef",
+    "mishkaki",
+    "grilled",
+    "skewers",
+    "easy"
+  ],
+  "description": "Tender beef skewers marinated in East African spices and grilled in the airfryer — no grill or charcoal needed.",
+  "base_servings": 4,
+  "adjustable_servings": false,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Beef (cubed)",
+      "amount": 500,
+      "unit": "g",
+      "editable": true,
+      "min": 400,
+      "max": 800
+    },
+    {
+      "name": "Garlic (minced)",
+      "amount": 2,
+      "unit": "cloves",
+      "editable": false
+    },
+    {
+      "name": "Ginger (grated)",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Cumin powder",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Paprika",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Black pepper",
+      "amount": 0.5,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Lemon juice",
+      "amount": 1,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Vegetable oil",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Wooden skewers (soaked)",
+      "amount": 8,
+      "unit": "pieces",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "In a bowl, mix beef cubes with garlic, ginger, cumin, paprika, salt, pepper, lemon juice, and oil.",
+    "Cover and marinate in the fridge for at least 1 hour (or overnight).",
+    "Thread the marinated beef onto soaked wooden skewers.",
+    "Preheat airfryer to 200°C (390°F) for 3 minutes.",
+    "Place skewers in the airfryer basket in a single layer.",
+    "Airfry at 200°C for 12–15 minutes, flipping once halfway.",
+    "Serve hot with kachumbari, flatbread, or fries."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/airfryer-beef-skewers-mishkaki.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Marinate beef in fridge",
+        "timer": 60
+      },
+      {
+        "step": "Airfry the skewers",
+        "timer": 15
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/airfryer-beef-skewers-mishkaki.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777002/recipe/Airfryer_hgt5vl.png",
+    "alt": "Airfryer recipes"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.6,
+  "time": 25
+}

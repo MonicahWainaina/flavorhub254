@@ -1,0 +1,125 @@
+{
+  "title": "Vegan Pesto Pasta",
+  "slug": "vegan-pesto-pasta",
+  "category": "Vegetarian",
+  "tags": [
+    "vegan",
+    "pasta",
+    "pesto",
+    "quick meals",
+    "healthy"
+  ],
+  "description": "Creamy vegan pesto tossed with al dente pasta for a quick and flavorful meal.",
+  "base_servings": 4,
+  "adjustable_servings": true,
+  "min_servings": 2,
+  "max_servings": 8,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Pasta (any variety)",
+      "amount": 400,
+      "unit": "g",
+      "editable": true,
+      "min": 300,
+      "max": 700
+    },
+    {
+      "name": "Fresh basil leaves",
+      "amount": 60,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Pine nuts",
+      "amount": 50,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Garlic (minced)",
+      "amount": 2,
+      "unit": "cloves",
+      "editable": false
+    },
+    {
+      "name": "Olive oil",
+      "amount": 80,
+      "unit": "ml",
+      "editable": false
+    },
+    {
+      "name": "Nutritional yeast",
+      "amount": 3,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Black pepper",
+      "amount": 0.5,
+      "unit": "tsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Cook pasta according to package instructions. Drain and set aside, reserving 1/4 cup of pasta water.",
+    "In a blender or food processor, combine basil, pine nuts, garlic, olive oil, nutritional yeast, salt, and pepper.",
+    "Blend until smooth, adding a splash of pasta water if needed for creaminess.",
+    "Toss cooked pasta with pesto until well coated.",
+    "Serve immediately — pairs beautifully with a fresh green salad."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric",
+    "scaling_factor": "pasta_anchor"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/vegan-pesto-pasta.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Cook pasta",
+        "timer": 10
+      },
+      {
+        "step": "Blend pesto",
+        "timer": 3
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/vegan-pesto-pasta.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777246/recipe/vegeterian_rrldtz.png",
+    "alt": "Vegetarian recipes"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.7,
+  "time": 30
+}

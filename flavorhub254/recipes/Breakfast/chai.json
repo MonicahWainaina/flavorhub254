@@ -1,0 +1,99 @@
+{
+  "title": "Chai ya Maziwa (Kenyan Milk Tea)",
+  "slug": "chai-ya-maziwa-kenyan-tea",
+  "category": "Breakfast",
+  "tags": [
+    "breakfast",
+    "tea",
+    "kenyan",
+    "hot drink",
+    "classic"
+  ],
+  "description": "Rich, creamy, and comforting — Kenyan chai is a staple breakfast drink brewed with black tea, milk, and sugar.",
+  "base_servings": 2,
+  "adjustable_servings": true,
+  "min_servings": 1,
+  "max_servings": 6,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Water",
+      "amount": 200,
+      "unit": "ml",
+      "editable": false
+    },
+    {
+      "name": "Whole milk",
+      "amount": 300,
+      "unit": "ml",
+      "editable": false
+    },
+    {
+      "name": "Loose black tea leaves",
+      "amount": 2,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Sugar",
+      "amount": 2,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Crushed ginger or masala spice (optional)",
+      "amount": 0.5,
+      "unit": "tsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "In a saucepan, bring water and tea leaves to a boil.",
+    "Add milk and crushed ginger or masala if using.",
+    "Reduce heat and simmer for 3–5 minutes to infuse the flavors.",
+    "Stir in sugar and simmer for another minute.",
+    "Strain into cups and serve hot — best enjoyed with mandazi, samosas, or simple buttered bread."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/chai-ya-maziwa-kenyan-tea.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Simmer tea and milk mixture",
+        "timer": 5
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/chai-ya-maziwa-kenyan-tea.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777103/recipe/breakfast_qah5se.png",
+    "alt": "Breakfast recipes"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.8,
+  "time": 15
+}

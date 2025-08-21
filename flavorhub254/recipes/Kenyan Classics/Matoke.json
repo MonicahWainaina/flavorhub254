@@ -1,0 +1,131 @@
+{
+  "title": "Savory Kenyan Matoke (Stewed Green Bananas)",
+  "slug": "savory-kenyan-matoke",
+  "category": "Kenyan Classics",
+  "tags": [
+    "kenyan",
+    "matoke",
+    "banana",
+    "vegetarian",
+    "stew",
+    "traditional"
+  ],
+  "description": "A rich and hearty Kenyan-style banana stew made from green matoke bananas simmered with onions, tomatoes, and spices. Simple and satisfying.",
+  "base_servings": 4,
+  "adjustable_servings": true,
+  "min_servings": 2,
+  "max_servings": 6,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Green bananas (matoke), peeled and chopped",
+      "amount": 6,
+      "unit": "medium",
+      "editable": false
+    },
+    {
+      "name": "Red onion (chopped)",
+      "amount": 1,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Tomatoes (chopped)",
+      "amount": 2,
+      "unit": "medium",
+      "editable": false
+    },
+    {
+      "name": "Garlic (minced)",
+      "amount": 2,
+      "unit": "cloves",
+      "editable": false
+    },
+    {
+      "name": "Ginger (grated)",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Coriander powder or curry powder",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Cooking oil",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Water or broth",
+      "amount": 1.5,
+      "unit": "cups",
+      "editable": false
+    },
+    {
+      "name": "Coriander leaves (optional, for garnish)",
+      "amount": 1,
+      "unit": "tbsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Heat oil in a sufuria over medium heat. Add onions and sauté until soft.",
+    "Add garlic, ginger, and cook for 1 minute.",
+    "Add tomatoes, salt, and spices. Cook until the tomatoes break down into a thick sauce.",
+    "Add chopped matoke bananas and stir well to coat.",
+    "Pour in water or broth. Cover and simmer for 20–25 minutes or until bananas are tender.",
+    "Garnish with fresh coriander and serve hot — great with ugali, rice, or chapati."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/savory-kenyan-matoke.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Simmer matoke until tender",
+        "timer": 25
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/savory-kenyan-matoke.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777091/recipe/kenyan_classics_u7hww0.png",
+    "alt": "Kenyan classics"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.9,
+  "time": 35
+}

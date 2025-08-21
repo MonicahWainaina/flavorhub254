@@ -1,0 +1,126 @@
+{
+  "title": "Mandazi – Soft Swahili Beignets",
+  "slug": "mandazi-swahili-beignets",
+  "category": "Kenyan Classics",
+  "tags": [
+    "snack",
+    "breakfast",
+    "deep fried",
+    "east africa"
+  ],
+  "description": "Fluffy, lightly sweetened Swahili mandazi — perfect with tea or on the go.",
+  "base_servings": 10,
+  "adjustable_servings": false,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "scaling_anchor": "All-purpose flour",
+  "scaling_step": 50,
+  "ingredients": [
+    {
+      "name": "All-purpose flour",
+      "amount": 500,
+      "unit": "g",
+      "editable": true,
+      "min": 400,
+      "max": 700
+    },
+    {
+      "name": "Sugar",
+      "amount": 75,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Baking powder",
+      "amount": 2,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Cardamom powder",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Milk",
+      "amount": 200,
+      "unit": "ml",
+      "editable": false
+    },
+    {
+      "name": "Egg",
+      "amount": 1,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Butter (melted)",
+      "amount": 50,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Vegetable oil (for frying)",
+      "amount": 500,
+      "unit": "ml",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "In a large bowl, mix flour, sugar, baking powder, and cardamom.",
+    "Add egg, melted butter, and milk. Knead into a soft, elastic dough.",
+    "Cover the dough and let it rest for 30 minutes.",
+    "Roll out the dough and cut into triangles or your preferred shapes.",
+    "Heat vegetable oil in a deep pan over medium heat.",
+    "Fry the mandazi in batches until golden brown on all sides.",
+    "Drain on paper towels to remove excess oil.",
+    "Serve warm — they pair beautifully with a cup of hot Kenyan chai (tea) for a comforting treat."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/mandazi-swahili-beignets.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Let dough rest after kneading",
+        "timer": 30
+      },
+      {
+        "step": "Deep-fry until golden brown",
+        "timer": 5
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/mandazi-swahili-beignets.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777103/recipe/breakfast_qah5se.png",
+    "alt": "Breakfast recipes"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.8,
+  "time": 15
+}

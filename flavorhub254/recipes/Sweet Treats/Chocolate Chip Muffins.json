@@ -1,0 +1,129 @@
+{
+  "title": "Chocolate Chip Muffins",
+  "slug": "chocolate-chip-muffins",
+  "category": "Sweet Treats",
+  "tags": [
+    "muffins",
+    "chocolate",
+    "baking",
+    "snack",
+    "sweet",
+    "breakfast"
+  ],
+  "description": "Soft and fluffy chocolate chip muffins with golden tops and melty chocolate chunks. Perfect for breakfast or snacking on the go.",
+  "base_servings": 12,
+  "adjustable_servings": false,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "All-purpose flour",
+      "amount": 220,
+      "unit": "g",
+      "editable": true,
+      "min": 180,
+      "max": 300
+    },
+    {
+      "name": "Sugar",
+      "amount": 150,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Butter (melted)",
+      "amount": 100,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Eggs",
+      "amount": 2,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Milk",
+      "amount": 120,
+      "unit": "ml",
+      "editable": false
+    },
+    {
+      "name": "Vanilla extract",
+      "amount": 1.5,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Baking powder",
+      "amount": 2,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 0.25,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Chocolate chips",
+      "amount": 150,
+      "unit": "g",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Preheat oven to 180°C (350°F) and line a 12-cup muffin tin.",
+    "In a large bowl, whisk together flour, sugar, baking powder, and salt.",
+    "In another bowl, mix melted butter, eggs, milk, and vanilla.",
+    "Combine wet and dry ingredients, mixing gently until just combined.",
+    "Fold in the chocolate chips, reserving a few for topping.",
+    "Divide the batter into the muffin cups, filling each about 3/4 full.",
+    "Top with extra chocolate chips and bake for 18–20 minutes.",
+    "Let cool slightly before serving.",
+    "Pairs perfectly with a glass of milk or a hot cup of tea."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/chocolate-chip-muffins.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Bake the muffins",
+        "timer": 20
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/chocolate-chip-muffins.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777167/recipe/sweet_treats_mojait.png",
+    "alt": "Sweet treats"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.9,
+  "time": 20
+}

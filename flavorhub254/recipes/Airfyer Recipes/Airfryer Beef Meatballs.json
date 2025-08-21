@@ -1,0 +1,126 @@
+{
+  "title": "Airfryer Beef Meatballs",
+  "slug": "airfryer-beef-meatballs",
+  "category": "Airfryer Recipes",
+  "tags": [
+    "airfryer",
+    "beef",
+    "meatballs",
+    "snack",
+    "protein",
+    "quick"
+  ],
+  "description": "Easy and juicy beef meatballs crisped in the airfryer — a perfect protein-packed snack or dinner addition.",
+  "base_servings": 4,
+  "adjustable_servings": false,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Minced beef",
+      "amount": 500,
+      "unit": "g",
+      "editable": true,
+      "min": 400,
+      "max": 800
+    },
+    {
+      "name": "Breadcrumbs",
+      "amount": 50,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Egg",
+      "amount": 1,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Onion (finely chopped)",
+      "amount": 1,
+      "unit": "medium",
+      "editable": false
+    },
+    {
+      "name": "Garlic (minced)",
+      "amount": 2,
+      "unit": "cloves",
+      "editable": false
+    },
+    {
+      "name": "Parsley or coriander (chopped)",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Black pepper",
+      "amount": 0.5,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Vegetable oil (for brushing)",
+      "amount": 1,
+      "unit": "tbsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "In a bowl, combine minced beef, breadcrumbs, egg, onion, garlic, herbs, salt, and pepper.",
+    "Mix until well combined, then roll into 16 small meatballs.",
+    "Preheat the airfryer to 200°C (390°F) for 3 minutes.",
+    "Lightly brush meatballs with oil and place them in the airfryer basket.",
+    "Airfry at 200°C for 12–15 minutes, shaking halfway through.",
+    "Serve hot with dipping sauce, pasta, or over rice."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/airfryer-beef-meatballs.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Airfry the meatballs",
+        "timer": 15
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/airfryer-beef-meatballs.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777002/recipe/Airfryer_hgt5vl.png",
+    "alt": "Airfryer recipes"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.6,
+  "time": 25
+}

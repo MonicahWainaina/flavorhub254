@@ -1,0 +1,123 @@
+{
+  "title": "Buttery Kenyan Scones",
+  "slug": "buttery-kenyan-scones",
+  "category": "Breakfast",
+  "tags": [
+    "breakfast",
+    "baking",
+    "kenyan",
+    "scones",
+    "oven"
+  ],
+  "description": "Classic Kenyan scones that are soft on the inside with a golden crust — perfect for breakfast or tea time.",
+  "base_servings": 8,
+  "adjustable_servings": false,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "scaling_anchor": "All-purpose flour",
+  "scaling_step": 50,
+  "ingredients": [
+    {
+      "name": "All-purpose flour",
+      "amount": 500,
+      "unit": "g",
+      "editable": true,
+      "min": 400,
+      "max": 700
+    },
+    {
+      "name": "Baking powder",
+      "amount": 2,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Sugar",
+      "amount": 3,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Butter (cold, cubed)",
+      "amount": 100,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Egg",
+      "amount": 1,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Milk",
+      "amount": 200,
+      "unit": "ml",
+      "editable": false
+    },
+    {
+      "name": "Vanilla extract (optional)",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Preheat oven to 180°C (350°F) and line a baking tray with parchment paper.",
+    "In a bowl, mix flour, baking powder, sugar, and salt.",
+    "Add cold butter and rub into the flour until the mixture resembles breadcrumbs.",
+    "Whisk egg, milk, and vanilla in a separate bowl. Pour into the flour mixture and mix gently into a soft dough.",
+    "Do not overwork the dough. Roll out gently and cut into rounds.",
+    "Place scones on tray and brush tops with milk or egg wash.",
+    "Bake for 18–20 minutes or until golden brown.",
+    "Serve warm — best enjoyed with butter, jam, or a hot cup of Kenyan chai."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/buttery-kenyan-scones.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Bake in preheated oven",
+        "timer": 20
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/buttery-kenyan-scones.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777103/recipe/breakfast_qah5se.png",
+    "alt": "Breakfast recipes"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.8,
+  "time": 15
+}

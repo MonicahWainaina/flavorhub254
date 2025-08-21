@@ -1,0 +1,121 @@
+{
+  "title": "One Pot Rice and Beans",
+  "slug": "one-pot-rice-and-beans",
+  "category": "One Pot Meals",
+  "tags": [
+    "rice",
+    "beans",
+    "one pot meals",
+    "vegetarian"
+  ],
+  "description": "A wholesome one pot dish of rice and beans simmered with aromatic spices for a filling meal.",
+  "base_servings": 6,
+  "adjustable_servings": true,
+  "min_servings": 3,
+  "max_servings": 10,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Long grain rice (washed)",
+      "amount": 3,
+      "unit": "cups",
+      "editable": true,
+      "min": 2,
+      "max": 5
+    },
+    {
+      "name": "Cooked beans (red or black)",
+      "amount": 3,
+      "unit": "cups",
+      "editable": false
+    },
+    {
+      "name": "Onion (chopped)",
+      "amount": 1,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Garlic (minced)",
+      "amount": 3,
+      "unit": "cloves",
+      "editable": false
+    },
+    {
+      "name": "Tomatoes (chopped)",
+      "amount": 2,
+      "unit": "medium",
+      "editable": false
+    },
+    {
+      "name": "Cooking oil",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Water or vegetable stock",
+      "amount": 4,
+      "unit": "cups",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": "to taste",
+      "unit": "",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Heat oil in a pot and sauté onions and garlic until fragrant.",
+    "Add tomatoes and cook until softened.",
+    "Stir in rice and beans, mixing well.",
+    "Add water or stock and bring to a boil.",
+    "Reduce heat, cover, and simmer until rice is cooked and liquid absorbed.",
+    "Serve warm — goes perfectly with avocado or a side salad."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric",
+    "scaling_factor": "ingredient_based"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/one-pot-rice-and-beans.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Simmer rice and beans",
+        "timer": 20
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/one-pot-rice-and-beans.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777171/recipe/onepot_meals_tuyv38.png",
+    "alt": "One pot meals"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.7,
+  "time": 45
+}

@@ -1,0 +1,122 @@
+{
+  "title": "Airfryer Banana Bread",
+  "slug": "airfryer-banana-bread",
+  "category": "Airfryer Recipes",
+  "tags": [
+    "airfryer",
+    "banana",
+    "bread",
+    "baking",
+    "sweet treat",
+    "snack"
+  ],
+  "description": "Moist, naturally sweet banana bread baked in the airfryer — quick, simple, and oven-free.",
+  "base_servings": 1,
+  "adjustable_servings": false,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Ripe bananas (mashed)",
+      "amount": 2,
+      "unit": "pieces",
+      "editable": true,
+      "min": 1,
+      "max": 3
+    },
+    {
+      "name": "All-purpose flour",
+      "amount": 1,
+      "unit": "cup",
+      "editable": false
+    },
+    {
+      "name": "Sugar",
+      "amount": 0.5,
+      "unit": "cup",
+      "editable": false
+    },
+    {
+      "name": "Egg",
+      "amount": 1,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Baking powder",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Vegetable oil or melted butter",
+      "amount": 0.25,
+      "unit": "cup",
+      "editable": false
+    },
+    {
+      "name": "Vanilla extract",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 0.25,
+      "unit": "tsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "In a bowl, mash bananas and mix with egg, sugar, oil, and vanilla.",
+    "In a separate bowl, combine flour, baking powder, and salt.",
+    "Mix wet and dry ingredients until just combined — don’t overmix.",
+    "Pour batter into a greased loaf pan that fits your airfryer.",
+    "Preheat the airfryer to 160°C (320°F) for 3 minutes.",
+    "Place the loaf pan in the basket and airfry at 160°C for 25–30 minutes.",
+    "Insert a toothpick in the center — if it comes out clean, it's ready.",
+    "Cool before slicing. Great with tea or coffee!"
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/airfryer-banana-bread.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Airfry the banana bread",
+        "timer": 30
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/airfryer-banana-bread.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777002/recipe/Airfryer_hgt5vl.png",
+    "alt": "Airfryer recipes"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.6,
+  "time": 25
+}

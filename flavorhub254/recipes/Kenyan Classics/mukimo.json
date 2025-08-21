@@ -1,0 +1,105 @@
+{
+  "title": "Traditional Kikuyu Mukimo (Maize Only)",
+  "slug": "traditional-kikuyu-mukimo-maize-only",
+  "category": "Kenyan Classics",
+  "tags": [
+    "kenyan",
+    "mukimo",
+    "maize",
+    "vegetarian",
+    "kikuyu",
+    "traditional"
+  ],
+  "description": "A flavorful Kikuyu dish of mashed potatoes mixed with boiled maize and pumpkin leaves — a true comfort meal from Central Kenya. \n\nNB: Some versions include boiled beans or green peas in place of or in addition to maize.",
+  "base_servings": 4,
+  "adjustable_servings": true,
+  "min_servings": 2,
+  "max_servings": 8,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Irish potatoes (peeled, chopped)",
+      "amount": 800,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Boiled maize (githeri-style)",
+      "amount": 1,
+      "unit": "cup",
+      "editable": false
+    },
+    {
+      "name": "Pumpkin leaves (or spinach)",
+      "amount": 1,
+      "unit": "bunch",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Oil or butter",
+      "amount": 1,
+      "unit": "tbsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Boil the potatoes in salted water until soft.",
+    "While the potatoes cook, steam or sauté the pumpkin leaves until wilted, then finely chop.",
+    "Once the potatoes are tender, drain any excess water and begin mashing them while hot.",
+    "Add the boiled maize and chopped pumpkin leaves into the pot.",
+    "Mash everything together until well combined. Add oil or butter and mix thoroughly.",
+    "Serve hot — mukimo pairs perfectly with beef stew, kienyeji chicken, or fermented milk."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/traditional-kikuyu-mukimo-maize-only.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Boil potatoes until soft",
+        "timer": 20
+      },
+      {
+        "step": "Mash with maize and greens",
+        "timer": 5
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/traditional-kikuyu-mukimo-maize-only.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777091/recipe/kenyan_classics_u7hww0.png",
+    "alt": "Kenyan classics"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.9,
+  "time": 35
+}

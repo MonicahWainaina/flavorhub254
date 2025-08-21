@@ -1,0 +1,119 @@
+{
+  "title": "Airfryer BBQ Chicken Wings",
+  "slug": "airfryer-bbq-chicken-wings",
+  "category": "Airfryer Recipes",
+  "tags": [
+    "airfryer",
+    "chicken",
+    "wings",
+    "bbq",
+    "snack",
+    "easy",
+    "crispy"
+  ],
+  "description": "Crispy and juicy chicken wings made in the airfryer and brushed with sweet, smoky BBQ sauce — no deep-frying needed.",
+  "base_servings": 4,
+  "adjustable_servings": false,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Chicken wings (split)",
+      "amount": 800,
+      "unit": "g",
+      "editable": true,
+      "min": 600,
+      "max": 1200
+    },
+    {
+      "name": "Salt",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Black pepper",
+      "amount": 0.5,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Garlic powder",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Paprika",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Olive oil",
+      "amount": 1,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "BBQ sauce",
+      "amount": 100,
+      "unit": "ml",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Preheat the airfryer to 200°C (390°F) for 3 minutes.",
+    "In a bowl, toss chicken wings with olive oil, salt, pepper, garlic powder, and paprika.",
+    "Place wings in a single layer in the airfryer basket.",
+    "Airfry at 200°C for 25 minutes, shaking the basket halfway.",
+    "Brush wings with BBQ sauce and cook for an additional 3–5 minutes.",
+    "Serve hot with extra BBQ sauce or a cooling dip like ranch or garlic mayo."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/airfryer-bbq-chicken-wings.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Airfry the chicken wings",
+        "timer": 25
+      },
+      {
+        "step": "Final BBQ glaze cook",
+        "timer": 5
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/airfryer-bbq-chicken-wings.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777002/recipe/Airfryer_hgt5vl.png",
+    "alt": "Airfryer recipes"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.6,
+  "time": 25
+}

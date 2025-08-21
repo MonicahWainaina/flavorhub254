@@ -1,0 +1,110 @@
+{
+  "title": "Homemade Pizza (Cheese & Beef)",
+  "slug": "homemade-pizza-cheese-and-beef",
+  "category": "Guilty Pleasures",
+  "tags": [
+    "pizza",
+    "cheese",
+    "beef",
+    "guilty pleasures"
+  ],
+  "description": "Crispy homemade pizza topped with savory beef and melty cheese — a crowd favorite.",
+  "base_servings": 4,
+  "adjustable_servings": true,
+  "min_servings": 2,
+  "max_servings": 8,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Pizza dough",
+      "amount": 500,
+      "unit": "g",
+      "editable": true,
+      "min": 300,
+      "max": 700
+    },
+    {
+      "name": "Ground beef (cooked and seasoned)",
+      "amount": 250,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Mozzarella cheese (shredded)",
+      "amount": 2,
+      "unit": "cups",
+      "editable": false
+    },
+    {
+      "name": "Pizza sauce",
+      "amount": 0.75,
+      "unit": "cup",
+      "editable": false
+    },
+    {
+      "name": "Olive oil",
+      "amount": 1,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Oregano or Italian seasoning",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Preheat oven to 220°C (425°F).",
+    "Roll out pizza dough to desired thickness and place on a baking tray.",
+    "Spread pizza sauce evenly over the dough.",
+    "Top with cooked beef, mozzarella cheese, and seasoning.",
+    "Drizzle lightly with olive oil.",
+    "Bake for 12–15 minutes until crust is golden and cheese is bubbly.",
+    "Serve hot — pairs perfectly with a chilled soda or fresh salad."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric",
+    "scaling_factor": "ingredient_based"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/homemade-pizza-cheese-and-beef.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Bake pizza",
+        "timer": 15
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/homemade-pizza-cheese-and-beef.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777085/recipe/guilty_pleasures_tz38ie.png",
+    "alt": "Guilty pleasures"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.6,
+  "time": 40
+}
