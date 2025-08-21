@@ -5,60 +5,36 @@ import Link from "next/link";
 import FavoriteButton from "@/components/FavoriteButton";
 import Header from "@/components/Header";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "@/lib/firebase"; // Adjust path if needed
+import { db } from "@/lib/firebase";
+
+// Category images lookup (copy from your addCategoryImagesToRecipes.js)
+const CATEGORY_IMAGES = {
+  "Kenyan Classics":  { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777091/recipe/kenyan_classics_u7hww0.png", alt: "Kenyan classics" },
+  "Airfyer Recipes":  { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777002/recipe/Airfryer_hgt5vl.png", alt: "Airfryer recipes" },
+  "Breakfast":      { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777103/recipe/breakfast_qah5se.png", alt: "Breakfast recipes" },
+  "Vegetarian":     { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777246/recipe/vegeterian_rrldtz.png", alt: "Vegetarian recipes" },
+  "Fried Foods":    { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755778571/recipe/friedfoods_vzurws.png", alt: "Fried foods" },
+  "Guilty Pleasures": { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777085/recipe/guilty_pleasures_tz38ie.png", alt: "Guilty pleasures" },
+  "One Pot Meals":    { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777171/recipe/onepot_meals_tuyv38.png", alt: "One pot meals" },
+  "Stew & Curries":   { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777070/recipe/stews_curries_jksa9a.jpg", alt: "Stew and curries" },
+  "Sweet Treats":     { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777167/recipe/sweet_treats_mojait.png", alt: "Sweet treats" },
+};
+
+const FALLBACK_IMAGE = { url: "/assets/placeholder.jpg", alt: "Recipe image" };
 
 function useRecipesPerPage() {
-    const [recipesPerPage, setRecipesPerPage] = useState(4); // default mobile
-
+    const [recipesPerPage, setRecipesPerPage] = useState(4);
     useEffect(() => {
         function handleResize() {
-            if (window.innerWidth >= 640) {
-                setRecipesPerPage(9);
-            } else {
-                setRecipesPerPage(4);
-            }
+            if (window.innerWidth >= 640) setRecipesPerPage(9);
+            else setRecipesPerPage(4);
         }
         handleResize();
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);
-
     return recipesPerPage;
 }
-
-// You can keep your categories carousel static or make it dynamic if you want
-const categories = [
-    {
-        title: "Breakfast",
-        img: "/assets/category-breakfast.jpg",
-        alt: "Breakfast",
-    },
-    {
-        title: "Kenyan Classics",
-        img: "/assets/category-main.jpg",
-        alt: "Kenyan Classics",
-    },
-    {
-        title: "Sweet Bakes",
-        img: "/assets/sweet-bakes.jpg",
-        alt: "Sweet Bakes",
-    },
-    {
-        title: "Fried Favorites",
-        img: "/assets/fried-chicken-fries.jpg",
-        alt: "Fried Favorites",
-    },
-    {
-        title: "Guilty Pleasures",
-        img: "/assets/guiltypleasues.jpg",
-        alt: "Guilty Pleasures",
-    },
-    {
-        title: "Breakfast",
-        img: "/assets/category-breakfast.jpg",
-        alt: "Breakfast",
-    },
-];
 
 export default function BrowsePage() {
     const carouselRef = useRef(null);
@@ -68,10 +44,10 @@ export default function BrowsePage() {
     const recipesPerPage = useRecipesPerPage();
     const [recipes, setRecipes] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [selectedCategory, setSelectedCategory] = useState(null);
 
     // Shuffle function
     function shuffleArray(array) {
-        // Fisher-Yates shuffle
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [array[i], array[j]] = [array[j], array[i]];
@@ -88,7 +64,7 @@ export default function BrowsePage() {
                 id: doc.id,
                 ...doc.data(),
             }));
-            fetched = shuffleArray(fetched); // Shuffle the recipes
+            fetched = shuffleArray(fetched);
             setRecipes(fetched);
             setFavoriteStates(Array(fetched.length).fill(false));
             setLoading(false);
@@ -96,21 +72,32 @@ export default function BrowsePage() {
         fetchRecipes();
     }, []);
 
-    const totalPages = Math.ceil(recipes.length / recipesPerPage);
-    const paginatedRecipes = recipes.slice(
+    // Get unique categories from recipes
+    const uniqueCategories = Array.from(
+        new Set(recipes.map(r => r.category))
+    ).map(cat => ({
+        title: cat,
+        img: CATEGORY_IMAGES[cat]?.url || FALLBACK_IMAGE.url,
+        alt: CATEGORY_IMAGES[cat]?.alt || cat,
+    }));
+
+    // Filter recipes by selected category
+    const filteredRecipes = selectedCategory
+        ? recipes.filter(r => r.category === selectedCategory)
+        : recipes;
+
+    const totalPages = Math.ceil(filteredRecipes.length / recipesPerPage);
+    const paginatedRecipes = filteredRecipes.slice(
         recipePage * recipesPerPage,
         (recipePage + 1) * recipesPerPage
     );
 
-    // Reset to first page if recipesPerPage changes (e.g., on resize)
     useEffect(() => {
         setRecipePage(0);
-    }, [recipesPerPage]);
+    }, [recipesPerPage, selectedCategory]);
 
-    // Responsive card width (match min-w-[260px] in px)
-    const CARD_WIDTH = 260 + 24; // card width + gap (gap-6 = 24px)
-
-    // Scroll to card by index
+    // Carousel logic (same as before)
+    const CARD_WIDTH = 260 + 24;
     const scrollToCard = (idx) => {
         if (carouselRef.current) {
             carouselRef.current.scrollTo({
@@ -119,8 +106,6 @@ export default function BrowsePage() {
             });
         }
     };
-
-    // Handle scroll to update active dot
     const handleScroll = () => {
         if (carouselRef.current) {
             const scrollLeft = carouselRef.current.scrollLeft;
@@ -128,8 +113,6 @@ export default function BrowsePage() {
             setActiveIndex(idx);
         }
     };
-
-    // Attach scroll event
     useEffect(() => {
         const ref = carouselRef.current;
         if (ref) {
@@ -137,28 +120,19 @@ export default function BrowsePage() {
             return () => ref.removeEventListener("scroll", handleScroll);
         }
     }, []);
-
-    // Responsive scroll for arrows
     const scroll = (direction) => {
         let newIndex = activeIndex + (direction === "left" ? -1 : 1);
-        newIndex = Math.max(0, Math.min(categories.length - 1, newIndex));
+        newIndex = Math.max(0, Math.min(uniqueCategories.length - 1, newIndex));
         scrollToCard(newIndex);
     };
 
-    const toggleFavorite = (idx) => {
-        setFavoriteStates((prev) =>
-            prev.map((val, i) => (i === idx ? !val : val))
-        );
-    };
-
+    // --- UI ---
     return (
         <>
-            <Header
-                navLinks={[
-                    { href: "/", label: "Home" },
-                    { href: "/flavorbot", label: "AI Recipe generator" },
-                ]}
-            />
+            <Header navLinks={[
+                { href: "/", label: "Home" },
+                { href: "/flavorbot", label: "AI Recipe generator" },
+            ]} />
             <main className="min-h-screen bg-[#181818] px-0 py-0">
                 {/* Hero Section */}
                 <section className="w-full rounded-none shadow-lg relative">
@@ -214,14 +188,7 @@ export default function BrowsePage() {
                             style={{ minWidth: 48, minHeight: 48 }}
                             disabled={activeIndex === 0}
                         >
-                            <svg
-                                width="24"
-                                height="24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="3"
-                                viewBox="0 0 24 24"
-                            >
+                            <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
                                 <path d="M15 19l-7-7 7-7" />
                             </svg>
                         </button>
@@ -231,10 +198,11 @@ export default function BrowsePage() {
                             className="flex gap-6 overflow-x-auto scrollbar-hide py-2 w-full snap-x snap-mandatory"
                             style={{ scrollBehavior: "smooth" }}
                         >
-                            {categories.map((cat, idx) => (
-                                <div
+                            {uniqueCategories.map((cat, idx) => (
+                                <button
                                     key={cat.title + idx}
-                                    className="bg-[#237a4b] rounded-xl overflow-hidden shadow-md min-w-[80vw] max-w-[80vw] sm:min-w-[260px] sm:max-w-[260px] flex flex-col snap-center transition-all duration-300"
+                                    className={`bg-[#237a4b] rounded-xl overflow-hidden shadow-md min-w-[80vw] max-w-[80vw] sm:min-w-[260px] sm:max-w-[260px] flex flex-col snap-center transition-all duration-300 border-4 ${selectedCategory === cat.title ? "border-[#3CB371]" : "border-transparent"}`}
+                                    onClick={() => setSelectedCategory(selectedCategory === cat.title ? null : cat.title)}
                                 >
                                     <div className="bg-[#237a4b] text-center">
                                         <span className="inline-block text-white px-4 py-1 font-bold text-lg">
@@ -252,7 +220,7 @@ export default function BrowsePage() {
                                             borderTopRightRadius: 12,
                                         }}
                                     />
-                                </div>
+                                </button>
                             ))}
                         </div>
                         {/* Right Arrow */}
@@ -261,23 +229,16 @@ export default function BrowsePage() {
                             onClick={() => scroll("right")}
                             className="hidden sm:flex bg-[#3CB371] rounded-full p-3 text-white hover:bg-[#2e8b57] transition"
                             style={{ minWidth: 48, minHeight: 48 }}
-                            disabled={activeIndex === categories.length - 1}
+                            disabled={activeIndex === uniqueCategories.length - 1}
                         >
-                            <svg
-                                width="24"
-                                height="24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="3"
-                                viewBox="0 0 24 24"
-                            >
+                            <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
                                 <path d="M9 5l7 7-7 7" />
                             </svg>
                         </button>
                     </div>
                     {/* Pagination Dots */}
                     <div className="flex justify-center mt-4 gap-2 sm:hidden">
-                        {categories.map((_, idx) => (
+                        {uniqueCategories.map((_, idx) => (
                             <button
                                 key={idx}
                                 className={`w-3 h-3 rounded-full transition-all duration-200 ${
@@ -296,7 +257,7 @@ export default function BrowsePage() {
                     <div className="h-1 w-24 bg-[#3CB371] rounded-full opacity-80"></div>
                 </div>
                 <h2 className="text-3xl font-extrabold text-white text-center mb-6">
-                    Recipes
+                    {selectedCategory ? selectedCategory : "Recipes"}
                 </h2>
                 {/* Recipes Section */}
                 <section className="w-full px-2 sm:px-8 flex flex-col sm:flex-row gap-8">
