@@ -1,13 +1,31 @@
 "use client";
-import React, { useRef, useState } from "react";
-import Header from "@/components/Header";
-import Link from "next/link";
-import { useAuth } from "@/context/AuthContext";
+import React, { useRef, useState, useEffect } from "react";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { setDoc, doc } from "firebase/firestore";
+import Image from "next/image";
+import Link from "next/link";
+import Header from "@/components/Header";
+import { useAuth } from "@/context/AuthContext";
 
 export default function HomePage() {
   const { user, username, logOut, loading } = useAuth();
+
+  // --- HERO FEATURED RECIPES ---
+  const [heroRecipes, setHeroRecipes] = useState([]);
+
+  useEffect(() => {
+    async function fetchHeroRecipes() {
+      const q = query(collection(db, "recipes"), where("featuredType", "==", "hero"));
+      const querySnapshot = await getDocs(q);
+      const recipes = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setHeroRecipes(recipes.slice(0, 4)); // Only show 4
+    }
+    fetchHeroRecipes();
+  }, []);
+
   // Carousel state for pagination dots
   const carouselRef = useRef(null);
   const [carouselIndex, setCarouselIndex] = useState(0);
@@ -75,45 +93,64 @@ export default function HomePage() {
     setCarouselIndex(index);
   };
 
-  // Category carousel state
-  const categoryRef = useRef(null);
-  const [categoryIndex, setCategoryIndex] = useState(0);
 
-  const categories = [
-    { title: "Breakfast", img: "/assets/category-breakfast.jpg" },
-    { title: "Main Dish", img: "/assets/category-main.jpg" },
-    { title: "Dessert", img: "/assets/category-dessert.jpg" },
-    { title: "Fast Food", img: "/assets/category-fastfood.jpg" },
-    // Duplicates for testing carousel scroll
-    { title: "Breakfast", img: "/assets/category-breakfast.jpg" },
-    { title: "Main Dish", img: "/assets/category-main.jpg" },
-    { title: "Dessert", img: "/assets/category-dessert.jpg" },
-    { title: "Fast Food", img: "/assets/category-fastfood.jpg" }
-  ];
+    
+    const [categories, setCategories] = useState([]);
+    const categoryRef = useRef(null);
+    const [categoryIndex, setCategoryIndex] = useState(0);
 
-  const scrollCarousel = (direction, ref = carouselRef) => {
-    const el = ref.current;
-    if (!el) return;
-    const cardWidth = el.firstChild?.offsetWidth || 1;
-    const gap = 36;
-    const scrollAmount = cardWidth + gap;
-    el.scrollBy({ left: direction === "left" ? -scrollAmount : scrollAmount, behavior: "smooth" });
-  };
+    // Use the same mapping as browse page
+    const CATEGORY_IMAGES = {
+      "Kenyan Classics":  { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777091/recipe/kenyan_classics_u7hww0.png", alt: "Kenyan classics" },
+      "Airfyer Recipes":  { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777002/recipe/Airfryer_hgt5vl.png", alt: "Airfryer recipes" },
+      "Breakfast":      { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777103/recipe/breakfast_qah5se.png", alt: "Breakfast recipes" },
+      "Vegetarian":     { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777246/recipe/vegeterian_rrldtz.png", alt: "Vegetarian recipes" },
+      "Fried Foods":    { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755778571/recipe/friedfoods_vzurws.png", alt: "Fried foods" },
+      "Guilty Pleasures": { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777085/recipe/guilty_pleasures_tz38ie.png", alt: "Guilty pleasures" },
+      "One Pot Meals":    { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777171/recipe/onepot_meals_tuyv38.png", alt: "One pot meals" },
+      "Stew & Curries":   { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777070/recipe/stews_curries_jksa9a.jpg", alt: "Stew and curries" },
+      "Sweet Treats":     { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777167/recipe/sweet_treats_mojait.png", alt: "Sweet treats" },
+    };
 
-  // Handle scroll to update category dot index
-  const handleCategoryScroll = () => {
-    const el = categoryRef.current;
-    if (!el) return;
-    const scrollLeft = el.scrollLeft;
-    const cardWidth = el.firstChild?.offsetWidth || 1;
-    const gap = 24; // gap-6 = 1.5rem = 24px
-    const index = Math.round(scrollLeft / (cardWidth + gap));
-    setCategoryIndex(index);
-  };
+    const FALLBACK_IMAGE = { url: "/assets/placeholder.jpg", alt: "Recipe image" };
+
+    // Fetch categories from Firestore on mount
+    useEffect(() => {
+      async function fetchCategories() {
+        const querySnapshot = await getDocs(collection(db, "recipes"));
+        const allCategories = querySnapshot.docs.map(doc => doc.data().category);
+        const unique = Array.from(new Set(allCategories)).map(cat => ({
+          title: cat,
+          img: CATEGORY_IMAGES[cat]?.url || FALLBACK_IMAGE.url,
+          alt: CATEGORY_IMAGES[cat]?.alt || cat,
+        }));
+        setCategories(unique);
+      }
+      fetchCategories();
+    }, []);
+
+    // Carousel scroll logic
+    const scrollCarousel = (direction) => {
+      const el = categoryRef.current;
+      if (!el) return;
+      const cardWidth = el.firstChild?.offsetWidth || 1;
+      const gap = 24;
+      const scrollAmount = cardWidth + gap;
+      el.scrollBy({ left: direction === "left" ? -scrollAmount : scrollAmount, behavior: "smooth" });
+    };
+    const handleCategoryScroll = () => {
+      const el = categoryRef.current;
+      if (!el) return;
+      const scrollLeft = el.scrollLeft;
+      const cardWidth = el.firstChild?.offsetWidth || 1;
+      const gap = 24;
+      const index = Math.round(scrollLeft / (cardWidth + gap));
+      setCategoryIndex(index);
+    };
 
   return (
     <>
-      <Header showSearch/>
+      <Header showSearch />
 
       {/* Hero + Cards Section */}
       <section className="w-full bg-gradient-to-br from-[#232323] to-black py-8 sm:py-12 min-h-[90vh] pt-28 sm:pt-34">
@@ -125,7 +162,7 @@ export default function HomePage() {
                 Kenya’s Smart <br /> Recipe Library
               </h1>
               <p className="text-base sm:text-lg text-white w-full relative mb-1 z-10">
-                Browse , adjust and cook your way with recipes made to fit you
+                Browse, adjust and cook your way with recipes made to fit you
               </p>
               {/* Leaves image absolutely positioned to the right of tagline */}
               <img
@@ -134,7 +171,7 @@ export default function HomePage() {
                 className="absolute right-[-120px] top-10 w-50 h-120 sm:w-45 sm:h-70 z-0 hidden md:block"
                 style={{ pointerEvents: "none" }}
               />
-              {/* Hero Image, width matches tagline */}
+              {/* Hero Image (optional, can keep or remove) */}
               <img
                 src="/assets/ugaliskumabeef.png"
                 alt="Ugali, Sukuma, Beef Stew"
@@ -147,72 +184,57 @@ export default function HomePage() {
               </button>
             </div>
           </div>
-          {/* Right: Recipe Cards */}
+          {/* Right: Dynamic Recipe Cards */}
           <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-16 sm:gap-y-24 mt-2">
-            {[{
-              img: "/assets/Chapati.png",
-              title: "chapati",
-              rating: 5,
-              reviews: "5.0",
-              mins: "35 mins",
-              border: "border-[#d97d7d]"
-            }, {
-              img: "/assets/Pilau.png",
-              title: "beef pilau",
-              rating: 4,
-              reviews: "4.0",
-              mins: "40 mins",
-              border: "border-[#5bb86a]"
-            }, {
-              img: "/assets/Mandazi.png",
-              title: "mandazi",
-              rating: 4,
-              reviews: "4.0",
-              mins: "30 mins",
-              border: "border-[#5bb86a]"
-            }, {
-              img: "/assets/KienyejiChicken.png",
-              title: "kienyeji chicken",
-              rating: 3,
-              reviews: "3.0",
-              mins: "45 mins",
-              border: "border-[#d97d7d]"
-            }].map((card, i) => (
-              <div
-                key={i}
-                className={`relative flex flex-col items-center w-full sm:w-[260px] bg-[#e5d0d0] rounded-xl border-b-4 ${card.border} shadow-md pt-[60px] sm:pt-[80px] pb-4 px-2 sm:px-4 mx-auto`}
-              >
-                {/* Full-width, overlapping image */}
-                <img
-                  src={card.img}
-                  alt={card.title}
-                  className="absolute left-0 right-0 -top-[50px] sm:-top-[80px] w-full h-[100px] sm:h-[170px] object-contain sm:object-cover"
-                  style={{ background: "transparent" }}
-                />
-                <h3 className="text-black font-bold text-lg sm:text-xl mb-2 text-center capitalize">{card.title}</h3>
-                <div className="flex items-center justify-center text-yellow-400 text-base mb-2">
-                  {[...Array(5)].map((_, idx) =>
-                    idx < card.rating ? (
-                      <svg key={idx} className="w-5 h-5 inline" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.921-.755 1.688-1.54 1.118l-3.38-2.455a1 1 0 00-1.175 0l-3.38 2.455c-.784.57-1.838-.197-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.049 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z" />
-                    </svg>
-                    ) : (
-                      <svg key={idx} className="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 20 20">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.921-.755 1.688-1.54 1.118l-3.38-2.455a1 1 0 00-1.175 0l-3.38 2.455c-.784.57-1.838-.197-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.049 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z" />
-                    </svg>
-                    )
-                  )}
-                  <span className="text-gray-700 ml-2">({card.reviews})</span>
+            {heroRecipes.length === 0 ? (
+              <div className="text-white col-span-2">Loading featured recipes...</div>
+            ) : (
+              heroRecipes.map((recipe, i) => (
+                <div
+                  key={recipe.id}
+                  className="relative flex flex-col items-center w-full sm:w-[260px] bg-[#e5d0d0] rounded-xl border-b-4 border-[#d97d7d] shadow-md px-2 sm:px-4 mx-auto h-full pt-8"
+                >
+                  {/* Image */}
+                  <div className="w-full flex justify-center absolute left-0 right-0 -top-10 sm:-top-14 z-10">
+                  <Image
+                    src={recipe.heroImage?.url || recipe.image?.url || "/assets/placeholder.jpg"}
+                    alt={recipe.heroImage?.alt || recipe.image?.alt || recipe.title}
+                    width={260}
+                    height={170}
+                    className="absolute left-0 right-0 -top-[50px] sm:-top-[30px] w-full h-[100px] sm:h-[170px] object-contain sm:object-cover"
+                    style={{ background: "transparent" }}
+                  />
+                  </div>
+                  {/* Card Content */}
+                  <div className="flex flex-col flex-1 w-full justify-between mt-16">
+                    <h3 className="text-black font-bold text-lg sm:text-xl mb-2 text-center capitalize">{recipe.title}</h3>
+                    <div className="flex items-center justify-center text-yellow-400 text-base mb-2">
+                      {[...Array(5)].map((_, idx) =>
+                        idx < Math.round(recipe.rating || 0) ? (
+                          <svg key={idx} className="w-5 h-5 inline" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.921-.755 1.688-1.54 1.118l-3.38-2.455a1 1 0 00-1.175 0l-3.38 2.455c-.784.57-1.838-.197-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.049 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z" />
+                          </svg>
+                        ) : (
+                          <svg key={idx} className="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 20 20">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.921-.755 1.688-1.54 1.118l-3.38-2.455a1 1 0 00-1.175 0l-3.38 2.455c-.784.57-1.838-.197-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.049 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z" />
+                          </svg>
+                        )
+                      )}
+                      <span className="text-gray-800 ml-2">({recipe.rating?.toFixed(1) || "N/A"})</span>
+                    </div>
+                    <hr className="w-11/12 border-t border-black my-2" />
+                    <div className="flex flex-col sm:flex-row justify-between items-center w-full px-1 mt-1 gap-2">
+                      <span className="text-gray-800 text-base">{recipe.time || "N/A"} mins</span>
+                      <Link href={`/recipe/${recipe.slug}`}>
+                        <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded-lg text-base font-semibold ml-0 sm:ml-2 capitalize w-full sm:w-auto">
+                          View Recipe
+                        </button>
+                      </Link>
+                    </div>
+                  </div>
                 </div>
-                <hr className="w-11/12 border-t border-black my-2" />
-                <div className="flex flex-col sm:flex-row justify-between items-center w-full px-1 mt-1 gap-2">
-                  <span className="text-gray-700 text-base">{card.mins}</span>
-                  <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded-lg text-base font-semibold ml-0 sm:ml-2 capitalize w-full sm:w-auto">
-                    View Recipe
-                  </button>
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
       </section>
@@ -314,8 +336,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-
     
       {/* --- NEW: What You Can Do Here Section --- */}
       <section className="w-full bg-gradient-to-br from-[#1a1a1a] to-black py-16 px-4 mt-12 overflow-visible">
@@ -398,74 +418,82 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* --- NEW: Browse By Category Section --- */}
+      {/* Category Section */}
       <section className="w-full py-12 px-4 bg-black">
-        <div className="max-w-7xl mx-auto relative">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center">
-              <h2 className="text-2xl sm:text-3xl font-bold text-white mr-2">Browse By Category</h2>
-              <img 
-                src="/assets/tomatoes.png" 
-                alt="Tomatoes" 
-                className="w-16 h-16 sm:w-24 sm:h-24 object-contain"
-                style={{ marginLeft: '-8px', transform: "rotate(-18deg)" }}
-              />
-            </div>
-            <button className="text-green-500 hover:text-green-400 font-semibold text-sm sm:text-base">See all &raquo;</button>
+      <div className="max-w-7xl mx-auto relative">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mr-2">Browse By Category</h2>
+            <img 
+              src="/assets/tomatoes.png" 
+              alt="Tomatoes" 
+              className="w-16 h-16 sm:w-24 sm:h-24 object-contain"
+              style={{ marginLeft: '-8px', transform: "rotate(-18deg)" }}
+            />
           </div>
-          {/* Centered arrow buttons */}
-          <div className="relative flex items-center">
-            <button
-              className="absolute left-0 z-10 bg-[#2e7d32] bg-opacity-80 rounded-full p-3 shadow hover:bg-green-700 transition hidden sm:flex items-center justify-center"
-              style={{ top: "50%", transform: "translateY(-50%)" }}
-              onClick={() => scrollCarousel("left", categoryRef)}
-              type="button"
-            >
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-            <div
-              ref={categoryRef}
-              onScroll={handleCategoryScroll}
-              className="flex gap-6 overflow-x-auto scrollbar-hide pb-2 sm:pb-0 w-full"
-              style={{ scrollSnapType: "x mandatory" }}
-            >
-              {categories.map((cat, i) => (
-                <div
-                  key={i}
-                  className="bg-[#232323] rounded-xl overflow-hidden shadow hover:shadow-lg transition flex-shrink-0 w-[180px] sm:w-auto snap-start"
-                >
-                  <img src={cat.img} alt={cat.title} className="w-full h-[200px] object-cover" />
-                  <div className="p-4 text-center text-white font-semibold capitalize">{cat.title}</div>
-                </div>
-              ))}
-            </div>
-            <button
-              className="absolute right-0 z-10 bg-[#2e7d32] bg-opacity-80 rounded-full p-3 shadow hover:bg-green-700 transition hidden sm:flex items-center justify-center"
-              style={{ top: "50%", transform: "translateY(-50%)" }}
-              onClick={() => scrollCarousel("right", categoryRef)}
-              type="button"
-            >
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-          </div>
-          {/* Pagination Dots for Category Carousel (mobile only) */}
-          <div className="flex justify-center mt-3 gap-2 sm:hidden">
-            {categories.map((_, i) => (
-              <span
-                key={i}
-                className={`h-2 w-2 rounded-full transition-all duration-200 ${
-                  i === categoryIndex ? "bg-green-700 scale-125" : "bg-gray-400"
-                }`}
-              />
+          <Link href="/browse" className="text-green-500 hover:text-green-400 font-semibold text-sm sm:text-base">See all &raquo;</Link>
+        </div>
+        {/* Centered arrow buttons */}
+        <div className="relative flex items-center">
+          {/* Left Arrow */}
+          <button
+            className="absolute left-0 z-10 bg-[#2e7d32] bg-opacity-80 rounded-full p-3 shadow hover:bg-green-700 transition hidden sm:flex items-center justify-center"
+            style={{ top: "50%", transform: "translateY(-50%)" }}
+            onClick={() => scrollCarousel("left")}
+            type="button"
+          >
+            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <div
+            ref={categoryRef}
+            onScroll={handleCategoryScroll}
+            className="flex gap-6 overflow-x-auto scrollbar-hide pb-2 sm:pb-0 w-full"
+            style={{ scrollSnapType: "x mandatory" }}
+          >
+            {categories.map((cat, i) => (
+              <Link
+                key={cat.title}
+                href={`/browse?category=${encodeURIComponent(cat.title)}`}
+                className="bg-[#232323] rounded-xl overflow-hidden shadow hover:shadow-lg transition flex-shrink-0 w-[180px] sm:w-auto snap-start"
+              >
+                <Image
+                  src={cat.img}
+                  alt={cat.alt}
+                  width={180}
+                  height={200}
+                  className="w-full h-[200px] object-cover"
+                />
+                <div className="p-4 text-center text-white font-semibold capitalize">{cat.title}</div>
+              </Link>
             ))}
           </div>
+          {/* Right Arrow */}
+          <button
+            className="absolute right-0 z-10 bg-[#2e7d32] bg-opacity-80 rounded-full p-3 shadow hover:bg-green-700 transition hidden sm:flex items-center justify-center"
+            style={{ top: "50%", transform: "translateY(-50%)" }}
+            onClick={() => scrollCarousel("right")}
+            type="button"
+          >
+            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
         </div>
+        {/* Pagination Dots for Category Carousel (mobile only) */}
+        <div className="flex justify-center mt-3 gap-2 sm:hidden">
+          {categories.map((_, i) => (
+            <span
+              key={i}
+              className={`h-2 w-2 rounded-full transition-all duration-200 ${
+                i === categoryIndex ? "bg-green-700 scale-125" : "bg-gray-400"
+              }`}
+            />
+          ))}
+        </div>
+      </div>
       </section>
-
 
       {/* --- FIGMA-STYLE FOOTER --- */}
       <footer className="w-full bg-[#111] text-white py-12 px-4 mt-12 relative overflow-hidden">

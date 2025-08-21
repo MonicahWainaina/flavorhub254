@@ -6,6 +6,7 @@ import FavoriteButton from "@/components/FavoriteButton";
 import Header from "@/components/Header";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { useSearchParams } from "next/navigation";
 
 // Category images lookup
 const CATEGORY_IMAGES = {
@@ -80,13 +81,20 @@ export default function BrowsePage() {
     }, []);
 
     // Get unique categories from recipes
-    const uniqueCategories = Array.from(
-        new Set(recipes.map(r => r.category))
-    ).map(cat => ({
-        title: cat,
-        img: CATEGORY_IMAGES[cat]?.url || FALLBACK_IMAGE.url,
-        alt: CATEGORY_IMAGES[cat]?.alt || cat,
-    }));
+      const uniqueCategories = Array.from(
+          new Set(recipes.map(r => r.category))
+      ).map(cat => ({
+          title: cat,
+          img: CATEGORY_IMAGES[cat]?.url || FALLBACK_IMAGE.url,
+          alt: CATEGORY_IMAGES[cat]?.alt || cat,
+      }));
+
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const cat = searchParams.get("category");
+    if (cat) setSelectedCategory(cat);
+  }, [searchParams]);
 
     // Filtering logic
     const filteredRecipes = recipes.filter(r => {
@@ -521,7 +529,11 @@ export default function BrowsePage() {
                                 {uniqueCategories.map((cat, idx) => (
                                     <button
                                         key={cat.title + idx}
-                                        className={`bg-[#237a4b] rounded-xl overflow-hidden shadow-md min-w-[80vw] max-w-[80vw] sm:min-w-[260px] sm:max-w-[260px] flex flex-col snap-center transition-all duration-300 border-4 ${selectedCategory === cat.title ? "border-[#3CB371]" : "border-transparent"}`}
+                                        className={`bg-[#237a4b] rounded-xl overflow-hidden shadow-md min-w-[80vw] max-w-[80vw] sm:min-w-[260px] sm:max-w-[260px] flex flex-col snap-center transition-all duration-300 border-4 ${
+                                            selectedCategory === cat.title
+                                              ? "border-[#a8323e] ring-2 ring-[#a8323e]"
+                                              : "border-transparent"
+                                        }`}
                                         onClick={() => setSelectedCategory(selectedCategory === cat.title ? null : cat.title)}
                                     >
                                         <div className="bg-[#237a4b] text-center">
