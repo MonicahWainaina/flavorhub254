@@ -418,9 +418,11 @@ export default function BrowsePage() {
                                                     <FavoriteButton />
                                                 </div>
                                                 <hr className="border-t border-white/30 my-2" />
+                                                <Link href={`/recipe/${recipe.slug}`}>
                                                 <button className="bg-white text-black px-4 py-2 rounded-lg font-bold w-fit text-sm shadow transition hover:bg-[#3CB371] hover:text-white">
                                                     View Recipe
                                                 </button>
+                                                </Link>
                                             </div>
                                         </div>
                                     );
