@@ -1,0 +1,145 @@
+{
+  "title": "Minji Potato Stew",
+  "slug": "minji-potato-stew",
+  "category": "Curries & Stews",
+  "tags": [
+    "minji",
+    "green peas",
+    "potatoes",
+    "carrots",
+    "kenyan stew",
+    "vegetarian",
+    "home-style"
+  ],
+  "description": "A homestyle Kenyan stew made with green peas (minji), potatoes, and carrots simmered in a light tomato gravy. Perfect for a comforting lunch with rice or chapati.",
+  "base_servings": 4,
+  "adjustable_servings": true,
+  "min_servings": 2,
+  "max_servings": 6,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Green peas (minji), fresh or frozen",
+      "amount": 300,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Potatoes (peeled and cubed)",
+      "amount": 3,
+      "unit": "medium",
+      "editable": false
+    },
+    {
+      "name": "Carrots (chopped)",
+      "amount": 2,
+      "unit": "medium",
+      "editable": false
+    },
+    {
+      "name": "Onion (chopped)",
+      "amount": 1,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Tomatoes (chopped)",
+      "amount": 2,
+      "unit": "medium",
+      "editable": false
+    },
+    {
+      "name": "Garlic (minced)",
+      "amount": 2,
+      "unit": "cloves",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Turmeric powder",
+      "amount": 0.5,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Black pepper",
+      "amount": 0.25,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Water or vegetable broth",
+      "amount": 300,
+      "unit": "ml",
+      "editable": false
+    },
+    {
+      "name": "Vegetable oil",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Fresh coriander (for garnish)",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Heat oil in a sufuria and sauté onions until translucent.",
+    "Add garlic and cook briefly until fragrant.",
+    "Stir in tomatoes, turmeric, salt, and pepper. Cook until tomatoes soften.",
+    "Add potatoes, carrots, and peas. Stir to coat.",
+    "Pour in water or broth and bring to a boil.",
+    "Reduce heat, cover, and simmer for 20–25 minutes until vegetables are tender and stew thickens.",
+    "Garnish with fresh coriander and serve with rice or chapati."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/minji-potato-stew.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Simmer peas, carrots, and potatoes",
+        "timer": 25
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/minji-potato-stew.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777070/recipe/stews_curries_jksa9a.jpg",
+    "alt": "Stew and curries"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1.1,
+  "rating": 4.8,
+  "time": 50
+}

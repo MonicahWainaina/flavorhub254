@@ -1,0 +1,115 @@
+{
+  "title": "Airfryer Bread Pudding",
+  "slug": "airfryer-bread-pudding",
+  "category": "Airfryer Recipes",
+  "tags": [
+    "airfryer",
+    "bread pudding",
+    "dessert",
+    "baking",
+    "sweet treats",
+    "comfort food"
+  ],
+  "description": "Soft and custardy bread pudding baked in the airfryer — golden top, warm center, and comforting flavor.",
+  "base_servings": 2,
+  "adjustable_servings": false,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Bread slices (white or brioche)",
+      "amount": 4,
+      "unit": "slices",
+      "editable": true,
+      "min": 2,
+      "max": 6
+    },
+    {
+      "name": "Milk",
+      "amount": 250,
+      "unit": "ml",
+      "editable": false
+    },
+    {
+      "name": "Egg",
+      "amount": 1,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Sugar",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Vanilla extract",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Raisins (optional)",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Butter (for greasing)",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Grease a small baking dish or ramekins with butter.",
+    "Cut bread slices into cubes and place in the dish with raisins if using.",
+    "In a bowl, whisk together milk, egg, sugar, and vanilla.",
+    "Pour the custard over the bread, pressing down lightly to soak.",
+    "Preheat the airfryer to 160°C (320°F) for 3 minutes.",
+    "Place the dish in the airfryer and cook at 160°C for 18–20 minutes until golden and set.",
+    "Let cool slightly before serving. Best enjoyed warm with cream or ice cream."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/airfryer-bread-pudding.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Airfry the bread pudding",
+        "timer": 20
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/airfryer-bread-pudding.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777002/recipe/Airfryer_hgt5vl.png",
+    "alt": "Airfryer recipes"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.6,
+  "time": 25
+}

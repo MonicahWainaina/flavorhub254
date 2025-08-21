@@ -1,0 +1,143 @@
+{
+  "title": "Matumbo in Rich Gravy",
+  "slug": "matumbo-rich-gravy",
+  "category": "Curries & Stews",
+  "tags": [
+    "matumbo",
+    "beef tripe",
+    "kenyan stew",
+    "ugali",
+    "rich gravy",
+    "offal"
+  ],
+  "description": "Tender beef tripe (matumbo) simmered in a richly seasoned tomato gravy. A Kenyan delicacy best served with ugali or chapati.",
+  "base_servings": 4,
+  "adjustable_servings": true,
+  "min_servings": 2,
+  "max_servings": 6,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Beef tripe (matumbo), cleaned and pre-boiled",
+      "amount": 500,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Onions (chopped)",
+      "amount": 2,
+      "unit": "medium",
+      "editable": false
+    },
+    {
+      "name": "Tomatoes (chopped)",
+      "amount": 2,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Garlic (minced)",
+      "amount": 3,
+      "unit": "cloves",
+      "editable": false
+    },
+    {
+      "name": "Ginger (grated)",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Tomato paste",
+      "amount": 1,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Cumin powder",
+      "amount": 0.5,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Coriander powder",
+      "amount": 0.5,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Black pepper",
+      "amount": 0.25,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Water or beef broth",
+      "amount": 250,
+      "unit": "ml",
+      "editable": false
+    },
+    {
+      "name": "Vegetable oil",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "In a sufuria, heat oil and sauté onions until golden brown.",
+    "Add garlic and ginger, cook for a minute.",
+    "Add tomatoes, tomato paste, and all spices. Stir and cook until thickened.",
+    "Add pre-boiled matumbo and mix well to coat.",
+    "Pour in water or broth. Stir, cover, and simmer for 30–40 minutes until tender and flavorful.",
+    "Adjust seasoning and serve hot with ugali, rice, or chapati."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/matumbo-rich-gravy.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Simmer matumbo in gravy until tender",
+        "timer": 40
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/matumbo-rich-gravy.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777070/recipe/stews_curries_jksa9a.jpg",
+    "alt": "Stew and curries"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.8,
+  "time": 50
+}

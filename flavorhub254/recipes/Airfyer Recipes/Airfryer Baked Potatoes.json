@@ -1,0 +1,90 @@
+{
+  "title": "Airfryer Baked Potatoes",
+  "slug": "airfryer-baked-potatoes",
+  "category": "Airfryer Recipes",
+  "tags": [
+    "airfryer",
+    "potatoes",
+    "baked",
+    "side dish",
+    "comfort food"
+  ],
+  "description": "Perfectly baked potatoes in the airfryer — crispy skin, soft and fluffy inside. A hearty and easy side dish.",
+  "base_servings": 2,
+  "adjustable_servings": false,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Large potatoes (Russet or similar)",
+      "amount": 2,
+      "unit": "pieces",
+      "editable": true,
+      "min": 1,
+      "max": 4
+    },
+    {
+      "name": "Vegetable oil",
+      "amount": 1,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 0.5,
+      "unit": "tsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Wash and scrub the potatoes clean. Pat dry with a towel.",
+    "Prick each potato a few times with a fork.",
+    "Rub the potatoes with oil and sprinkle with salt.",
+    "Preheat the airfryer to 200°C (390°F) for 3 minutes.",
+    "Place potatoes in the airfryer basket, leaving space between them.",
+    "Airfry at 200°C for 35–40 minutes, turning halfway through, until skin is crisp and inside is soft.",
+    "Slice open, fluff the insides with a fork, and serve with your favorite toppings like butter, sour cream, or cheese."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/airfryer-baked-potatoes.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Airfry the potatoes",
+        "timer": 40
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/airfryer-baked-potatoes.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777002/recipe/Airfryer_hgt5vl.png",
+    "alt": "Airfryer recipes"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.6,
+  "time": 25
+}

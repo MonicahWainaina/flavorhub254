@@ -1,0 +1,100 @@
+{
+  "title": "Uji wa Wimbi (Millet Porridge)",
+  "slug": "uji-wa-wimbi-millet-porridge",
+  "category": "Breakfast",
+  "tags": [
+    "breakfast",
+    "porridge",
+    "millet",
+    "kenyan",
+    "traditional"
+  ],
+  "description": "Nutritious and warming millet porridge, a beloved Kenyan breakfast staple served sweet or fermented.",
+  "base_servings": 2,
+  "adjustable_servings": true,
+  "min_servings": 1,
+  "max_servings": 6,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Millet flour (wimbi)",
+      "amount": 80,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Water",
+      "amount": 500,
+      "unit": "ml",
+      "editable": false
+    },
+    {
+      "name": "Milk (optional)",
+      "amount": 150,
+      "unit": "ml",
+      "editable": false
+    },
+    {
+      "name": "Sugar or honey",
+      "amount": 1,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Lemon juice or fermented starter (optional)",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "In a small bowl, mix millet flour with a bit of cold water to make a smooth slurry.",
+    "Bring the remaining water to a boil in a saucepan.",
+    "Reduce heat and slowly pour in the slurry while stirring to avoid lumps.",
+    "Simmer on low heat for 10–12 minutes, stirring occasionally until thick and smooth.",
+    "Add sugar or honey and milk (if using), and cook for another 2 minutes.",
+    "Serve hot — pairs wonderfully with mandazi, sweet potatoes, or tea biscuits."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/uji-wa-wimbi-millet-porridge.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Simmer porridge on low heat",
+        "timer": 12
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/uji-wa-wimbi-millet-porridge.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777103/recipe/breakfast_qah5se.png",
+    "alt": "Breakfast recipes"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.8,
+  "time": 15
+}

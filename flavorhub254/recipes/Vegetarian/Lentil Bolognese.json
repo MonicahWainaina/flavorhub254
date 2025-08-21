@@ -1,0 +1,150 @@
+{
+  "title": "Lentil Bolognese",
+  "slug": "lentil-bolognese",
+  "category": "Vegetarian",
+  "tags": [
+    "lentils",
+    "bolognese",
+    "pasta sauce",
+    "vegetarian",
+    "healthy"
+  ],
+  "description": "A hearty, protein-rich vegetarian twist on the classic Italian Bolognese sauce, made with lentils instead of meat.",
+  "base_servings": 4,
+  "adjustable_servings": true,
+  "min_servings": 2,
+  "max_servings": 8,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Dry green or brown lentils",
+      "amount": 200,
+      "unit": "g",
+      "editable": true,
+      "min": 150,
+      "max": 350
+    },
+    {
+      "name": "Olive oil",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Onion (diced)",
+      "amount": 1,
+      "unit": "medium",
+      "editable": false
+    },
+    {
+      "name": "Carrot (diced)",
+      "amount": 1,
+      "unit": "medium",
+      "editable": false
+    },
+    {
+      "name": "Celery (diced)",
+      "amount": 1,
+      "unit": "stick",
+      "editable": false
+    },
+    {
+      "name": "Garlic (minced)",
+      "amount": 2,
+      "unit": "cloves",
+      "editable": false
+    },
+    {
+      "name": "Canned chopped tomatoes",
+      "amount": 400,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Tomato paste",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Vegetable broth",
+      "amount": 500,
+      "unit": "ml",
+      "editable": false
+    },
+    {
+      "name": "Dried oregano",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Black pepper",
+      "amount": 0.5,
+      "unit": "tsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Rinse lentils and set aside.",
+    "In a large pan, heat olive oil and sauté onion, carrot, and celery for 5 minutes.",
+    "Add garlic and cook for 1 minute.",
+    "Stir in tomato paste, chopped tomatoes, vegetable broth, lentils, oregano, salt, and pepper.",
+    "Simmer uncovered for 25–30 minutes until lentils are tender and sauce thickens.",
+    "Serve over spaghetti or your favorite pasta, topped with fresh basil if desired."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric",
+    "scaling_factor": "lentil_anchor"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/lentil-bolognese.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Sauté vegetables",
+        "timer": 5
+      },
+      {
+        "step": "Simmer sauce",
+        "timer": 30
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/lentil-bolognese.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777246/recipe/vegeterian_rrldtz.png",
+    "alt": "Vegetarian recipes"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.7,
+  "time": 30
+}

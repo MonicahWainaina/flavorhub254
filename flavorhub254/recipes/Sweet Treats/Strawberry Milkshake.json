@@ -1,0 +1,92 @@
+{
+  "title": "Strawberry Milkshake",
+  "slug": "strawberry-milkshake",
+  "category": "Sweet Treats",
+  "tags": [
+    "milkshake",
+    "strawberry",
+    "drink",
+    "cold",
+    "easy",
+    "blender"
+  ],
+  "description": "A refreshing and creamy strawberry milkshake made with real strawberries and vanilla ice cream — perfect for hot days or sweet cravings.",
+  "base_servings": 2,
+  "adjustable_servings": true,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "scaling_factors": {
+    "Strawberries (fresh or frozen)": 100,
+    "Vanilla ice cream": 100,
+    "Milk (cold)": 150,
+    "Honey or sugar (optional)": 10
+  },
+  "ingredients": [
+    {
+      "name": "Strawberries (fresh or frozen)",
+      "amount": 200,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Vanilla ice cream",
+      "amount": 200,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Milk (cold)",
+      "amount": 300,
+      "unit": "ml",
+      "editable": false
+    },
+    {
+      "name": "Honey or sugar (optional)",
+      "amount": 20,
+      "unit": "g",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Wash and hull the strawberries if using fresh ones.",
+    "Add strawberries, vanilla ice cream, milk, and sweetener (if using) to a blender.",
+    "Blend until smooth and creamy.",
+    "Taste and adjust sweetness if needed.",
+    "Pour into glasses and serve immediately — optionally top with whipped cream or a strawberry slice."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/strawberry-milkshake.mp3"
+  },
+  "smart_cooking": {
+    "enabled": false,
+    "steps_with_timers": []
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/strawberry-milkshake.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777167/recipe/sweet_treats_mojait.png",
+    "alt": "Sweet treats"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.9,
+  "time": 20
+}

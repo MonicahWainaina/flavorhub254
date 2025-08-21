@@ -1,0 +1,105 @@
+{
+  "title": "Airfryer Sausage Rolls",
+  "slug": "airfryer-sausage-rolls",
+  "category": "Airfryer Recipes",
+  "tags": [
+    "airfryer",
+    "snack",
+    "sausage",
+    "pastry",
+    "quick",
+    "golden",
+    "easy"
+  ],
+  "description": "Flaky, golden sausage rolls made effortlessly in the airfryer — a quick savory snack or party treat.",
+  "base_servings": 4,
+  "adjustable_servings": false,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Sausages (uncooked)",
+      "amount": 4,
+      "unit": "pieces",
+      "editable": true,
+      "min": 2,
+      "max": 6
+    },
+    {
+      "name": "Puff pastry sheets (thawed)",
+      "amount": 2,
+      "unit": "sheets",
+      "editable": false
+    },
+    {
+      "name": "Egg (beaten)",
+      "amount": 1,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Salt (optional)",
+      "amount": 0.25,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Black pepper (optional)",
+      "amount": 0.25,
+      "unit": "tsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Preheat the airfryer to 190°C (375°F) for 3 minutes.",
+    "Roll out puff pastry sheets and cut each into 2 rectangles.",
+    "Place one sausage on each piece, season with salt and pepper if desired.",
+    "Roll the pastry over the sausage and seal the edge by pressing down with a fork.",
+    "Brush the tops with beaten egg.",
+    "Place sausage rolls in the airfryer basket, leaving space between each.",
+    "Airfry at 190°C for 15–18 minutes or until puffed and golden.",
+    "Serve warm with ketchup, mustard, or your favorite dip."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/airfryer-sausage-rolls.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Airfry the sausage rolls",
+        "timer": 18
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/airfryer-sausage-rolls.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777002/recipe/Airfryer_hgt5vl.png",
+    "alt": "Airfryer recipes"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.6,
+  "time": 25
+}

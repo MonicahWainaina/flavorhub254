@@ -1,0 +1,134 @@
+{
+  "title": "Chicken Biryani – One Pot",
+  "slug": "chicken-biryani-one-pot",
+  "category": "One Pot Meals",
+  "tags": [
+    "biryani",
+    "chicken",
+    "rice",
+    "kenyan fusion",
+    "one pot meals"
+  ],
+  "description": "Fragrant spiced rice cooked with marinated chicken in one pot for a flavorful biryani feast.",
+  "base_servings": 6,
+  "adjustable_servings": true,
+  "min_servings": 3,
+  "max_servings": 10,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Basmati rice (washed)",
+      "amount": 3,
+      "unit": "cups",
+      "editable": true,
+      "min": 2,
+      "max": 5
+    },
+    {
+      "name": "Chicken pieces (marinated)",
+      "amount": 1,
+      "unit": "kg",
+      "editable": false
+    },
+    {
+      "name": "Onion (sliced)",
+      "amount": 2,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Garlic (minced)",
+      "amount": 4,
+      "unit": "cloves",
+      "editable": false
+    },
+    {
+      "name": "Ginger (minced)",
+      "amount": 1,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Biryani spice mix",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Yogurt",
+      "amount": 1,
+      "unit": "cup",
+      "editable": false
+    },
+    {
+      "name": "Cooking oil",
+      "amount": 3,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Water or chicken stock",
+      "amount": 4,
+      "unit": "cups",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": "to taste",
+      "unit": "",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Heat oil in a large pot and fry onions until golden brown.",
+    "Add garlic and ginger, cook until fragrant.",
+    "Add marinated chicken and biryani spice mix, cooking until chicken is browned.",
+    "Add rice, yogurt, and water or stock, stir gently.",
+    "Cover and cook until rice is tender and liquid is absorbed.",
+    "Serve hot — goes perfectly with kachumbari or raita."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric",
+    "scaling_factor": "ingredient_based"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/chicken-biryani-one-pot.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Cook rice and chicken together",
+        "timer": 25
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/chicken-biryani-one-pot.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777171/recipe/onepot_meals_tuyv38.png",
+    "alt": "One pot meals"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.7,
+  "time": 45
+}

@@ -1,0 +1,138 @@
+{
+  "title": "Coconut Ndengu Stew",
+  "slug": "coconut-ndengu-stew",
+  "category": "Curries & Stews",
+  "tags": [
+    "ndengu",
+    "green grams",
+    "vegetarian",
+    "kenyan stew",
+    "coconut",
+    "swahili",
+    "high protein"
+  ],
+  "description": "A coastal-style Kenyan stew made with green grams (ndengu) simmered in a rich coconut sauce. Delicious with rice or chapati, and perfect for vegetarians.",
+  "base_servings": 4,
+  "adjustable_servings": true,
+  "min_servings": 2,
+  "max_servings": 6,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Green grams (ndengu), pre-boiled",
+      "amount": 400,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Coconut milk",
+      "amount": 400,
+      "unit": "ml",
+      "editable": false
+    },
+    {
+      "name": "Onions (chopped)",
+      "amount": 1,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Tomatoes (chopped)",
+      "amount": 2,
+      "unit": "medium",
+      "editable": false
+    },
+    {
+      "name": "Garlic (minced)",
+      "amount": 2,
+      "unit": "cloves",
+      "editable": false
+    },
+    {
+      "name": "Ginger (grated)",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Curry powder",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Black pepper",
+      "amount": 0.25,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Vegetable oil",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Fresh coriander (for garnish)",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Heat oil in a sufuria and sauté onions until translucent.",
+    "Add garlic and ginger; cook until fragrant.",
+    "Add tomatoes, curry powder, salt, and pepper. Cook until tomatoes soften and mixture thickens.",
+    "Stir in boiled ndengu and mix well.",
+    "Pour in coconut milk, reduce heat, and simmer gently for 15–20 minutes.",
+    "Garnish with fresh coriander and serve with rice or chapati."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/coconut-ndengu-stew.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Simmer ndengu in coconut milk",
+        "timer": 20
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/coconut-ndengu-stew.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777070/recipe/stews_curries_jksa9a.jpg",
+    "alt": "Stew and curries"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.8,
+  "time": 50
+}

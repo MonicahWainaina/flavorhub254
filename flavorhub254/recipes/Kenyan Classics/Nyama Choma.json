@@ -1,0 +1,103 @@
+{
+  "title": "Nyama Choma (Kenyan Grilled Beef)",
+  "slug": "nyama-choma-kenyan-grilled-beef",
+  "category": "Kenyan Classics",
+  "tags": [
+    "kenyan",
+    "grilled",
+    "beef",
+    "nyama choma",
+    "classic"
+  ],
+  "description": "Smoky, tender beef grilled over open flame or charcoal — Kenya’s ultimate meat lover’s dish best enjoyed with kachumbari and ugali.",
+  "base_servings": 4,
+  "adjustable_servings": true,
+  "min_servings": 2,
+  "max_servings": 8,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Beef (with some fat for flavor)",
+      "amount": 1,
+      "unit": "kg",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Garlic (crushed)",
+      "amount": 2,
+      "unit": "cloves",
+      "editable": false
+    },
+    {
+      "name": "Lemon juice or vinegar",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Chili flakes or pilipili (optional)",
+      "amount": 0.5,
+      "unit": "tsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Cut beef into large chunks or ribs. Pat dry with a paper towel.",
+    "Mix garlic, salt, lemon juice, and chili (if using). Rub marinade onto meat and let rest for 30–60 minutes.",
+    "Preheat grill or jiko with charcoal until hot.",
+    "Grill meat slowly over low to medium heat, turning occasionally, for 30–40 minutes until fully cooked and charred on the edges.",
+    "Let meat rest for 5 minutes, then slice and serve hot — best with kachumbari, ugali, and a cold drink."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/nyama-choma-kenyan-grilled-beef.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Marinate meat before grilling",
+        "timer": 60
+      },
+      {
+        "step": "Grill slowly over hot coals",
+        "timer": 40
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/nyama-choma-kenyan-grilled-beef.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777091/recipe/kenyan_classics_u7hww0.png",
+    "alt": "Kenyan classics"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.9,
+  "time": 35
+}

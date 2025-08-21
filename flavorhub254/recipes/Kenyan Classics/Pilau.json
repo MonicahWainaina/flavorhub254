@@ -1,0 +1,130 @@
+{
+  "title": "Kenyan Beef Pilau",
+  "slug": "kenyan-beef-pilau",
+  "category": "Kenyan Classics",
+  "tags": [
+    "kenyan",
+    "rice",
+    "pilau",
+    "spiced",
+    "main dish"
+  ],
+  "description": "A fragrant spiced rice dish cooked with tender beef, caramelized onions, and classic East African pilau masala.",
+  "base_servings": 4,
+  "adjustable_servings": true,
+  "min_servings": 2,
+  "max_servings": 8,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Beef (boneless, cubed)",
+      "amount": 500,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Basmati or long grain rice",
+      "amount": 2,
+      "unit": "cups",
+      "editable": false
+    },
+    {
+      "name": "Red onions (sliced)",
+      "amount": 2,
+      "unit": "medium",
+      "editable": false
+    },
+    {
+      "name": "Garlic (minced)",
+      "amount": 2,
+      "unit": "cloves",
+      "editable": false
+    },
+    {
+      "name": "Ginger (grated)",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Pilau masala",
+      "amount": 1.5,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Tomato (chopped)",
+      "amount": 1,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Oil",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Water or beef broth",
+      "amount": 4,
+      "unit": "cups",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Heat oil in a large sufuria. Add onions and sauté until deep golden brown.",
+    "Add garlic, ginger, and pilau masala. Stir for 1 minute.",
+    "Add beef and cook until browned. Add tomatoes and cook until soft.",
+    "Pour in water or broth and add salt. Bring to a boil.",
+    "Stir in rice. Reduce heat, cover, and simmer until rice is cooked and liquid is absorbed (about 20–25 minutes).",
+    "Fluff rice with a fork and serve hot — pairs beautifully with kachumbari, plain yogurt, or sliced bananas."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/kenyan-beef-pilau.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Simmer rice until fully cooked",
+        "timer": 25
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/kenyan-beef-pilau.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777091/recipe/kenyan_classics_u7hww0.png",
+    "alt": "Kenyan classics"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.9,
+  "time": 35
+}

@@ -1,0 +1,119 @@
+{
+  "title": "Airfryer Brownie Squares",
+  "slug": "airfryer-brownie-squares",
+  "category": "Airfryer Recipes",
+  "tags": [
+    "airfryer",
+    "brownies",
+    "chocolate",
+    "dessert",
+    "baking",
+    "sweet treats"
+  ],
+  "description": "Rich and fudgy brownies with a crackly top, baked in the airfryer — fast, chocolatey indulgence.",
+  "base_servings": 9,
+  "adjustable_servings": false,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Dark chocolate (chopped)",
+      "amount": 100,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Butter",
+      "amount": 100,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Sugar",
+      "amount": 100,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Eggs",
+      "amount": 2,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "All-purpose flour",
+      "amount": 60,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Cocoa powder",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Vanilla extract",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 0.25,
+      "unit": "tsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Melt chocolate and butter together in a bowl (microwave or double boiler).",
+    "Stir in sugar and vanilla extract.",
+    "Add eggs one at a time, mixing well.",
+    "Fold in flour, cocoa powder, and salt until just combined.",
+    "Pour batter into a greased square tin that fits in the airfryer basket.",
+    "Preheat the airfryer to 160°C (320°F) for 3 minutes.",
+    "Airfry at 160°C for 18–20 minutes until set but still slightly fudgy in the center.",
+    "Let cool before slicing into squares. Enjoy!"
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/airfryer-brownie-squares.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Airfry the brownie squares",
+        "timer": 20
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/airfryer-brownie-squares.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777002/recipe/Airfryer_hgt5vl.png",
+    "alt": "Airfryer recipes"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.6,
+  "time": 25
+}

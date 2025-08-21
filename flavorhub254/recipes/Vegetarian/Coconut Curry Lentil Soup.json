@@ -1,0 +1,127 @@
+{
+  "title": "Coconut Curry Lentil Soup",
+  "slug": "coconut-curry-lentil-soup",
+  "category": "Vegetarian",
+  "tags": [
+    "lentils",
+    "curry",
+    "soup",
+    "vegetarian"
+  ],
+  "description": "Hearty lentil soup simmered with coconut milk and curry spices for a creamy, comforting vegetarian dish.",
+  "base_servings": 4,
+  "adjustable_servings": true,
+  "min_servings": 2,
+  "max_servings": 8,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Red lentils (rinsed)",
+      "amount": 250,
+      "unit": "g",
+      "editable": true,
+      "min": 200,
+      "max": 500
+    },
+    {
+      "name": "Onion (chopped)",
+      "amount": 1,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Garlic (minced)",
+      "amount": 2,
+      "unit": "cloves",
+      "editable": false
+    },
+    {
+      "name": "Ginger (minced)",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Curry powder",
+      "amount": 1,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Vegetable broth",
+      "amount": 750,
+      "unit": "ml",
+      "editable": false
+    },
+    {
+      "name": "Coconut milk",
+      "amount": 200,
+      "unit": "ml",
+      "editable": false
+    },
+    {
+      "name": "Olive oil",
+      "amount": 1,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Spinach (optional)",
+      "amount": 50,
+      "unit": "g",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Heat olive oil in a pot and sauté onions until soft.",
+    "Add garlic, ginger, and curry powder; cook for 1 minute.",
+    "Stir in red lentils and vegetable broth, bring to a boil.",
+    "Reduce heat and simmer for 15–20 minutes until lentils are tender.",
+    "Stir in coconut milk and spinach, cook for 2 minutes until heated through.",
+    "Serve hot with naan or flatbread."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric",
+    "scaling_factor": "lentil_anchor"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/coconut-curry-lentil-soup.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Simmer lentils",
+        "timer": 20
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/coconut-curry-lentil-soup.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777246/recipe/vegeterian_rrldtz.png",
+    "alt": "Vegetarian recipes"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.7,
+  "time": 30
+}

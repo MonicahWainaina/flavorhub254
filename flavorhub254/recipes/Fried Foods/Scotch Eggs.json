@@ -1,0 +1,120 @@
+{
+  "title": "Kenyan-Style Scotch Eggs",
+  "slug": "kenyan-style-scotch-eggs",
+  "category": "Fried Favourites",
+  "tags": [
+    "kenyan",
+    "scotch eggs",
+    "snack",
+    "deep fried",
+    "party food",
+    "protein"
+  ],
+  "description": "A crispy and savory snack of hard-boiled eggs wrapped in minced meat, coated in breadcrumbs, and deep-fried until golden brown. Perfect for parties, lunchboxes, or roadside cravings.",
+  "base_servings": 4,
+  "adjustable_servings": true,
+  "min_servings": 2,
+  "max_servings": 6,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Eggs (hard-boiled and peeled)",
+      "amount": 4,
+      "unit": "pieces",
+      "editable": false
+    },
+    {
+      "name": "Minced meat (beef or sausage meat)",
+      "amount": 400,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Onion (finely chopped)",
+      "amount": 1,
+      "unit": "small",
+      "editable": false
+    },
+    {
+      "name": "Breadcrumbs",
+      "amount": 1,
+      "unit": "cup",
+      "editable": false
+    },
+    {
+      "name": "Egg (for coating)",
+      "amount": 1,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Black pepper",
+      "amount": 0.5,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Cooking oil (for deep frying)",
+      "amount": 500,
+      "unit": "ml",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Mix minced meat with chopped onions, salt, and pepper.",
+    "Divide into equal portions and flatten each into a patty.",
+    "Wrap each hard-boiled egg in a meat patty and shape into a ball.",
+    "Dip each ball in beaten egg, then roll in breadcrumbs to coat.",
+    "Heat oil in a pan over medium-high heat.",
+    "Fry the Scotch eggs until golden brown and cooked through (about 5–6 minutes).",
+    "Drain on paper towels and serve hot with ketchup or chili sauce."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/kenyan-style-scotch-eggs.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Fry Scotch eggs until golden and cooked through",
+        "timer": 6
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/kenyan-style-scotch-eggs.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755778571/recipe/friedfoods_vzurws.png",
+    "alt": "Fried foods"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.5,
+  "time": 25
+}

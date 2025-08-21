@@ -1,0 +1,128 @@
+{
+  "title": "Banana Muffins",
+  "slug": "banana-muffins",
+  "category": "Sweet Treats",
+  "tags": [
+    "muffins",
+    "banana",
+    "baking",
+    "snack",
+    "breakfast",
+    "sweet"
+  ],
+  "description": "Soft and moist banana muffins made with ripe bananas and a hint of vanilla. A great way to use overripe fruit and enjoy a homemade treat any time.",
+  "base_servings": 12,
+  "adjustable_servings": false,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "All-purpose flour",
+      "amount": 200,
+      "unit": "g",
+      "editable": true,
+      "min": 180,
+      "max": 300
+    },
+    {
+      "name": "Ripe bananas (mashed)",
+      "amount": 3,
+      "unit": "medium",
+      "editable": false
+    },
+    {
+      "name": "Sugar",
+      "amount": 120,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Egg",
+      "amount": 1,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Vegetable oil",
+      "amount": 80,
+      "unit": "ml",
+      "editable": false
+    },
+    {
+      "name": "Milk",
+      "amount": 60,
+      "unit": "ml",
+      "editable": false
+    },
+    {
+      "name": "Vanilla extract",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Baking soda",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 0.25,
+      "unit": "tsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Preheat oven to 175°C (350°F) and line a 12-cup muffin tin.",
+    "In a bowl, whisk together flour, baking soda, and salt.",
+    "In another bowl, mix mashed bananas, sugar, egg, oil, milk, and vanilla until smooth.",
+    "Gently combine the wet and dry ingredients until just mixed. Do not overmix.",
+    "Spoon the batter into muffin cups, filling about 3/4 full.",
+    "Bake for 18–20 minutes or until a toothpick inserted comes out clean.",
+    "Let cool on a wire rack before serving.",
+    "Best enjoyed warm or with a cup of tea or milk."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/banana-muffins.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Bake the banana muffins",
+        "timer": 20
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/banana-muffins.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777167/recipe/sweet_treats_mojait.png",
+    "alt": "Sweet treats"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.9,
+  "time": 20
+}

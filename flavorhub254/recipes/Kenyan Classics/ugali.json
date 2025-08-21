@@ -1,0 +1,86 @@
+{
+  "title": "Classic Kenyan Ugali",
+  "slug": "classic-kenyan-ugali",
+  "category": "Kenyan Classics",
+  "tags": [
+    "kenyan",
+    "staple",
+    "ugali",
+    "traditional",
+    "side dish"
+  ],
+  "description": "Firm and smooth Kenyan ugali made from maize flour – a classic staple served with vegetables, meat, or stews.",
+  "base_servings": 2,
+  "adjustable_servings": true,
+  "min_servings": 1,
+  "max_servings": 6,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Maize flour (unga ya ugali)",
+      "amount": 1,
+      "unit": "cup",
+      "editable": false
+    },
+    {
+      "name": "Water",
+      "amount": 2,
+      "unit": "cups",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Bring water to a boil in a heavy-bottomed sufuria or pot.",
+    "Slowly add maize flour while stirring continuously to prevent lumps.",
+    "Reduce heat and keep stirring until thick and firm, about 5–8 minutes.",
+    "Use a mwiko (wooden stick) to mash and mix until smooth and firm.",
+    "Cover and let steam on low heat for 2–3 minutes.",
+    "Serve hot — pairs perfectly with sukuma wiki, beef stew, or kienyeji chicken."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/classic-kenyan-ugali.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Simmer and stir until thick and firm",
+        "timer": 8
+      },
+      {
+        "step": "Steam ugali briefly after stirring",
+        "timer": 3
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/classic-kenyan-ugali.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777091/recipe/kenyan_classics_u7hww0.png",
+    "alt": "Kenyan classics"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.9,
+  "time": 35
+}

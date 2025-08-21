@@ -4,304 +4,130 @@ import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import FavoriteButton from "@/components/FavoriteButton";
 import Header from "@/components/Header";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+
+// Category images lookup
+const CATEGORY_IMAGES = {
+  "Kenyan Classics":  { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777091/recipe/kenyan_classics_u7hww0.png", alt: "Kenyan classics" },
+  "Airfyer Recipes":  { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777002/recipe/Airfryer_hgt5vl.png", alt: "Airfryer recipes" },
+  "Breakfast":      { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777103/recipe/breakfast_qah5se.png", alt: "Breakfast recipes" },
+  "Vegetarian":     { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777246/recipe/vegeterian_rrldtz.png", alt: "Vegetarian recipes" },
+  "Fried Foods":    { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755778571/recipe/friedfoods_vzurws.png", alt: "Fried foods" },
+  "Guilty Pleasures": { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777085/recipe/guilty_pleasures_tz38ie.png", alt: "Guilty pleasures" },
+  "One Pot Meals":    { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777171/recipe/onepot_meals_tuyv38.png", alt: "One pot meals" },
+  "Stew & Curries":   { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777070/recipe/stews_curries_jksa9a.jpg", alt: "Stew and curries" },
+  "Sweet Treats":     { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777167/recipe/sweet_treats_mojait.png", alt: "Sweet treats" },
+};
+
+const FALLBACK_IMAGE = { url: "/assets/placeholder.jpg", alt: "Recipe image" };
 
 function useRecipesPerPage() {
-    const [recipesPerPage, setRecipesPerPage] = useState(4); // default mobile
-
+    const [recipesPerPage, setRecipesPerPage] = useState(4);
     useEffect(() => {
         function handleResize() {
-            if (window.innerWidth >= 640) {
-                setRecipesPerPage(9);
-            } else {
-                setRecipesPerPage(4);
-            }
+            if (window.innerWidth >= 640) setRecipesPerPage(9);
+            else setRecipesPerPage(4);
         }
         handleResize();
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);
-
     return recipesPerPage;
 }
-
-const categories = [
-    {
-        title: "Breakfast",
-        img: "/assets/category-breakfast.jpg",
-        alt: "Breakfast",
-    },
-    {
-        title: "Kenyan Classics",
-        img: "/assets/category-main.jpg",
-        alt: "Kenyan Classics",
-    },
-    {
-        title: "Sweet Bakes",
-        img: "/assets/sweet-bakes.jpg",
-        alt: "Sweet Bakes",
-    },
-    {
-        title: "Fried Favorites",
-        img: "/assets/fried-chicken-fries.jpg",
-        alt: "Fried Favorites",
-    },
-    {
-        title: "Guilty Pleasures",
-        img: "/assets/guiltypleasues.jpg",
-        alt: "Guilty Pleasures",
-    },
-    {
-        title: "Breakfast",
-        img: "/assets/category-breakfast.jpg",
-        alt: "Breakfast",
-    },
-];
-
-// Sample recipes data (12 items, first 6 real, next 6 unique placeholders)
-const recipes = [
-    {
-        title: "Barbecue wings",
-        img: "/assets/barbecue-wings.jpg",
-        rating: 5.0,
-        time: 35,
-    },
-    {
-        title: "Spaghetti & Meatballs",
-        img: "/assets/spaghetti-meatballs.jpg",
-        rating: 4.0,
-        time: 20,
-    },
-    {
-        title: "Red Velvet",
-        img: "/assets/red-velvet.jpg",
-        rating: 3.0,
-        time: 45,
-    },
-    {
-        title: "Samosas",
-        img: "/assets/samosas.jpg",
-        rating: 5.0,
-        time: 30,
-    },
-    {
-        title: "BlackForest Cake",
-        img: "/assets/blackforest.jpg",
-        rating: 3.0,
-        time: 45,
-    },
-    {
-        title: "Mandazi",
-        img: "/assets/mandazi.jpg",
-        rating: 3.0,
-        time: 20,
-    },
-    // Second half: unique titles and placeholder images
-    {
-        title: "Veggie Delight",
-        img: "/assets/vegis.jpg",
-        rating: 4.5,
-        time: 25,
-    },
-    {
-        title: "Tropical Fruit Tart",
-        img: "/assets/matoke.jpg",
-        rating: 4.2,
-        time: 40,
-    },
-    {
-        title: "Classic Ugali",
-        img: "/assets/ugali-mishkaki.jpg",
-        rating: 4.8,
-        time: 15,
-    },
-    {
-        title: "Choco Banana Bread",
-        img: "/assets/vanilla.jpg",
-        rating: 4.0,
-        time: 50,
-    },
-    {
-        title: "Zesty Lemon Pie",
-        img: "/assets/pilau.jpg",
-        rating: 3.9,
-        time: 35,
-    },
-    {
-        title: "Mango Lassi",
-        img:"/assets/stew.jpg",
-        rating: 4.7,
-        time: 10,
-    },
-	   {
-        title: "Barbecue wings",
-        img: "/assets/barbecue-wings.jpg",
-        rating: 5.0,
-        time: 35,
-    },
-    {
-        title: "Spaghetti & Meatballs",
-        img: "/assets/spaghetti-meatballs.jpg",
-        rating: 4.0,
-        time: 20,
-    },
-    {
-        title: "Red Velvet",
-        img: "/assets/red-velvet.jpg",
-        rating: 3.0,
-        time: 45,
-    },
-    {
-        title: "Samosas",
-        img: "/assets/samosas.jpg",
-        rating: 5.0,
-        time: 30,
-    },
-    {
-        title: "BlackForest Cake",
-        img: "/assets/blackforest.jpg",
-        rating: 3.0,
-        time: 45,
-    },
-    {
-        title: "Mandazi",
-        img: "/assets/mandazi.jpg",
-        rating: 3.0,
-        time: 20,
-    },
-    // Second half: unique titles and placeholder images
-    {
-        title: "Veggie Delight",
-        img: "/assets/vegis.jpg",
-        rating: 4.5,
-        time: 25,
-    },
-    {
-        title: "Tropical Fruit Tart",
-        img: "/assets/matoke.jpg",
-        rating: 4.2,
-        time: 40,
-    },
-    {
-        title: "Classic Ugali",
-        img: "/assets/ugali-mishkaki.jpg",
-        rating: 4.8,
-        time: 15,
-    },
-    {
-        title: "Choco Banana Bread",
-        img: "/assets/vanilla.jpg",
-        rating: 4.0,
-        time: 50,
-    },
-    {
-        title: "Zesty Lemon Pie",
-        img: "/assets/pilau.jpg",
-        rating: 3.9,
-        time: 35,
-    },
-    {
-        title: "Mango Lassi",
-        img:"/assets/stew.jpg",
-        rating: 4.7,
-        time: 10,
-    },
-	   {
-        title: "Barbecue wings",
-        img: "/assets/barbecue-wings.jpg",
-        rating: 5.0,
-        time: 35,
-    },
-    {
-        title: "Spaghetti & Meatballs",
-        img: "/assets/spaghetti-meatballs.jpg",
-        rating: 4.0,
-        time: 20,
-    },
-    {
-        title: "Red Velvet",
-        img: "/assets/red-velvet.jpg",
-        rating: 3.0,
-        time: 45,
-    },
-    {
-        title: "Samosas",
-        img: "/assets/samosas.jpg",
-        rating: 5.0,
-        time: 30,
-    },
-    {
-        title: "BlackForest Cake",
-        img: "/assets/blackforest.jpg",
-        rating: 3.0,
-        time: 45,
-    },
-    {
-        title: "Mandazi",
-        img: "/assets/mandazi.jpg",
-        rating: 3.0,
-        time: 20,
-    },
-    // Second half: unique titles and placeholder images
-    {
-        title: "Veggie Delight",
-        img: "/assets/vegis.jpg",
-        rating: 4.5,
-        time: 25,
-    },
-    {
-        title: "Tropical Fruit Tart",
-        img: "/assets/matoke.jpg",
-        rating: 4.2,
-        time: 40,
-    },
-    {
-        title: "Classic Ugali",
-        img: "/assets/ugali-mishkaki.jpg",
-        rating: 4.8,
-        time: 15,
-    },
-    {
-        title: "Choco Banana Bread",
-        img: "/assets/vanilla.jpg",
-        rating: 4.0,
-        time: 50,
-    },
-    {
-        title: "Zesty Lemon Pie",
-        img: "/assets/pilau.jpg",
-        rating: 3.9,
-        time: 35,
-    },
-    {
-        title: "Mango Lassi",
-        img:"/assets/stew.jpg",
-        rating: 4.7,
-        time: 10,
-    },
-];
 
 export default function BrowsePage() {
     const carouselRef = useRef(null);
     const [activeIndex, setActiveIndex] = useState(0);
-    const [favoriteStates, setFavoriteStates] = useState(Array(recipes.length).fill(false));
+    const [favoriteStates, setFavoriteStates] = useState([]);
     const [recipePage, setRecipePage] = useState(0);
     const recipesPerPage = useRecipesPerPage();
-    const totalPages = Math.ceil(recipes.length / recipesPerPage);
+    const [recipes, setRecipes] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [selectedCategory, setSelectedCategory] = useState(null);
 
-    const paginatedRecipes = recipes.slice(
+    // Search/autocomplete state
+    const [searchTerm, setSearchTerm] = useState("");
+    const [showSuggestions, setShowSuggestions] = useState(false);
+    const [selectedIngredients, setSelectedIngredients] = useState([]);
+
+    const term = searchTerm.trim().toLowerCase();
+
+    // Shuffle function
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    // Fetch recipes from Firestore
+    useEffect(() => {
+        async function fetchRecipes() {
+            setLoading(true);
+            const querySnapshot = await getDocs(collection(db, "recipes"));
+            let fetched = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data(),
+            }));
+            fetched = shuffleArray(fetched);
+            setRecipes(fetched);
+            setFavoriteStates(Array(fetched.length).fill(false));
+            setLoading(false);
+        }
+        fetchRecipes();
+    }, []);
+
+    // Get unique categories from recipes
+    const uniqueCategories = Array.from(
+        new Set(recipes.map(r => r.category))
+    ).map(cat => ({
+        title: cat,
+        img: CATEGORY_IMAGES[cat]?.url || FALLBACK_IMAGE.url,
+        alt: CATEGORY_IMAGES[cat]?.alt || cat,
+    }));
+
+    // Filtering logic
+    const filteredRecipes = recipes.filter(r => {
+    const matchesCategory = selectedCategory ? r.category === selectedCategory : true;
+    const matchesSearch =
+        !term ||
+        r.title?.toLowerCase().includes(term) ||
+        r.tags?.some(tag => tag.toLowerCase().includes(term)) ||
+        (Array.isArray(r.ingredients) &&
+        r.ingredients.some(ing =>
+            typeof ing === "string"
+            ? ing.toLowerCase().includes(term)
+            : ing.name?.toLowerCase().includes(term)
+        ));
+
+    // Ingredient filter
+    const matchesIngredients =
+        selectedIngredients.length === 0 ||
+        selectedIngredients.every(selected =>
+        r.ingredients?.some(ing =>
+            typeof ing === "string"
+            ? ing.toLowerCase().includes(selected.toLowerCase())
+            : ing.name?.toLowerCase().includes(selected.toLowerCase())
+        )
+        );
+
+    return matchesCategory && matchesSearch && matchesIngredients;
+    });
+
+    const totalPages = Math.ceil(filteredRecipes.length / recipesPerPage);
+    const paginatedRecipes = filteredRecipes.slice(
         recipePage * recipesPerPage,
         (recipePage + 1) * recipesPerPage
     );
 
-    // Reset to first page if recipesPerPage changes (e.g., on resize)
     useEffect(() => {
         setRecipePage(0);
-    }, [recipesPerPage]);
+    }, [recipesPerPage, selectedCategory, searchTerm]);
 
-    // Responsive card width (match min-w-[260px] in px)
-    const CARD_WIDTH = 260 + 24; // card width + gap (gap-6 = 24px)
-
-    // Scroll to card by index
+    // Carousel logic (same as before)
+    const CARD_WIDTH = 260 + 24;
     const scrollToCard = (idx) => {
         if (carouselRef.current) {
             carouselRef.current.scrollTo({
@@ -310,8 +136,6 @@ export default function BrowsePage() {
             });
         }
     };
-
-    // Handle scroll to update active dot
     const handleScroll = () => {
         if (carouselRef.current) {
             const scrollLeft = carouselRef.current.scrollLeft;
@@ -319,8 +143,6 @@ export default function BrowsePage() {
             setActiveIndex(idx);
         }
     };
-
-    // Attach scroll event
     useEffect(() => {
         const ref = carouselRef.current;
         if (ref) {
@@ -328,28 +150,19 @@ export default function BrowsePage() {
             return () => ref.removeEventListener("scroll", handleScroll);
         }
     }, []);
-
-    // Responsive scroll for arrows
     const scroll = (direction) => {
         let newIndex = activeIndex + (direction === "left" ? -1 : 1);
-        newIndex = Math.max(0, Math.min(categories.length - 1, newIndex));
+        newIndex = Math.max(0, Math.min(uniqueCategories.length - 1, newIndex));
         scrollToCard(newIndex);
     };
 
-    const toggleFavorite = (idx) => {
-        setFavoriteStates((prev) =>
-            prev.map((val, i) => (i === idx ? !val : val))
-        );
-    };
-
+    // --- UI ---
     return (
         <>
-            <Header
-                navLinks={[
-                    { href: "/", label: "Home" },
-                    { href: "/flavorbot", label: "AI Recipe generator" },
-                ]}
-            />
+            <Header navLinks={[
+                { href: "/", label: "Home" },
+                { href: "/flavorbot", label: "AI Recipe generator" },
+            ]} />
             <main className="min-h-screen bg-[#181818] px-0 py-0">
                 {/* Hero Section */}
                 <section className="w-full rounded-none shadow-lg relative">
@@ -369,252 +182,254 @@ export default function BrowsePage() {
                                 <h1 className="text-3xl sm:text-5xl font-extrabold text-white mb-4 sm:mb-8 text-center drop-shadow-2xl">
                                     Browse & Cook
                                 </h1>
-                                {/* Search Bar */}
-                                <form className="flex w-full max-w-full sm:max-w-xl mx-auto bg-gray-100 rounded-xl shadow-lg">
-                                    <input
-                                        type="text"
-                                        placeholder="What recipe are you looking for ?"
-                                        className="w-full flex-1 min-w-0 px-3 py-2 sm:px-6 sm:py-4 rounded-l-xl text-base sm:text-lg outline-none bg-transparent border-none text-black placeholder-gray-500"
-                                    />
-                                    <button
-                                        type="submit"
-                                        className="bg-[#3CB371] text-white px-4 py-2 sm:px-10 sm:py-4 rounded-r-xl font-semibold text-base sm:text-lg hover:bg-[#2e8b57] transition"
-                                    >
-                                        Search
-                                    </button>
+                                {/* Search Bar with Suggestions */}
+                                <form
+                                  className="flex w-full max-w-full sm:max-w-xl mx-auto bg-gray-100 rounded-xl shadow-lg relative"
+                                  onSubmit={e => e.preventDefault()}
+                                >
+                                  <input
+                                    type="text"
+                                    value={searchTerm}
+                                    onChange={e => {
+                                      setSearchTerm(e.target.value);
+                                      setShowSuggestions(true);
+                                    }}
+                                    onFocus={() => setShowSuggestions(true)}
+                                    onBlur={() => setTimeout(() => setShowSuggestions(false), 100)}
+                                    placeholder="What recipe are you looking for ?"
+                                    className="w-full flex-1 min-w-0 px-3 py-2 sm:px-6 sm:py-4 rounded-l-xl text-base sm:text-lg outline-none bg-transparent border-none text-black placeholder-gray-500"
+                                    autoComplete="off"
+                                  />
+                                  <button
+                                    type="submit"
+                                    className="bg-[#3CB371] text-white px-4 py-2 sm:px-10 sm:py-4 rounded-r-xl font-semibold text-base sm:text-lg hover:bg-[#2e8b57] transition"
+                                  >
+                                    Search
+                                  </button>
+                                  {/* Suggestions Dropdown */}
+                                  {showSuggestions && searchTerm.trim() && (
+                                    <div className="absolute left-0 right-0 top-full bg-[#181818] border border-gray-700 rounded-b-xl shadow-lg z-10 max-h-60 overflow-y-auto">
+                                      {recipes
+                                        .filter(r => {
+                                          const term = searchTerm.trim().toLowerCase();
+                                          return (
+                                            r.title?.toLowerCase().includes(term) ||
+                                            r.tags?.some(tag => tag.toLowerCase().includes(term)) ||
+                                            (Array.isArray(r.ingredients) &&
+                                              r.ingredients.some(ing =>
+                                                typeof ing === "string"
+                                                  ? ing.toLowerCase().includes(term)
+                                                  : ing.name?.toLowerCase().includes(term)
+                                              ))
+                                          );
+                                        })
+                                        .slice(0, 8)
+                                        .map(r => (
+                                          <Link
+                                            key={r.slug}
+                                            href={`/recipe/${r.slug}`}
+                                            onClick={() => {
+                                              setSearchTerm("");
+                                              setShowSuggestions(false);
+                                            }}
+                                            className="flex items-center gap-3 px-4 py-2 hover:bg-[#3CB371] hover:text-white text-white transition"
+                                          >
+                                            {/* Recipe image */}
+                                            <Image
+                                              src={r.image?.url || "/assets/placeholder.jpg"}
+                                              alt={r.image?.alt || r.title}
+                                              width={40}
+                                              height={40}
+                                              className="rounded object-cover"
+                                            />
+                                            <span>{r.title}</span>
+                                          </Link>
+                                        ))}
+                                      {/* No results */}
+                                      {recipes.filter(r => {
+                                        const term = searchTerm.trim().toLowerCase();
+                                        return (
+                                          r.title?.toLowerCase().includes(term) ||
+                                          r.tags?.some(tag => tag.toLowerCase().includes(term)) ||
+                                          (Array.isArray(r.ingredients) &&
+                                            r.ingredients.some(ing =>
+                                              typeof ing === "string"
+                                                ? ing.toLowerCase().includes(term)
+                                                : ing.name?.toLowerCase().includes(term)
+                                            ))
+                                        );
+                                      }).length === 0 && (
+                                        <div className="px-4 py-2 text-gray-400">No suggestions found.</div>
+                                      )}
+                                    </div>
+                                  )}
                                 </form>
                             </div>
                         </div>
                     </div>
                 </section>
-                {/* Categories Carousel */}
-                <section className="w-full mt-7 px-0">
-                    {/* Centered horizontal line */}
-                    <div className="flex justify-center mb-4">
-                        <div className="h-1 w-24 bg-[#3CB371] rounded-full opacity-80"></div>
-                    </div>
-                    <h2 className="text-3xl font-extrabold text-white text-center mb-6">
-                        Categories
-                    </h2>
-                    <div className="flex items-center justify-between w-full px-2 sm:px-4">
-                        {/* Left Arrow */}
-                        <button
-                            aria-label="Scroll left"
-                            onClick={() => scroll("left")}
-                            className="hidden sm:flex bg-[#3CB371] rounded-full p-3 text-white hover:bg-[#2e8b57] transition"
-                            style={{ minWidth: 48, minHeight: 48 }}
-                            disabled={activeIndex === 0}
-                        >
-                            <svg
-                                width="24"
-                                height="24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="3"
-                                viewBox="0 0 24 24"
-                            >
-                                <path d="M15 19l-7-7 7-7" />
-                            </svg>
-                        </button>
-                        {/* Carousel */}
-                        <div
-                            ref={carouselRef}
-                            className="flex gap-6 overflow-x-auto scrollbar-hide py-2 w-full snap-x snap-mandatory"
-                            style={{ scrollBehavior: "smooth" }}
-                        >
-                            {categories.map((cat, idx) => (
-                                <div
-                                    key={cat.title + idx}
-                                    className="bg-[#237a4b] rounded-xl overflow-hidden shadow-md min-w-[80vw] max-w-[80vw] sm:min-w-[260px] sm:max-w-[260px] flex flex-col snap-center transition-all duration-300"
-                                >
-                                    <div className="bg-[#237a4b] text-center">
-                                        <span className="inline-block text-white px-4 py-1 font-bold text-lg">
-                                            {cat.title}
-                                        </span>
-                                    </div>
-                                    <Image
-                                        src={cat.img}
-                                        alt={cat.alt}
-                                        width={300}
-                                        height={180}
-                                        className="w-full h-44 object-cover"
-                                        style={{
-                                            borderTopLeftRadius: 12,
-                                            borderTopRightRadius: 12,
-                                        }}
-                                    />
-                                </div>
-                            ))}
-                        </div>
-                        {/* Right Arrow */}
-                        <button
-                            aria-label="Scroll right"
-                            onClick={() => scroll("right")}
-                            className="hidden sm:flex bg-[#3CB371] rounded-full p-3 text-white hover:bg-[#2e8b57] transition"
-                            style={{ minWidth: 48, minHeight: 48 }}
-                            disabled={activeIndex === categories.length - 1}
-                        >
-                            <svg
-                                width="24"
-                                height="24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="3"
-                                viewBox="0 0 24 24"
-                            >
-                                <path d="M9 5l7 7-7 7" />
-                            </svg>
-                        </button>
-                    </div>
-                    {/* Pagination Dots */}
-                    <div className="flex justify-center mt-4 gap-2 sm:hidden">
-                        {categories.map((_, idx) => (
-                            <button
-                                key={idx}
-                                className={`w-3 h-3 rounded-full transition-all duration-200 ${
-                                    idx === activeIndex
-                                        ? "bg-[#3CB371] scale-125"
-                                        : "bg-gray-400 opacity-60"
-                                }`}
-                                onClick={() => scrollToCard(idx)}
-                                aria-label={`Go to category ${idx + 1}`}
-                            />
-                        ))}
-                    </div>
-                </section>
-                {/* Divider Line for Recipes Section */}
-                <div className="flex justify-center my-8">
-                    <div className="h-1 w-24 bg-[#3CB371] rounded-full opacity-80"></div>
-                </div>
-                <h2 className="text-3xl font-extrabold text-white text-center mb-6">
-                    Recipes
-                </h2>
-                {/* Recipes Section */}
-                <section className="w-full px-2 sm:px-8 flex flex-col sm:flex-row gap-8">
-                    {/* Filter Sidebar */}
+                {/* --- MAIN CONTENT --- */}
+                {searchTerm.trim() ? (
+                  // Show filtered recipes grid here
+                  <section className="w-full px-2 sm:px-8 flex flex-col sm:flex-row gap-8 mt-6">
+                    {/* Filter Sidebar (optional, you can remove this if not needed) */}
                     <aside className="sm:w-1/4 w-full bg-[#181818] rounded-xl p-6 shadow-lg flex flex-col gap-6">
-                        <h3 className="text-xl font-bold text-white mb-2">
-                            Filter By Ingredients
-                        </h3>
-                        <hr className="border-t border-white/30 mb-2" />
-                        <form className="flex flex-col gap-4">
-                            {/* Vegetables */}
-                            <div>
-                                <span className="font-semibold text-white">Vegetables</span>
-                                <div className="flex flex-col gap-1 mt-1">
-                                    <label className="text-white">
-                                        <input type="checkbox" /> Tomato
-                                    </label>
-                                    <label className="text-white">
-                                        <input type="checkbox" /> Spinach
-                                    </label>
-                                    <label className="text-white">
-                                        <input type="checkbox" /> Kale
-                                    </label>
-                                    <label className="text-white">
-                                        <input type="checkbox" /> Potatoes
-                                    </label>
-                                </div>
-                            </div>
-                            {/* Meats */}
-                            <div>
-                                <span className="font-semibold text-white">Meats</span>
-                                <div className="flex flex-col gap-1 mt-1">
-                                    <label className="text-white">
-                                        <input type="checkbox" /> Chicken
-                                    </label>
-                                    <label className="text-white">
-                                        <input type="checkbox" /> Beef
-                                    </label>
-                                    <label className="text-white">
-                                        <input type="checkbox" /> Goat
-                                    </label>
-                                    <label className="text-white">
-                                        <input type="checkbox" /> Fish
-                                    </label>
-                                </div>
-                            </div>
-                            {/* Dairy */}
-                            <div>
-                                <span className="font-semibold text-white">Dairy</span>
-                                <div className="flex flex-col gap-1 mt-1">
-                                    <label className="text-white">
-                                        <input type="checkbox" /> Eggs
-                                    </label>
-                                    <label className="text-white">
-                                        <input type="checkbox" /> Milk
-                                    </label>
-                                    <label className="text-white">
-                                        <input type="checkbox" /> Cheese
-                                    </label>
-                                </div>
-                            </div>
-                            <button
-                                type="submit"
-                                className="mt-4 bg-[#3CB371] text-white px-4 py-2 rounded-lg font-bold hover:bg-[#2e8b57] transition"
-                            >
-                                Apply Filter
-                            </button>
-                        </form>
-                    </aside>
-
-                    {/* Recipe Cards Grid Carousel */}
-                    <div className="sm:w-3/4 w-full flex flex-col">
-                        <div className="flex items-center justify-end mb-4">
-                            {/* Carousel Arrows */}
-                            <div className="flex gap-2">
-                                <button
-                                    aria-label="Previous"
-                                    className="bg-[#3CB371] rounded-full p-2 text-white hover:bg-[#2e8b57] transition disabled:opacity-50"
-                                    onClick={() => setRecipePage((p) => Math.max(0, p - 1))}
-                                    disabled={recipePage === 0}
-                                >
-                                    <svg
-                                        width="24"
-                                        height="24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="3"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path d="M15 19l-7-7 7-7" />
-                                    </svg>
-                                </button>
-                                <button
-                                    aria-label="Next"
-                                    className="bg-[#3CB371] rounded-full p-2 text-white hover:bg-[#2e8b57] transition disabled:opacity-50"
-                                    onClick={() => setRecipePage((p) => Math.min(totalPages - 1, p + 1))}
-                                    disabled={recipePage === totalPages - 1}
-                                >
-                                    <svg
-                                        width="24"
-                                        height="24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="3"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path d="M9 5l7 7-7 7" />
-                                    </svg>
-                                </button>
-                            </div>
+                      <h3 className="text-xl font-bold text-white mb-2">
+                          Filter By Ingredients
+                      </h3>
+                      <hr className="border-t border-white/30 mb-2" />
+                      <form className="flex flex-col gap-4" onSubmit={e => e.preventDefault()}>
+  {/* Vegetables */}
+  <div>
+    <span className="font-semibold text-white">Vegetables</span>
+    <div className="flex flex-col gap-1 mt-1">
+      {["Tomato", "Spinach", "Kale", "Potatoes"].map(ingredient => (
+        <label className="text-white" key={ingredient}>
+          <input
+            type="checkbox"
+            checked={selectedIngredients.includes(ingredient)}
+            onChange={e => {
+              if (e.target.checked) {
+                if (selectedIngredients.length < 2) {
+                  setSelectedIngredients([...selectedIngredients, ingredient]);
+                }
+              } else {
+                setSelectedIngredients(selectedIngredients.filter(ing => ing !== ingredient));
+              }
+            }}
+            disabled={
+              !selectedIngredients.includes(ingredient) && selectedIngredients.length >= 2
+            }
+          />{" "}
+          {ingredient}
+        </label>
+      ))}
+    </div>
+  </div>
+  {/* Meats */}
+  <div>
+    <span className="font-semibold text-white">Meats</span>
+    <div className="flex flex-col gap-1 mt-1">
+      {["Chicken", "Beef", "Goat", "Fish"].map(ingredient => (
+        <label className="text-white" key={ingredient}>
+          <input
+            type="checkbox"
+            checked={selectedIngredients.includes(ingredient)}
+            onChange={e => {
+              if (e.target.checked) {
+                if (selectedIngredients.length < 2) {
+                  setSelectedIngredients([...selectedIngredients, ingredient]);
+                }
+              } else {
+                setSelectedIngredients(selectedIngredients.filter(ing => ing !== ingredient));
+              }
+            }}
+            disabled={
+              !selectedIngredients.includes(ingredient) && selectedIngredients.length >= 2
+            }
+          />{" "}
+          {ingredient}
+        </label>
+      ))}
+    </div>
+  </div>
+  {/* Dairy */}
+                    <div>
+                        <span className="font-semibold text-white">Dairy</span>
+                        <div className="flex flex-col gap-1 mt-1">
+                        {["Eggs", "Milk", "Cheese"].map(ingredient => (
+                            <label className="text-white" key={ingredient}>
+                            <input
+                                type="checkbox"
+                                checked={selectedIngredients.includes(ingredient)}
+                                onChange={e => {
+                                if (e.target.checked) {
+                                    if (selectedIngredients.length < 2) {
+                                    setSelectedIngredients([...selectedIngredients, ingredient]);
+                                    }
+                                } else {
+                                    setSelectedIngredients(selectedIngredients.filter(ing => ing !== ingredient));
+                                }
+                                }}
+                                disabled={
+                                !selectedIngredients.includes(ingredient) && selectedIngredients.length >= 2
+                                }
+                            />{" "}
+                            {ingredient}
+                            </label>
+                        ))}
                         </div>
-                        {/* Grid of Recipe Cards */}
+                    </div>
+                    <button
+                        type="button"
+                        className="mt-4 bg-[#3CB371] text-white px-4 py-2 rounded-lg font-bold hover:bg-[#2e8b57] transition"
+                        onClick={() => setSelectedIngredients([])}
+                        disabled={selectedIngredients.length === 0}
+                    >
+                        Clear Filter
+                    </button>
+                    </form>
+                                    </aside>
+                  {/* Recipe Cards Grid */}
+                  <div className="sm:w-3/4 w-full flex flex-col">
+                    {/* Pagination Dots (optional, you can remove this if not needed) */}
+                    <div className="flex justify-end mb-4">
+                      <div className="flex gap-2">
+                        <button
+                          aria-label="Previous"
+                          className="bg-[#3CB371] rounded-full p-2 text-white hover:bg-[#2e8b57] transition disabled:opacity-50"
+                          onClick={() => setRecipePage((p) => Math.max(0, p - 1))}
+                          disabled={recipePage === 0}
+                        >
+                          <svg
+                            width="24"
+                            height="24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="3"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M15 19l-7-7 7-7" />
+                          </svg>
+                        </button>
+                        <button
+                          aria-label="Next"
+                          className="bg-[#3CB371] rounded-full p-2 text-white hover:bg-[#2e8b57] transition disabled:opacity-50"
+                          onClick={() => setRecipePage((p) => Math.min(totalPages - 1, p + 1))}
+                          disabled={recipePage === totalPages - 1}
+                        >
+                          <svg
+                            width="24"
+                            height="24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="3"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M9 5l7 7-7 7" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                    {/* Grid of Recipe Cards */}
+                    {loading ? (
+                        <div className="text-white text-center py-20">Loading recipes...</div>
+                    ) : (
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6">
                             {paginatedRecipes.map((recipe, idx) => {
                                 const globalIdx = recipePage * recipesPerPage + idx;
                                 const isFav = favoriteStates[globalIdx];
                                 return (
                                     <div
-                                        key={idx}
+                                        key={recipe.id || idx}
                                         className="flex flex-col sm:flex-row bg-[#a94f4f] rounded-[2.5rem] shadow-lg overflow-hidden min-h-[220px] max-h-[340px] sm:min-h-[170px] sm:max-h-[190px]"
                                         style={{ minWidth: 0 }}
                                     >
                                         {/* Image */}
                                         <div className="relative w-full h-[120px] sm:w-[48%] sm:h-full flex-shrink-0">
                                             <Image
-                                                src={recipe.img}
-                                                alt={recipe.title}
+                                                src={recipe.image?.url || "/assets/placeholder.jpg"}
+                                                alt={recipe.image?.alt || recipe.title}
                                                 fill
                                                 className="object-cover w-full h-full sm:rounded-r-[2.5rem] sm:rounded-l-[2.5rem] rounded-t-[2.5rem] sm:rounded-t-none"
                                                 style={{ minHeight: 0, maxHeight: '100%' }}
@@ -629,7 +444,9 @@ export default function BrowsePage() {
                                                     <svg width="18" height="18" fill="#FFD700" viewBox="0 0 20 20">
                                                         <path d="M10 15l-5.878 3.09 1.122-6.545L.488 6.91l6.561-.955L10 0l2.951 5.955 6.561.955-4.756 4.635 1.122 6.545z"/>
                                                     </svg>
-                                                    <span className="text-yellow-300 font-bold text-sm">({recipe.rating.toFixed(1)})</span>
+                                                    <span className="text-yellow-300 font-bold text-sm">
+                                                        ({recipe.rating?.toFixed(1) || "N/A"})
+                                                    </span>
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-3 mb-1">
@@ -638,37 +455,351 @@ export default function BrowsePage() {
                                                     <circle cx="12" cy="12" r="10" />
                                                     <path d="M12 6v6l4 2" />
                                                 </svg>
-                                                <span className="text-white text-sm">{recipe.time} mins</span>
+                                                <span className="text-white text-sm">{recipe.time || "N/A"} mins</span>
                                                 {/* Heart-in-Circle SVG Button */}
-                                                <FavoriteButton
-                                                />
+                                                <FavoriteButton />
                                             </div>
                                             <hr className="border-t border-white/30 my-2" />
+                                            <Link href={`/recipe/${recipe.slug}`}>
                                             <button className="bg-white text-black px-4 py-2 rounded-lg font-bold w-fit text-sm shadow transition hover:bg-[#3CB371] hover:text-white">
                                                 View Recipe
                                             </button>
+                                            </Link>
                                         </div>
                                     </div>
                                 );
                             })}
                         </div>
+                    )}
+                    {/* Pagination Dots */}
+                    <div className="flex justify-center mt-4 gap-2">
+                        {Array.from({ length: totalPages }).map((_, idx) => (
+                            <button
+                                key={idx}
+                                className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                                    idx === recipePage
+                                        ? "bg-[#3CB371] scale-125"
+                                        : "bg-gray-400 opacity-60"
+                                }`}
+                                onClick={() => setRecipePage(idx)}
+                                aria-label={`Go to page ${idx + 1}`}
+                            />
+                        ))}
+                    </div>
+                  </div>
+                </section>
+                ) : (
+                  <>
+                    {/* Categories Carousel */}
+                    <section className="w-full mt-7 px-0">
+                        {/* Centered horizontal line */}
+                        <div className="flex justify-center mb-4">
+                            <div className="h-1 w-24 bg-[#3CB371] rounded-full opacity-80"></div>
+                        </div>
+                        <h2 className="text-3xl font-extrabold text-white text-center mb-6">
+                            Categories
+                        </h2>
+                        <div className="flex items-center justify-between w-full px-2 sm:px-4">
+                            {/* Left Arrow */}
+                            <button
+                                aria-label="Scroll left"
+                                onClick={() => scroll("left")}
+                                className="hidden sm:flex bg-[#3CB371] rounded-full p-3 text-white hover:bg-[#2e8b57] transition"
+                                style={{ minWidth: 48, minHeight: 48 }}
+                                disabled={activeIndex === 0}
+                            >
+                                <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                                    <path d="M15 19l-7-7 7-7" />
+                                </svg>
+                            </button>
+                            {/* Carousel */}
+                            <div
+                                ref={carouselRef}
+                                className="flex gap-6 overflow-x-auto scrollbar-hide py-2 w-full snap-x snap-mandatory"
+                                style={{ scrollBehavior: "smooth" }}
+                            >
+                                {uniqueCategories.map((cat, idx) => (
+                                    <button
+                                        key={cat.title + idx}
+                                        className={`bg-[#237a4b] rounded-xl overflow-hidden shadow-md min-w-[80vw] max-w-[80vw] sm:min-w-[260px] sm:max-w-[260px] flex flex-col snap-center transition-all duration-300 border-4 ${selectedCategory === cat.title ? "border-[#3CB371]" : "border-transparent"}`}
+                                        onClick={() => setSelectedCategory(selectedCategory === cat.title ? null : cat.title)}
+                                    >
+                                        <div className="bg-[#237a4b] text-center">
+                                            <span className="inline-block text-white px-4 py-1 font-bold text-lg">
+                                                {cat.title}
+                                            </span>
+                                        </div>
+                                        <Image
+                                            src={cat.img}
+                                            alt={cat.alt}
+                                            width={300}
+                                            height={180}
+                                            className="w-full h-44 object-cover"
+                                            style={{
+                                                borderTopLeftRadius: 12,
+                                                borderTopRightRadius: 12,
+                                            }}
+                                        />
+                                    </button>
+                                ))}
+                            </div>
+                            {/* Right Arrow */}
+                            <button
+                                aria-label="Scroll right"
+                                onClick={() => scroll("right")}
+                                className="hidden sm:flex bg-[#3CB371] rounded-full p-3 text-white hover:bg-[#2e8b57] transition"
+                                style={{ minWidth: 48, minHeight: 48 }}
+                                disabled={activeIndex === uniqueCategories.length - 1}
+                            >
+                                <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                                    <path d="M9 5l7 7-7 7" />
+                                </svg>
+                            </button>
+                        </div>
                         {/* Pagination Dots */}
-                        <div className="flex justify-center mt-4 gap-2">
-                            {Array.from({ length: totalPages }).map((_, idx) => (
+                        <div className="flex justify-center mt-4 gap-2 sm:hidden">
+                            {uniqueCategories.map((_, idx) => (
                                 <button
                                     key={idx}
                                     className={`w-3 h-3 rounded-full transition-all duration-200 ${
-                                        idx === recipePage
+                                        idx === activeIndex
                                             ? "bg-[#3CB371] scale-125"
                                             : "bg-gray-400 opacity-60"
                                     }`}
-                                    onClick={() => setRecipePage(idx)}
-                                    aria-label={`Go to page ${idx + 1}`}
+                                    onClick={() => scrollToCard(idx)}
+                                    aria-label={`Go to category ${idx + 1}`}
                                 />
                             ))}
                         </div>
+                    </section>
+                    {/* Divider Line for Recipes Section */}
+                    <div className="flex justify-center my-8">
+                        <div className="h-1 w-24 bg-[#3CB371] rounded-full opacity-80"></div>
                     </div>
-                </section>
+                    <h2 className="text-3xl font-extrabold text-white text-center mb-6">
+                        {selectedCategory ? selectedCategory : "Recipes"}
+                    </h2>
+                    {/* Recipes Section */}
+                    <section className="w-full px-2 sm:px-8 flex flex-col sm:flex-row gap-8">
+                        {/* Filter Sidebar */}
+                        <aside className="sm:w-1/4 w-full bg-[#181818] rounded-xl p-6 shadow-lg flex flex-col gap-6">
+                            <h3 className="text-xl font-bold text-white mb-2">
+                                Filter By Ingredients
+                            </h3>
+                            <hr className="border-t border-white/30 mb-2" />
+                            <form className="flex flex-col gap-4" onSubmit={e => e.preventDefault()}>
+  {/* Vegetables */}
+  <div>
+    <span className="font-semibold text-white">Vegetables</span>
+    <div className="flex flex-col gap-1 mt-1">
+      {["Tomato", "Spinach", "Kale", "Potatoes"].map(ingredient => (
+        <label className="text-white" key={ingredient}>
+          <input
+            type="checkbox"
+            checked={selectedIngredients.includes(ingredient)}
+            onChange={e => {
+              if (e.target.checked) {
+                if (selectedIngredients.length < 2) {
+                  setSelectedIngredients([...selectedIngredients, ingredient]);
+                }
+              } else {
+                setSelectedIngredients(selectedIngredients.filter(ing => ing !== ingredient));
+              }
+            }}
+            disabled={
+              !selectedIngredients.includes(ingredient) && selectedIngredients.length >= 2
+            }
+          />{" "}
+          {ingredient}
+        </label>
+      ))}
+    </div>
+  </div>
+  {/* Meats */}
+  <div>
+    <span className="font-semibold text-white">Meats</span>
+    <div className="flex flex-col gap-1 mt-1">
+      {["Chicken", "Beef", "Goat", "Fish"].map(ingredient => (
+        <label className="text-white" key={ingredient}>
+          <input
+            type="checkbox"
+            checked={selectedIngredients.includes(ingredient)}
+            onChange={e => {
+              if (e.target.checked) {
+                if (selectedIngredients.length < 2) {
+                  setSelectedIngredients([...selectedIngredients, ingredient]);
+                }
+              } else {
+                setSelectedIngredients(selectedIngredients.filter(ing => ing !== ingredient));
+              }
+            }}
+            disabled={
+              !selectedIngredients.includes(ingredient) && selectedIngredients.length >= 2
+            }
+          />{" "}
+          {ingredient}
+        </label>
+      ))}
+    </div>
+  </div>
+  {/* Dairy */}
+  <div>
+    <span className="font-semibold text-white">Dairy</span>
+    <div className="flex flex-col gap-1 mt-1">
+      {["Eggs", "Milk", "Cheese"].map(ingredient => (
+        <label className="text-white" key={ingredient}>
+          <input
+            type="checkbox"
+            checked={selectedIngredients.includes(ingredient)}
+            onChange={e => {
+              if (e.target.checked) {
+                if (selectedIngredients.length < 2) {
+                  setSelectedIngredients([...selectedIngredients, ingredient]);
+                }
+              } else {
+                setSelectedIngredients(selectedIngredients.filter(ing => ing !== ingredient));
+              }
+            }}
+            disabled={
+              !selectedIngredients.includes(ingredient) && selectedIngredients.length >= 2
+            }
+          />{" "}
+          {ingredient}
+        </label>
+      ))}
+    </div>
+  </div>
+  <button
+    type="button"
+    className="mt-4 bg-[#3CB371] text-white px-4 py-2 rounded-lg font-bold hover:bg-[#2e8b57] transition"
+    onClick={() => setSelectedIngredients([])}
+    disabled={selectedIngredients.length === 0}
+  >
+    Clear Filter
+  </button>
+</form>
+                        </aside>
+
+                        {/* Recipe Cards Grid Carousel */}
+                        <div className="sm:w-3/4 w-full flex flex-col">
+                            <div className="flex items-center justify-end mb-4">
+                                {/* Carousel Arrows */}
+                                <div className="flex gap-2">
+                                    <button
+                                        aria-label="Previous"
+                                        className="bg-[#3CB371] rounded-full p-2 text-white hover:bg-[#2e8b57] transition disabled:opacity-50"
+                                        onClick={() => setRecipePage((p) => Math.max(0, p - 1))}
+                                        disabled={recipePage === 0}
+                                    >
+                                        <svg
+                                            width="24"
+                                            height="24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="3"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path d="M15 19l-7-7 7-7" />
+                                        </svg>
+                                    </button>
+                                    <button
+                                        aria-label="Next"
+                                        className="bg-[#3CB371] rounded-full p-2 text-white hover:bg-[#2e8b57] transition disabled:opacity-50"
+                                        onClick={() => setRecipePage((p) => Math.min(totalPages - 1, p + 1))}
+                                        disabled={recipePage === totalPages - 1}
+                                    >
+                                        <svg
+                                            width="24"
+                                            height="24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="3"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path d="M9 5l7 7-7 7" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            {/* Grid of Recipe Cards */}
+                            {loading ? (
+                                <div className="text-white text-center py-20">Loading recipes...</div>
+                            ) : (
+                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6">
+                                    {paginatedRecipes.map((recipe, idx) => {
+                                        const globalIdx = recipePage * recipesPerPage + idx;
+                                        const isFav = favoriteStates[globalIdx];
+                                        return (
+                                            <div
+                                                key={recipe.id || idx}
+                                                className="flex flex-col sm:flex-row bg-[#a94f4f] rounded-[2.5rem] shadow-lg overflow-hidden min-h-[220px] max-h-[340px] sm:min-h-[170px] sm:max-h-[190px]"
+                                                style={{ minWidth: 0 }}
+                                            >
+                                                {/* Image */}
+                                                <div className="relative w-full h-[120px] sm:w-[48%] sm:h-full flex-shrink-0">
+                                                    <Image
+                                                        src={recipe.image?.url || "/assets/placeholder.jpg"}
+                                                        alt={recipe.image?.alt || recipe.title}
+                                                        fill
+                                                        className="object-cover w-full h-full sm:rounded-r-[2.5rem] sm:rounded-l-[2.5rem] rounded-t-[2.5rem] sm:rounded-t-none"
+                                                        style={{ minHeight: 0, maxHeight: '100%' }}
+                                                    />
+                                                </div>
+                                                {/* Content */}
+                                                <div className="flex flex-col justify-between pt-3 px-3 pb-4 sm:p-4 flex-1 min-w-0">
+                                                    <div>
+                                                        <span className="font-bold text-white text-base block mb-1">{recipe.title}</span>
+                                                        <div className="flex items-center gap-2 mb-1">
+                                                            {/* Star SVG */}
+                                                            <svg width="18" height="18" fill="#FFD700" viewBox="0 0 20 20">
+                                                                <path d="M10 15l-5.878 3.09 1.122-6.545L.488 6.91l6.561-.955L10 0l2.951 5.955 6.561.955-4.756 4.635 1.122 6.545z"/>
+                                                            </svg>
+                                                            <span className="text-yellow-300 font-bold text-sm">
+                                                                ({recipe.rating?.toFixed(1) || "N/A"})
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex items-center gap-3 mb-1">
+                                                        {/* Clock SVG */}
+                                                        <svg width="16" height="16" fill="none" stroke="#fff" strokeWidth="2" viewBox="0 0 24 24">
+                                                            <circle cx="12" cy="12" r="10" />
+                                                            <path d="M12 6v6l4 2" />
+                                                        </svg>
+                                                        <span className="text-white text-sm">{recipe.time || "N/A"} mins</span>
+                                                        {/* Heart-in-Circle SVG Button */}
+                                                        <FavoriteButton />
+                                                    </div>
+                                                    <hr className="border-t border-white/30 my-2" />
+                                                    <Link href={`/recipe/${recipe.slug}`}>
+                                                    <button className="bg-white text-black px-4 py-2 rounded-lg font-bold w-fit text-sm shadow transition hover:bg-[#3CB371] hover:text-white">
+                                                        View Recipe
+                                                    </button>
+                                                    </Link>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
+                            {/* Pagination Dots */}
+                            <div className="flex justify-center mt-4 gap-2">
+                                {Array.from({ length: totalPages }).map((_, idx) => (
+                                    <button
+                                        key={idx}
+                                        className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                                            idx === recipePage
+                                                ? "bg-[#3CB371] scale-125"
+                                                : "bg-gray-400 opacity-60"
+                                        }`}
+                                        onClick={() => setRecipePage(idx)}
+                                        aria-label={`Go to page ${idx + 1}`}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                    </>
+                )}
                 {/* AI Recipe Generator Section */}
                 <section className="w-full mt-12 px-2 sm:px-8">
                     <div className="relative w-full rounded-2xl overflow-hidden h-[120px] sm:h-[180px] flex items-center justify-center mb-10">

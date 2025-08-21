@@ -1,0 +1,113 @@
+{
+  "title": "Kenyan Sukuma Wiki (Collard Greens)",
+  "slug": "kenyan-sukuma-wiki-collard-greens",
+  "category": "Kenyan Classics",
+  "tags": [
+    "kenyan",
+    "sukuma wiki",
+    "vegetable",
+    "collard greens",
+    "side dish"
+  ],
+  "description": "A staple Kenyan vegetable dish made from shredded collard greens sautéed with onion and tomato — simple, flavorful, and perfect with ugali or stew.",
+  "base_servings": 4,
+  "adjustable_servings": true,
+  "min_servings": 2,
+  "max_servings": 8,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Sukuma wiki (collard greens), shredded",
+      "amount": 1,
+      "unit": "bunch",
+      "editable": false
+    },
+    {
+      "name": "Red onion (chopped)",
+      "amount": 1,
+      "unit": "medium",
+      "editable": false
+    },
+    {
+      "name": "Tomato (chopped)",
+      "amount": 1,
+      "unit": "medium",
+      "editable": false
+    },
+    {
+      "name": "Garlic (optional, minced)",
+      "amount": 1,
+      "unit": "clove",
+      "editable": false
+    },
+    {
+      "name": "Cooking oil",
+      "amount": 1,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Royco or curry powder (optional)",
+      "amount": 0.5,
+      "unit": "tsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Heat oil in a sufuria over medium heat. Add chopped onions and sauté until soft.",
+    "Add garlic (if using) and cook for 30 seconds until fragrant.",
+    "Add chopped tomato and cook until it forms a thick sauce.",
+    "Stir in salt and Royco or curry powder (optional).",
+    "Add the shredded sukuma wiki and stir well to coat with the sauce.",
+    "Cover and cook for 5–7 minutes, stirring occasionally, until greens are wilted but still vibrant.",
+    "Serve hot — best enjoyed with ugali, stew, githeri, or dengu."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/kenyan-sukuma-wiki-collard-greens.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Cook sukuma until wilted but still vibrant",
+        "timer": 7
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/kenyan-sukuma-wiki-collard-greens.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777091/recipe/kenyan_classics_u7hww0.png",
+    "alt": "Kenyan classics"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.9,
+  "time": 35
+}

@@ -1,0 +1,125 @@
+{
+  "title": "Mac & Cheese (Baked)",
+  "slug": "mac-and-cheese-baked",
+  "category": "Guilty Pleasures",
+  "tags": [
+    "mac and cheese",
+    "baked",
+    "pasta",
+    "comfort food",
+    "guilty pleasures"
+  ],
+  "description": "Creamy macaroni pasta baked with a rich cheese sauce and a crispy breadcrumb topping.",
+  "base_servings": 6,
+  "adjustable_servings": true,
+  "min_servings": 2,
+  "max_servings": 10,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Macaroni pasta",
+      "amount": 300,
+      "unit": "g",
+      "editable": true,
+      "min": 200,
+      "max": 500
+    },
+    {
+      "name": "Cheddar cheese (shredded)",
+      "amount": 2,
+      "unit": "cups",
+      "editable": false
+    },
+    {
+      "name": "Milk",
+      "amount": 2,
+      "unit": "cups",
+      "editable": false
+    },
+    {
+      "name": "Butter",
+      "amount": 3,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "All-purpose flour",
+      "amount": 3,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Breadcrumbs",
+      "amount": 0.5,
+      "unit": "cup",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Black pepper",
+      "amount": 0.5,
+      "unit": "tsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Preheat oven to 180°C (350°F).",
+    "Cook macaroni according to package directions until al dente, then drain.",
+    "In a saucepan, melt butter and stir in flour to make a roux.",
+    "Gradually whisk in milk, cooking until sauce thickens.",
+    "Stir in shredded cheddar cheese until melted and smooth.",
+    "Combine cheese sauce with cooked macaroni, then pour into a baking dish.",
+    "Sprinkle breadcrumbs evenly on top.",
+    "Bake for 20 minutes or until top is golden brown.",
+    "Serve hot — pairs perfectly with a green salad."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric",
+    "scaling_factor": "pasta_anchor"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/mac-and-cheese-baked.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Bake until golden brown",
+        "timer": 20
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/mac-and-cheese-baked.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777085/recipe/guilty_pleasures_tz38ie.png",
+    "alt": "Guilty pleasures"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.6,
+  "time": 40
+}

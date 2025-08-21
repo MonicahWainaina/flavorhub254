@@ -1,0 +1,116 @@
+{
+  "title": "Oreo Cheesecake (No-Bake)",
+  "slug": "oreo-cheesecake-no-bake",
+  "category": "Sweet Treats",
+  "tags": [
+    "cheesecake",
+    "oreo",
+    "no-bake",
+    "dessert",
+    "chilled",
+    "easy"
+  ],
+  "description": "Creamy no-bake Oreo cheesecake with a crushed cookie crust and rich filling. Perfect for parties or easy weekend desserts.",
+  "base_servings": 8,
+  "adjustable_servings": false,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Oreo cookies (crushed)",
+      "amount": 300,
+      "unit": "g",
+      "editable": true,
+      "min": 250,
+      "max": 400
+    },
+    {
+      "name": "Cream cheese",
+      "amount": 400,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Heavy cream (cold)",
+      "amount": 250,
+      "unit": "ml",
+      "editable": false
+    },
+    {
+      "name": "Unsalted butter (melted)",
+      "amount": 80,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Powdered sugar",
+      "amount": 100,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Vanilla extract",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Line the base of an 8-inch springform pan with parchment paper.",
+    "Mix half of the crushed Oreos with melted butter to form a crust.",
+    "Press the crust mixture into the pan base and chill for 15 minutes.",
+    "In a bowl, beat cream cheese, powdered sugar, and vanilla until smooth.",
+    "In another bowl, whip cold cream until stiff peaks form.",
+    "Fold the whipped cream into the cream cheese mixture.",
+    "Stir in the remaining crushed Oreos.",
+    "Spread the filling over the chilled crust and smooth the top.",
+    "Chill in the fridge for at least 4 hours or overnight to set.",
+    "Garnish with more Oreos before serving. Best served cold!"
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/oreo-cheesecake-no-bake.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Chill the base crust",
+        "timer": 15
+      },
+      {
+        "step": "Chill the assembled cheesecake",
+        "timer": 240
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/oreo-cheesecake-no-bake.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777167/recipe/sweet_treats_mojait.png",
+    "alt": "Sweet treats"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.9,
+  "time": 20
+}

@@ -1,0 +1,90 @@
+{
+  "title": "Airfryer Plantains",
+  "slug": "airfryer-plantains",
+  "category": "Airfryer Recipes",
+  "tags": [
+    "airfryer",
+    "plantains",
+    "snack",
+    "sweet",
+    "easy",
+    "vegan"
+  ],
+  "description": "Crispy, golden plantain slices airfried with minimal oil — a sweet and simple side or snack.",
+  "base_servings": 2,
+  "adjustable_servings": false,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Ripe plantains (medium)",
+      "amount": 2,
+      "unit": "pieces",
+      "editable": true,
+      "min": 1,
+      "max": 4
+    },
+    {
+      "name": "Vegetable oil (optional, for brushing)",
+      "amount": 1,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Salt (optional)",
+      "amount": 0.25,
+      "unit": "tsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Peel and slice plantains diagonally into 1 cm thick pieces.",
+    "Lightly brush slices with vegetable oil and sprinkle a pinch of salt if desired.",
+    "Preheat airfryer to 190°C (375°F) for 3 minutes.",
+    "Arrange slices in a single layer in the airfryer basket.",
+    "Airfry at 190°C for 10–12 minutes, flipping halfway through.",
+    "Serve hot as a snack or side dish — great with stew, beans, or on its own."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/airfryer-plantains.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Airfry the plantains",
+        "timer": 12
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/airfryer-plantains.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777002/recipe/Airfryer_hgt5vl.png",
+    "alt": "Airfryer recipes"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.6,
+  "time": 25
+}

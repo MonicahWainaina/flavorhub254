@@ -1,0 +1,109 @@
+{
+  "title": "Butter Cookies",
+  "slug": "butter-cookies",
+  "category": "Sweet Treats",
+  "tags": [
+    "cookies",
+    "butter",
+    "shortbread",
+    "baking",
+    "dessert",
+    "holiday"
+  ],
+  "description": "Classic Danish-style butter cookies with a soft crumb, crisp edges, and a rich, buttery flavor. Great for gifting or enjoying with tea.",
+  "base_servings": 20,
+  "adjustable_servings": false,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "All-purpose flour",
+      "amount": 250,
+      "unit": "g",
+      "editable": true,
+      "min": 200,
+      "max": 350
+    },
+    {
+      "name": "Butter (softened)",
+      "amount": 200,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Icing sugar",
+      "amount": 100,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Vanilla extract",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 0.25,
+      "unit": "tsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Preheat oven to 170°C (340°F) and line a baking tray with parchment paper.",
+    "In a large bowl, cream the butter and icing sugar until light and fluffy.",
+    "Add vanilla extract and salt. Mix to combine.",
+    "Gradually add flour and mix until a soft dough forms.",
+    "Chill dough for 20–30 minutes if too soft.",
+    "Pipe or shape cookies onto the tray using a cookie press or spoon.",
+    "Bake for 12–15 minutes or until lightly golden at the edges.",
+    "Cool completely on a rack before serving or storing.",
+    "Pairs perfectly with a warm cup of tea or coffee."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/butter-cookies.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Chill the dough (if needed)",
+        "timer": 30
+      },
+      {
+        "step": "Bake the cookies",
+        "timer": 15
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/butter-cookies.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777167/recipe/sweet_treats_mojait.png",
+    "alt": "Sweet treats"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.9,
+  "time": 20
+}

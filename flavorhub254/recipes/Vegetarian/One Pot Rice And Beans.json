@@ -1,0 +1,130 @@
+{
+  "title": "One Pot Rice & Beans",
+  "slug": "one-pot-rice-and-beans",
+  "category": "Vegetarian",
+  "tags": [
+    "rice",
+    "beans",
+    "one pot meal",
+    "vegetarian"
+  ],
+  "description": "A simple, hearty one-pot dish combining rice and beans with spices for a wholesome vegetarian meal.",
+  "base_servings": 6,
+  "adjustable_servings": true,
+  "min_servings": 3,
+  "max_servings": 12,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Long-grain rice",
+      "amount": 400,
+      "unit": "g",
+      "editable": true,
+      "min": 300,
+      "max": 800
+    },
+    {
+      "name": "Cooked beans (any variety)",
+      "amount": 400,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Onion (chopped)",
+      "amount": 1,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Tomato (chopped)",
+      "amount": 2,
+      "unit": "medium",
+      "editable": false
+    },
+    {
+      "name": "Garlic (minced)",
+      "amount": 2,
+      "unit": "cloves",
+      "editable": false
+    },
+    {
+      "name": "Cumin powder",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Paprika",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Vegetable broth",
+      "amount": 750,
+      "unit": "ml",
+      "editable": false
+    },
+    {
+      "name": "Vegetable oil",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Heat vegetable oil in a pot and sauté onions until soft.",
+    "Add garlic, tomatoes, cumin, and paprika; cook for 2 minutes.",
+    "Stir in rice, cooked beans, and vegetable broth.",
+    "Bring to a boil, then cover and simmer on low heat for 20 minutes until rice is cooked.",
+    "Fluff with a fork and serve hot — great with avocado or a side salad."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric",
+    "scaling_factor": "rice_anchor"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/one-pot-rice-and-beans.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Sauté onions",
+        "timer": 3
+      },
+      {
+        "step": "Simmer rice and beans",
+        "timer": 20
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/one-pot-rice-and-beans.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777246/recipe/vegeterian_rrldtz.png",
+    "alt": "Vegetarian recipes"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.7,
+  "time": 30
+}

@@ -1,0 +1,132 @@
+{
+  "title": "Crispy Onion Rings",
+  "slug": "crispy-onion-rings",
+  "category": "Fried Favourites",
+  "tags": [
+    "onion rings",
+    "fried",
+    "snack",
+    "street food",
+    "side dish",
+    "kenyan"
+  ],
+  "description": "Crispy, golden onion rings — perfect as a side dish or a crunchy snack. Made by coating fresh onion slices in a seasoned batter and frying to perfection.",
+  "base_servings": 4,
+  "adjustable_servings": true,
+  "min_servings": 2,
+  "max_servings": 6,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Large onions (sliced into rings)",
+      "amount": 2,
+      "unit": "pieces",
+      "editable": false
+    },
+    {
+      "name": "All-purpose flour",
+      "amount": 1,
+      "unit": "cup",
+      "editable": false
+    },
+    {
+      "name": "Cornstarch (optional for extra crispiness)",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Baking powder",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 0.5,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Black pepper",
+      "amount": 0.25,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Paprika (optional)",
+      "amount": 0.5,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Egg",
+      "amount": 1,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Milk or water",
+      "amount": 0.75,
+      "unit": "cup",
+      "editable": false
+    },
+    {
+      "name": "Vegetable oil (for deep frying)",
+      "amount": 500,
+      "unit": "ml",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Separate onion slices into rings and set aside.",
+    "In a bowl, whisk flour, cornstarch, baking powder, salt, pepper, and paprika.",
+    "Add egg and milk (or water), whisking to create a smooth batter.",
+    "Heat oil in a deep frying pan over medium heat.",
+    "Dip onion rings in batter and carefully place in hot oil.",
+    "Fry in batches until golden and crispy, about 3–4 minutes.",
+    "Drain on paper towels and serve hot with ketchup, garlic mayo, or chili sauce."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/crispy-onion-rings.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Fry onion rings until golden and crispy",
+        "timer": 4
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/crispy-onion-rings.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755778571/recipe/friedfoods_vzurws.png",
+    "alt": "Fried foods"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.5,
+  "time": 25
+}

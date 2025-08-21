@@ -1,0 +1,116 @@
+{
+  "title": "Egg Fried Rice – One Pot",
+  "slug": "egg-fried-rice-one-pot",
+  "category": "One Pot Meals",
+  "tags": [
+    "rice",
+    "eggs",
+    "fried rice",
+    "one pot meals",
+    "asian fusion"
+  ],
+  "description": "Quick and easy egg fried rice made in one pot with vegetables and seasonings for a flavorful meal.",
+  "base_servings": 4,
+  "adjustable_servings": true,
+  "min_servings": 2,
+  "max_servings": 8,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Cooked long grain rice",
+      "amount": 4,
+      "unit": "cups",
+      "editable": true,
+      "min": 2,
+      "max": 6
+    },
+    {
+      "name": "Eggs (beaten)",
+      "amount": 3,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Mixed vegetables (carrots, peas, corn)",
+      "amount": 1,
+      "unit": "cup",
+      "editable": false
+    },
+    {
+      "name": "Soy sauce",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Sesame oil or cooking oil",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Garlic (minced)",
+      "amount": 2,
+      "unit": "cloves",
+      "editable": false
+    },
+    {
+      "name": "Salt and pepper",
+      "amount": "to taste",
+      "unit": "",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Heat oil in a large skillet or wok over medium heat.",
+    "Add garlic and sauté until fragrant.",
+    "Push garlic to one side, pour in beaten eggs, and scramble until just set.",
+    "Add vegetables and cook until tender.",
+    "Stir in rice and soy sauce, mixing well to combine.",
+    "Serve hot — pairs perfectly with grilled chicken or stir-fried tofu."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric",
+    "scaling_factor": "ingredient_based"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/egg-fried-rice-one-pot.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Scramble eggs and stir-fry rice",
+        "timer": 10
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/egg-fried-rice-one-pot.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777171/recipe/onepot_meals_tuyv38.png",
+    "alt": "One pot meals"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.7,
+  "time": 45
+}

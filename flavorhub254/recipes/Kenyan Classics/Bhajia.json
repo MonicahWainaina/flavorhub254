@@ -1,0 +1,125 @@
+{
+  "title": "Crispy Kenyan Bhajia",
+  "slug": "crispy-kenyan-bhajia",
+  "category": "Kenyan Classics",
+  "tags": [
+    "kenyan",
+    "bhajia",
+    "fried",
+    "potatoes",
+    "street food",
+    "snack"
+  ],
+  "description": "Golden and crispy bhajia — thinly sliced potatoes coated in spiced gram flour batter and deep-fried to perfection. A popular Kenyan street food and snack.",
+  "base_servings": 4,
+  "adjustable_servings": true,
+  "min_servings": 2,
+  "max_servings": 6,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Potatoes (peeled and thinly sliced)",
+      "amount": 3,
+      "unit": "medium",
+      "editable": false
+    },
+    {
+      "name": "Gram flour (besan)",
+      "amount": 1,
+      "unit": "cup",
+      "editable": false
+    },
+    {
+      "name": "Garlic (minced)",
+      "amount": 2,
+      "unit": "cloves",
+      "editable": false
+    },
+    {
+      "name": "Coriander leaves (chopped)",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Chili powder",
+      "amount": 0.5,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Turmeric powder",
+      "amount": 0.5,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Water",
+      "amount": 0.75,
+      "unit": "cup",
+      "editable": false
+    },
+    {
+      "name": "Vegetable oil (for deep frying)",
+      "amount": 500,
+      "unit": "ml",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "In a mixing bowl, combine gram flour, salt, chili powder, turmeric, garlic, and chopped coriander.",
+    "Gradually add water to form a thick batter.",
+    "Add the sliced potatoes into the batter and coat well.",
+    "Heat oil in a deep frying pan over medium-high heat.",
+    "Fry the bhajia in batches, turning occasionally, until golden and crispy (about 5–6 minutes).",
+    "Drain on paper towels and serve hot — best with ketchup, tamarind (ukwaju) chutney, or fresh kachumbari."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/crispy-kenyan-bhajia.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Fry bhajia until golden and crispy",
+        "timer": 6
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/crispy-kenyan-bhajia.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777091/recipe/kenyan_classics_u7hww0.png",
+    "alt": "Kenyan classics"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.9,
+  "time": 35
+}

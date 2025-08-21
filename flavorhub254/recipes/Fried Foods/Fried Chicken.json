@@ -1,0 +1,119 @@
+{
+  "title": "Kenyan-Style Fried Chicken",
+  "slug": "kenyan-style-fried-chicken",
+  "category": "Fried Favourites",
+  "tags": [
+    "kenyan",
+    "fried",
+    "chicken",
+    "street food",
+    "crispy",
+    "main dish"
+  ],
+  "description": "Crispy, golden fried chicken with Kenyan-style spices — juicy on the inside, crunchy on the outside. Perfect with chips or ugali and kachumbari.",
+  "base_servings": 4,
+  "adjustable_servings": true,
+  "min_servings": 2,
+  "max_servings": 6,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Chicken pieces (drumsticks or thighs)",
+      "amount": 1,
+      "unit": "kg",
+      "editable": false
+    },
+    {
+      "name": "All-purpose flour",
+      "amount": 1,
+      "unit": "cup",
+      "editable": false
+    },
+    {
+      "name": "Garlic powder",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Paprika or cayenne pepper",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Black pepper",
+      "amount": 0.5,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Eggs (beaten)",
+      "amount": 2,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Vegetable oil (for deep frying)",
+      "amount": 750,
+      "unit": "ml",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Season chicken with salt, garlic powder, paprika, and pepper. Let marinate for at least 30 minutes (or overnight in fridge).",
+    "Set up two bowls: one with beaten eggs, one with flour.",
+    "Dip each chicken piece into egg, then coat in flour.",
+    "Heat oil in a deep pan over medium-high heat.",
+    "Fry chicken in batches for 10–12 minutes, turning occasionally, until golden and cooked through.",
+    "Drain on paper towels and serve hot — goes well with chips, kachumbari, or ugali."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/kenyan-style-fried-chicken.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Fry chicken until golden and cooked through",
+        "timer": 12
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/kenyan-style-fried-chicken.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755778571/recipe/friedfoods_vzurws.png",
+    "alt": "Fried foods"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.5,
+  "time": 25
+}

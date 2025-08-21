@@ -1,0 +1,95 @@
+{
+  "title": "Smokie Pasua (Kenyan Street-Style Sausage Snack)",
+  "slug": "smokie-pasua-kenyan-snack",
+  "category": "Kenyan Classics",
+  "tags": [
+    "kenyan",
+    "smokie pasua",
+    "snack",
+    "street food",
+    "quick",
+    "kachumbari"
+  ],
+  "description": "A wildly popular Kenyan street snack made by slicing a smokie sausage in half and stuffing it with fresh kachumbari and chili sauce — quick, spicy, and satisfying.",
+  "base_servings": 2,
+  "adjustable_servings": true,
+  "min_servings": 1,
+  "max_servings": 4,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Smokies (ready-cooked)",
+      "amount": 2,
+      "unit": "pieces",
+      "editable": false
+    },
+    {
+      "name": "Kachumbari (tomato-onion salad)",
+      "amount": 0.5,
+      "unit": "cup",
+      "editable": false
+    },
+    {
+      "name": "Chili sauce or pilipili",
+      "amount": 2,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Mayonnaise or tomato sauce (optional)",
+      "amount": 2,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Toothpicks or paper wrap (for serving)",
+      "amount": 2,
+      "unit": "pieces",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Warm the smokies in hot water, pan, or microwave if not already hot.",
+    "Slice each smokie lengthwise (pasua) without cutting all the way through.",
+    "Fill the opening with 1–2 tablespoons of kachumbari.",
+    "Drizzle chili sauce (and mayo or tomato sauce if using) over the top.",
+    "Secure with a toothpick or wrap in paper for easy handling.",
+    "Serve immediately — best eaten on the go or with a cold soda."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/smokie-pasua-kenyan-snack.mp3"
+  },
+  "smart_cooking": {
+    "enabled": false,
+    "steps_with_timers": []
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/smokie-pasua-kenyan-snack.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777091/recipe/kenyan_classics_u7hww0.png",
+    "alt": "Kenyan classics"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.9,
+  "time": 35
+}

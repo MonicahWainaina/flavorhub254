@@ -1,0 +1,102 @@
+{
+  "title": "Airfryer Sweet Potato Fries",
+  "slug": "airfryer-sweet-potato-fries",
+  "category": "Airfryer Recipes",
+  "tags": [
+    "airfryer",
+    "sweet potato",
+    "fries",
+    "snack",
+    "healthy",
+    "vegan"
+  ],
+  "description": "Crispy-on-the-outside, tender-on-the-inside sweet potato fries made in the airfryer — minimal oil, maximum flavor.",
+  "base_servings": 2,
+  "adjustable_servings": false,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Sweet potatoes (medium)",
+      "amount": 2,
+      "unit": "pieces",
+      "editable": true,
+      "min": 1,
+      "max": 3
+    },
+    {
+      "name": "Vegetable oil",
+      "amount": 1,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Paprika",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 0.5,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Black pepper",
+      "amount": 0.25,
+      "unit": "tsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Peel and cut sweet potatoes into thin fries.",
+    "Toss with oil, paprika, salt, and pepper until well coated.",
+    "Preheat airfryer to 200°C (390°F) for 3 minutes.",
+    "Place fries in a single layer in the airfryer basket (work in batches if needed).",
+    "Airfry at 200°C for 12–15 minutes, shaking halfway through.",
+    "Serve hot with your favorite dip or as a tasty side."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/airfryer-sweet-potato-fries.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Airfry the sweet potato fries",
+        "timer": 15
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/airfryer-sweet-potato-fries.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777002/recipe/Airfryer_hgt5vl.png",
+    "alt": "Airfryer recipes"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.6,
+  "time": 25
+}

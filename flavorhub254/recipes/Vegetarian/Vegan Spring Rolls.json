@@ -1,0 +1,124 @@
+{
+  "title": "Vegetable Spring Rolls",
+  "slug": "vegetable-spring-rolls",
+  "category": "Vegetarian",
+  "tags": [
+    "spring rolls",
+    "vegetarian",
+    "snack",
+    "asian"
+  ],
+  "description": "Crispy golden spring rolls filled with fresh vegetables, perfect as a snack or appetizer.",
+  "base_servings": 12,
+  "adjustable_servings": true,
+  "min_servings": 6,
+  "max_servings": 24,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Spring roll wrappers",
+      "amount": 12,
+      "unit": "pieces",
+      "editable": true,
+      "min": 6,
+      "max": 24
+    },
+    {
+      "name": "Cabbage (shredded)",
+      "amount": 200,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Carrot (julienned)",
+      "amount": 100,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Bean sprouts",
+      "amount": 100,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Spring onions (chopped)",
+      "amount": 50,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Soy sauce",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Sesame oil",
+      "amount": 1,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Vegetable oil (for frying)",
+      "amount": 500,
+      "unit": "ml",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Heat sesame oil in a wok and stir-fry cabbage, carrot, bean sprouts, and spring onions for 3–4 minutes.",
+    "Add soy sauce and mix well. Remove from heat and let the filling cool.",
+    "Place a spoonful of filling on each spring roll wrapper and roll tightly, sealing edges with a dab of water.",
+    "Heat vegetable oil and deep-fry rolls until golden brown.",
+    "Serve hot with sweet chili sauce or soy dipping sauce."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric",
+    "scaling_factor": "wrapper_anchor"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/vegetable-spring-rolls.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Stir-fry vegetables",
+        "timer": 4
+      },
+      {
+        "step": "Deep-fry rolls",
+        "timer": 5
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/vegetable-spring-rolls.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777246/recipe/vegeterian_rrldtz.png",
+    "alt": "Vegetarian recipes"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.7,
+  "time": 30
+}

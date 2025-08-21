@@ -1,0 +1,120 @@
+{
+  "title": "Cauliflower Fried Rice",
+  "slug": "cauliflower-fried-rice",
+  "category": "Vegetarian",
+  "tags": [
+    "cauliflower",
+    "fried rice",
+    "low carb",
+    "vegetarian",
+    "healthy"
+  ],
+  "description": "A lighter, low-carb take on fried rice using finely chopped cauliflower instead of regular rice.",
+  "base_servings": 4,
+  "adjustable_servings": true,
+  "min_servings": 2,
+  "max_servings": 8,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Cauliflower (riced)",
+      "amount": 500,
+      "unit": "g",
+      "editable": true,
+      "min": 400,
+      "max": 800
+    },
+    {
+      "name": "Carrots (diced)",
+      "amount": 100,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Peas",
+      "amount": 100,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Spring onions (chopped)",
+      "amount": 50,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Soy sauce",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Sesame oil",
+      "amount": 1,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Garlic (minced)",
+      "amount": 2,
+      "unit": "cloves",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Heat sesame oil in a large pan or wok.",
+    "Add garlic, carrots, and peas; stir-fry for 2–3 minutes.",
+    "Add the riced cauliflower and stir-fry for 5 minutes until tender.",
+    "Pour in soy sauce and mix well.",
+    "Stir in spring onions and cook for another minute.",
+    "Serve warm — pairs well with stir-fried vegetables or tofu."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric",
+    "scaling_factor": "cauliflower_anchor"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/cauliflower-fried-rice.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Stir-fry vegetables",
+        "timer": 3
+      },
+      {
+        "step": "Cook cauliflower rice",
+        "timer": 5
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/cauliflower-fried-rice.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777246/recipe/vegeterian_rrldtz.png",
+    "alt": "Vegetarian recipes"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.7,
+  "time": 30
+}

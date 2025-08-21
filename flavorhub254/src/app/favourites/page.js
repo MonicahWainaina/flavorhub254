@@ -394,127 +394,127 @@ export default function FavoritesPage() {
 		<>
 			<Header/>
 			<main className="min-h-screen bg-[#181818] px-0 py-0">
-				{/* Hero Section */}
-				<section className="w-full rounded-none shadow-lg relative">
-					<div className="relative w-full h-[320px] sm:h-[440px]">
-						<Image
-							src="/assets/herofood.png"
-							alt="Food"
-							fill
-							className="object-cover object-top"
-							priority
-						/>
-						<div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/40 to-black/80 flex flex-col items-center justify-center h-full px-2">
-							<h1 className="text-3xl sm:text-5xl font-extrabold text-white mb-4 sm:mb-8 text-center drop-shadow-2xl">
-								{username ? `${username}'s Favourite Recipes` : "Your Favourite Recipes"}
-							</h1>
-							{/* Search Bar */}
-							<form className="flex w-full max-w-full sm:max-w-xl mx-auto bg-gray-100 rounded-xl shadow-lg">
-								<input
-									type="text"
-									placeholder="What recipe are you looking for ?"
-									className="w-full flex-1 min-w-0 px-3 py-2 sm:px-6 sm:py-4 rounded-l-xl text-base sm:text-lg outline-none bg-transparent border-none text-black placeholder-gray-500"
-								/>
-								<button
-									type="submit"
-									className="bg-[#3CB371] text-white px-4 py-2 sm:px-10 sm:py-4 rounded-r-xl font-semibold text-base sm:text-lg hover:bg-[#2e8b57] transition"
-								>
-									Search
-								</button>
-							</form>
-						</div>
-					</div>
-				</section>
-				{/* Categories Carousel */}
-				<section className="w-full mt-7 px-0">
-					<div className="flex justify-center mb-4">
-						<div className="h-1 w-24 bg-[#3CB371] rounded-full opacity-80"></div>
-					</div>
-					<h2 className="text-3xl font-extrabold text-white text-center mb-2">
-						Categories
-					</h2>
-					{/* Carousel Arrows below title, centered */}
-					<div className="flex justify-center mb-2 gap-4">
-						<button
-							aria-label="Scroll left"
-							onClick={() => scroll("left")}
-							className="flex bg-[#3CB371] rounded-full p-3 text-white hover:bg-[#2e8b57] transition"
-							style={{ minWidth: 48, minHeight: 48 }}
-							disabled={activeIndex === 0}
-						>
-							<svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
-								<path d="M15 19l-7-7 7-7" />
-							</svg>
-						</button>
-						<button
-							aria-label="Scroll right"
-							onClick={() => scroll("right")}
-							className="flex bg-[#3CB371] rounded-full p-3 text-white hover:bg-[#2e8b57] transition"
-							style={{ minWidth: 48, minHeight: 48 }}
-							disabled={activeIndex === categories.length - 1}
-						>
-							<svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
-								<path d="M9 5l7 7-7 7" />
-							</svg>
-						</button>
-					</div>
-					<div className="flex items-center w-full px-2 sm:px-4">
-						{/* Carousel */}
-						<div
-							ref={carouselRef}
-							className="flex gap-6 overflow-x-auto scrollbar-hide py-2 w-full snap-x snap-mandatory"
-							style={{ scrollBehavior: "smooth" }}
-						>
-							{categories.map((cat, idx) => (
-								<div
-									key={cat.title + idx}
-									className="carousel-card bg-[#237a4b] rounded-xl overflow-hidden shadow-md min-w-[80vw] max-w-[80vw] sm:min-w-[260px] sm:max-w-[260px] flex flex-col snap-center transition-all duration-300"
-								>
-									<div className="bg-[#237a4b] text-center">
-										<span className="inline-block text-white px-4 py-1 font-bold text-lg">
-											{cat.title}
-										</span>
-									</div>
-									<Image
-										src={cat.img}
-										alt={cat.alt}
-										width={300}
-										height={180}
-										className="w-full h-44 object-cover"
-										style={{
-											borderTopLeftRadius: 12,
-											borderTopRightRadius: 12,
-										}}
-									/>
-								</div>
-							))}
-						</div>
-					</div>
-					{/* Pagination Dots (always visible, update with scroll) */}
-					<div className="flex justify-center mt-4 gap-2">
-						{categories.map((_, idx) => (
+			{/* Hero Section */}
+			<section className="w-full rounded-none shadow-lg relative">
+				<div className="relative w-full h-[320px] sm:h-[440px]">
+					<Image
+						src="/assets/herofood.png"
+						alt="Food"
+						fill
+						className="object-cover object-top"
+						priority
+					/>
+					<div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/40 to-black/80 flex flex-col items-center justify-center h-full px-2">
+						<h1 className="text-3xl sm:text-5xl font-extrabold text-white mb-4 sm:mb-8 text-center drop-shadow-2xl">
+							{username ? `${username}'s Favourite Recipes` : "Your Favourite Recipes"}
+						</h1>
+						{/* Search Bar */}
+						<form className="flex w-full max-w-full sm:max-w-xl mx-auto bg-gray-100 rounded-xl shadow-lg">
+							<input
+								type="text"
+								placeholder="What recipe are you looking for ?"
+								className="w-full flex-1 min-w-0 px-3 py-2 sm:px-6 sm:py-4 rounded-l-xl text-base sm:text-lg outline-none bg-transparent border-none text-black placeholder-gray-500"
+							/>
 							<button
-								key={idx}
-								className={`w-3 h-3 rounded-full transition-all duration-200 ${
-								idx === activeIndex
-									? "bg-[#3CB371] scale-125"
-									: "bg-gray-400 opacity-60"
-							}`}
-							onClick={() => scrollToCard(idx)}
-							aria-label={`Go to category ${idx + 1}`}
-						/>
-						))}
+								type="submit"
+								className="bg-[#3CB371] text-white px-4 py-2 sm:px-10 sm:py-4 rounded-r-xl font-semibold text-base sm:text-lg hover:bg-[#2e8b57] transition"
+							>
+								Search
+							</button>
+						</form>
 					</div>
-				</section>
-				{/* Divider Line for Recipes Section */}
-				<div className="flex justify-center my-8">
+				</div>
+			</section>
+			{/* Categories Carousel */}
+			<section className="w-full mt-7 px-0">
+				<div className="flex justify-center mb-4">
 					<div className="h-1 w-24 bg-[#3CB371] rounded-full opacity-80"></div>
 				</div>
-				<h2 className="text-3xl font-extrabold text-white text-center mb-6">
-				Your Saved Recipes
+				<h2 className="text-3xl font-extrabold text-white text-center mb-2">
+					Categories
 				</h2>
-				{/* Recipes Carousel Arrows */}
-				<div className="flex justify-center sm:justify-end px-4 sm:px-12 mb-4 gap-2">
+				{/* Carousel Arrows below title, centered */}
+				<div className="flex justify-center mb-2 gap-4">
+					<button
+						aria-label="Scroll left"
+						onClick={() => scroll("left")}
+						className="flex bg-[#3CB371] rounded-full p-3 text-white hover:bg-[#2e8b57] transition"
+						style={{ minWidth: 48, minHeight: 48 }}
+						disabled={activeIndex === 0}
+					>
+						<svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+							<path d="M15 19l-7-7 7-7" />
+						</svg>
+					</button>
+					<button
+						aria-label="Scroll right"
+						onClick={() => scroll("right")}
+						className="flex bg-[#3CB371] rounded-full p-3 text-white hover:bg-[#2e8b57] transition"
+						style={{ minWidth: 48, minHeight: 48 }}
+						disabled={activeIndex === categories.length - 1}
+					>
+						<svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+							<path d="M9 5l7 7-7 7" />
+						</svg>
+					</button>
+				</div>
+				<div className="flex items-center w-full px-2 sm:px-4">
+					{/* Carousel */}
+					<div
+						ref={carouselRef}
+						className="flex gap-6 overflow-x-auto scrollbar-hide py-2 w-full snap-x snap-mandatory"
+						style={{ scrollBehavior: "smooth" }}
+					>
+						{categories.map((cat, idx) => (
+							<div
+								key={cat.title + idx}
+								className="carousel-card bg-[#237a4b] rounded-xl overflow-hidden shadow-md min-w-[80vw] max-w-[80vw] sm:min-w-[260px] sm:max-w-[260px] flex flex-col snap-center transition-all duration-300"
+							>
+								<div className="bg-[#237a4b] text-center">
+									<span className="inline-block text-white px-4 py-1 font-bold text-lg">
+										{cat.title}
+									</span>
+								</div>
+								<Image
+									src={cat.img}
+									alt={cat.alt}
+									width={300}
+									height={180}
+									className="w-full h-44 object-cover"
+									style={{
+										borderTopLeftRadius: 12,
+										borderTopRightRadius: 12,
+									}}
+								/>
+							</div>
+						))}
+					</div>
+				</div>
+				{/* Pagination Dots (always visible, update with scroll) */}
+				<div className="flex justify-center mt-4 gap-2">
+					{categories.map((_, idx) => (
+						<button
+							key={idx}
+							className={`w-3 h-3 rounded-full transition-all duration-200 ${
+							idx === activeIndex
+								? "bg-[#3CB371] scale-125"
+								: "bg-gray-400 opacity-60"
+						}`}
+						onClick={() => scrollToCard(idx)}
+						aria-label={`Go to category ${idx + 1}`}
+					/>
+					))}
+				</div>
+			</section>
+			{/* Divider Line for Recipes Section */}
+			<div className="flex justify-center my-8">
+				<div className="h-1 w-24 bg-[#3CB371] rounded-full opacity-80"></div>
+			</div>
+			<h2 className="text-3xl font-extrabold text-white text-center mb-6">
+			Your Saved Recipes
+			</h2>
+			{/* Recipes Carousel Arrows */}
+			<div className="flex justify-center sm:justify-end px-4 sm:px-12 mb-4 gap-2">
 				<button
 					aria-label="Previous"
 					className="bg-[#3CB371] rounded-full p-2 text-white hover:bg-[#2e8b57] transition disabled:opacity-50"

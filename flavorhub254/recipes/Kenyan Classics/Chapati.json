@@ -1,0 +1,108 @@
+{
+  "title": "Soft Kenyan Chapati",
+  "slug": "soft-kenyan-chapati",
+  "category": "Kenyan Classics",
+  "tags": [
+    "kenyan",
+    "flatbread",
+    "chapati",
+    "flour",
+    "staple"
+  ],
+  "description": "Flaky, golden chapatis that are soft inside and perfect for scooping up stew, beans, or veggies – a must-have on every Kenyan table.",
+  "base_servings": 8,
+  "adjustable_servings": false,
+  "editable_ingredients": true,
+  "premium_feature": true,
+  "features": [
+    "adjust_ingredient",
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "scaling_anchor": "All-purpose flour",
+  "scaling_step": 50,
+  "ingredients": [
+    {
+      "name": "All-purpose flour",
+      "amount": 500,
+      "unit": "g",
+      "editable": true,
+      "min": 400,
+      "max": 800
+    },
+    {
+      "name": "Warm water",
+      "amount": 250,
+      "unit": "ml",
+      "editable": false
+    },
+    {
+      "name": "Sugar",
+      "amount": 1,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Oil (for dough and cooking)",
+      "amount": 3,
+      "unit": "tbsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "In a large bowl, mix flour, sugar, and salt.",
+    "Add warm water gradually and knead into a soft dough.",
+    "Add 1 tbsp of oil and knead for 5–10 minutes until smooth.",
+    "Cover and let rest for 30 minutes.",
+    "Divide into equal balls, roll out into circles, and lightly oil and coil each piece.",
+    "Roll again and cook on a hot pan with oil until golden spots form on both sides.",
+    "Serve warm — chapati pairs perfectly with beef stew, dengu, beans, or fried cabbage."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": true,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/soft-kenyan-chapati.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Let dough rest before rolling",
+        "timer": 30
+      },
+      {
+        "step": "Cook each chapati until golden brown",
+        "timer": 4
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/soft-kenyan-chapati.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777091/recipe/kenyan_classics_u7hww0.png",
+    "alt": "Kenyan classics"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.9,
+  "time": 35
+}

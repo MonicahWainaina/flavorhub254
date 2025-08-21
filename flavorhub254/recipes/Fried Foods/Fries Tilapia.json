@@ -1,0 +1,107 @@
+{
+  "title": "Kenyan-Style Fried Tilapia",
+  "slug": "kenyan-style-fried-tilapia",
+  "category": "Fried Favourites",
+  "tags": [
+    "kenyan",
+    "tilapia",
+    "fried fish",
+    "main dish",
+    "lake victoria",
+    "seafood"
+  ],
+  "description": "Golden and crispy Kenyan-style fried tilapia, seasoned simply and pan-fried to perfection. Often served whole with ugali and kachumbari.",
+  "base_servings": 2,
+  "adjustable_servings": true,
+  "min_servings": 1,
+  "max_servings": 4,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Whole tilapia (cleaned and scaled)",
+      "amount": 2,
+      "unit": "medium",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Garlic (minced)",
+      "amount": 2,
+      "unit": "cloves",
+      "editable": false
+    },
+    {
+      "name": "Lemon juice",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Curry powder (optional)",
+      "amount": 0.5,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Cooking oil (for shallow frying)",
+      "amount": 250,
+      "unit": "ml",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Rinse the tilapia and pat dry with paper towels.",
+    "Score the fish on both sides and rub with salt, garlic, lemon juice, and optional curry powder.",
+    "Let marinate for 15–30 minutes.",
+    "Heat oil in a large pan over medium-high heat.",
+    "Gently place the fish into the hot oil and fry for 6–8 minutes per side until golden brown and crispy.",
+    "Drain on paper towels and serve hot — perfect with ugali, sukuma wiki, or kachumbari."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/kenyan-style-fried-tilapia.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Fry tilapia until golden and crispy",
+        "timer": 8
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/kenyan-style-fried-tilapia.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755778571/recipe/friedfoods_vzurws.png",
+    "alt": "Fried foods"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.5,
+  "time": 25
+}

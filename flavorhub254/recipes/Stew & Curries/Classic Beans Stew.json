@@ -1,0 +1,132 @@
+{
+  "title": "Classic Beans Stew",
+  "slug": "classic-beans-stew",
+  "category": "Curries & Stews",
+  "tags": [
+    "beans",
+    "stew",
+    "vegetarian",
+    "kenyan",
+    "wairimu",
+    "rose coco",
+    "budget-friendly"
+  ],
+  "description": "A wholesome and budget-friendly Kenyan bean stew simmered in a light tomato-onion base. A staple across homes, perfect with rice, ugali, or chapati.",
+  "base_servings": 4,
+  "adjustable_servings": true,
+  "min_servings": 2,
+  "max_servings": 6,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Boiled beans (e.g., rose coco, nyayo, or wairimu)",
+      "amount": 400,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Onion (chopped)",
+      "amount": 1,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Tomatoes (chopped)",
+      "amount": 2,
+      "unit": "medium",
+      "editable": false
+    },
+    {
+      "name": "Garlic (minced)",
+      "amount": 2,
+      "unit": "cloves",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Black pepper",
+      "amount": 0.25,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Paprika",
+      "amount": 0.5,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Water or vegetable broth",
+      "amount": 300,
+      "unit": "ml",
+      "editable": false
+    },
+    {
+      "name": "Vegetable oil",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Fresh coriander (for garnish)",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Heat oil in a sufuria and sauté onions until soft.",
+    "Add garlic and cook briefly until fragrant.",
+    "Stir in tomatoes, salt, black pepper, and paprika. Cook until soft and saucy.",
+    "Add the boiled beans and stir to combine.",
+    "Pour in water or broth and simmer uncovered for 15–20 minutes.",
+    "Garnish with coriander and serve hot with rice, ugali, or chapati."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/classic-beans-stew.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Simmer beans in sauce",
+        "timer": 20
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/classic-beans-stew.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777070/recipe/stews_curries_jksa9a.jpg",
+    "alt": "Stew and curries"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.8,
+  "time": 50
+}

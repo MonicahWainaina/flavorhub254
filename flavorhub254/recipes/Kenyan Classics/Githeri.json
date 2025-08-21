@@ -1,0 +1,119 @@
+{
+  "title": "Fried Kenyan Githeri",
+  "slug": "fried-kenyan-githeri",
+  "category": "Kenyan Classics",
+  "tags": [
+    "kenyan",
+    "githeri",
+    "maize and beans",
+    "vegetarian",
+    "traditional"
+  ],
+  "description": "A simple yet satisfying Kenyan classic — boiled maize and beans, stir-fried with onions, tomatoes, and spices. Githeri is a staple across households and schools alike.",
+  "base_servings": 4,
+  "adjustable_servings": true,
+  "min_servings": 2,
+  "max_servings": 8,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Boiled maize",
+      "amount": 2,
+      "unit": "cups",
+      "editable": false
+    },
+    {
+      "name": "Boiled beans (any variety)",
+      "amount": 2,
+      "unit": "cups",
+      "editable": false
+    },
+    {
+      "name": "Red onion (chopped)",
+      "amount": 1,
+      "unit": "medium",
+      "editable": false
+    },
+    {
+      "name": "Tomatoes (chopped)",
+      "amount": 2,
+      "unit": "medium",
+      "editable": false
+    },
+    {
+      "name": "Garlic (minced)",
+      "amount": 2,
+      "unit": "cloves",
+      "editable": false
+    },
+    {
+      "name": "Cooking oil",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    },
+    {
+      "name": "Curry powder or pilau masala (optional)",
+      "amount": 1,
+      "unit": "tsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Heat oil in a sufuria over medium heat. Sauté onions until translucent.",
+    "Add garlic and cook for 1 minute until fragrant.",
+    "Add chopped tomatoes and cook until softened into a sauce.",
+    "Stir in salt and curry powder or pilau masala (if using).",
+    "Add the boiled maize and beans. Stir well to combine.",
+    "Cook for 5–7 minutes until heated through and flavors are combined.",
+    "Serve hot — githeri goes well with avocado, sukuma wiki, or a cup of tea."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/fried-kenyan-githeri.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Simmer githeri with spices and tomatoes",
+        "timer": 7
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/fried-kenyan-githeri.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777091/recipe/kenyan_classics_u7hww0.png",
+    "alt": "Kenyan classics"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.9,
+  "time": 35
+}

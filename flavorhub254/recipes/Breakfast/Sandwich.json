@@ -1,0 +1,110 @@
+{
+  "title": "Cheesy Breakfast Egg Sandwich",
+  "slug": "cheesy-breakfast-egg-sandwich",
+  "category": "Breakfast",
+  "tags": [
+    "breakfast",
+    "sandwich",
+    "eggs",
+    "quick",
+    "easy"
+  ],
+  "description": "A warm and satisfying breakfast sandwich layered with eggs, melted cheese, and your favorite extras – ready in minutes.",
+  "base_servings": 2,
+  "adjustable_servings": true,
+  "min_servings": 1,
+  "max_servings": 4,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Bread slices",
+      "amount": 4,
+      "unit": "pieces",
+      "editable": false
+    },
+    {
+      "name": "Eggs",
+      "amount": 2,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Cheddar cheese",
+      "amount": 2,
+      "unit": "slices",
+      "editable": false
+    },
+    {
+      "name": "Butter or margarine",
+      "amount": 1,
+      "unit": "tbsp",
+      "editable": false
+    },
+    {
+      "name": "Salt",
+      "amount": 1,
+      "unit": "pinch",
+      "editable": false
+    },
+    {
+      "name": "Black pepper",
+      "amount": 1,
+      "unit": "pinch",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Crack eggs into a bowl, add salt and pepper, and whisk well.",
+    "Heat a nonstick pan, add butter, and scramble or fry the eggs to your liking.",
+    "Toast or warm the bread slices.",
+    "Assemble the sandwich: place eggs and cheese between bread slices.",
+    "Optional: grill the sandwich lightly on both sides until the cheese melts.",
+    "Serve warm — pairs perfectly with a hot cup of tea or coffee and fresh fruit."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/cheesy-breakfast-egg-sandwich.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Cook eggs to desired doneness",
+        "timer": 5
+      },
+      {
+        "step": "Grill sandwich until cheese melts",
+        "timer": 3
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/cheesy-breakfast-egg-sandwich.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777103/recipe/breakfast_qah5se.png",
+    "alt": "Breakfast recipes"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.8,
+  "time": 15
+}

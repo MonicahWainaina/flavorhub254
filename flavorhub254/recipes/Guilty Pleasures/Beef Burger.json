@@ -1,0 +1,112 @@
+{
+  "title": "Homemade Beef Burger",
+  "slug": "homemade-beef-burger",
+  "category": "Guilty Pleasures",
+  "tags": [
+    "burger",
+    "beef",
+    "fast food",
+    "guilty pleasures"
+  ],
+  "description": "Juicy homemade beef burger with fresh toppings and a soft bun — perfect for a weekend indulgence.",
+  "base_servings": 4,
+  "adjustable_servings": true,
+  "min_servings": 2,
+  "max_servings": 8,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "Ground beef (80/20 lean)",
+      "amount": 500,
+      "unit": "g",
+      "editable": false
+    },
+    {
+      "name": "Burger buns",
+      "amount": 4,
+      "unit": "pieces",
+      "editable": false
+    },
+    {
+      "name": "Cheddar cheese slices",
+      "amount": 4,
+      "unit": "pieces",
+      "editable": false
+    },
+    {
+      "name": "Lettuce leaves",
+      "amount": 4,
+      "unit": "pieces",
+      "editable": false
+    },
+    {
+      "name": "Tomato (sliced)",
+      "amount": 1,
+      "unit": "large",
+      "editable": false
+    },
+    {
+      "name": "Onion (sliced)",
+      "amount": 1,
+      "unit": "medium",
+      "editable": false
+    },
+    {
+      "name": "Salt and pepper",
+      "amount": "to taste",
+      "unit": "",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Season ground beef with salt and pepper, then shape into equal-sized patties.",
+    "Heat a skillet or grill over medium-high heat and cook patties for 3–4 minutes per side or until desired doneness.",
+    "Place cheese slices on patties in the last minute of cooking to melt.",
+    "Toast burger buns lightly.",
+    "Assemble burgers with lettuce, tomato, onion, and beef patties.",
+    "Serve hot — pairs perfectly with crispy fries or onion rings."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric",
+    "scaling_factor": "serving_based"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/homemade-beef-burger.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": [
+      {
+        "step": "Grill or pan-fry patties",
+        "timer": 8
+      }
+    ]
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/homemade-beef-burger.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777085/recipe/guilty_pleasures_tz38ie.png",
+    "alt": "Guilty pleasures"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.6,
+  "time": 40
+}

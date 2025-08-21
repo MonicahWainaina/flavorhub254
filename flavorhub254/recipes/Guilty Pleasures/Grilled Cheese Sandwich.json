@@ -1,0 +1,81 @@
+{
+  "title": "Grilled Cheese Sandwich",
+  "slug": "grilled-cheese-sandwich",
+  "category": "Guilty Pleasures",
+  "tags": [
+    "sandwich",
+    "cheese",
+    "comfort food",
+    "guilty pleasures"
+  ],
+  "description": "Crispy golden bread with gooey melted cheese — the ultimate grilled cheese sandwich.",
+  "base_servings": 2,
+  "adjustable_servings": true,
+  "min_servings": 1,
+  "max_servings": 6,
+  "editable_ingredients": false,
+  "premium_feature": true,
+  "features": [
+    "smart_cooking",
+    "pdf_download",
+    "audio_instruction"
+  ],
+  "ingredients": [
+    {
+      "name": "White or brown bread slices",
+      "amount": 4,
+      "unit": "pieces",
+      "editable": false
+    },
+    {
+      "name": "Cheddar or mozzarella cheese (sliced or shredded)",
+      "amount": 1,
+      "unit": "cup",
+      "editable": false
+    },
+    {
+      "name": "Butter (softened)",
+      "amount": 2,
+      "unit": "tbsp",
+      "editable": false
+    }
+  ],
+  "instructions": [
+    "Butter one side of each bread slice.",
+    "Place cheese between two bread slices, buttered side out.",
+    "Heat a skillet over medium heat and grill sandwiches until golden brown on both sides and cheese is melted.",
+    "Serve hot — pairs well with tomato soup."
+  ],
+  "adjustment_rules": {
+    "allow_multiple_edits": false,
+    "show_reset_button": false,
+    "display_unit": "metric",
+    "scaling_factor": "serving_based"
+  },
+  "audio": {
+    "has_audio_instruction": true,
+    "mp3_url": "https://flavorhub254.com/audio/grilled-cheese-sandwich.mp3"
+  },
+  "smart_cooking": {
+    "enabled": true,
+    "steps_with_timers": []
+  },
+  "pdf": {
+    "enabled": true,
+    "url": "https://flavorhub254.com/pdfs/grilled-cheese-sandwich.pdf",
+    "includes": [
+      "ingredients",
+      "instructions",
+      "servings"
+    ],
+    "generated_by": "flavorHUB254 Smart Cooking PDF Engine"
+  },
+  "image": {
+    "url": "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777085/recipe/guilty_pleasures_tz38ie.png",
+    "alt": "Guilty pleasures"
+  },
+  "created_by": "flavorHUB254-team",
+  "version": 1,
+  "rating": 4.6,
+  "time": 40
+}
