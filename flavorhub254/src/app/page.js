@@ -26,127 +26,95 @@ export default function HomePage() {
     fetchHeroRecipes();
   }, []);
 
-  // Carousel state for pagination dots
+  // --- CAROUSEL FEATURED RECIPES ---
+  const [carouselRecipes, setCarouselRecipes] = useState([]);
+  const [favoriteIds, setFavoriteIds] = useState([]);
   const carouselRef = useRef(null);
   const [carouselIndex, setCarouselIndex] = useState(0);
 
-  // Carousel items
-  const featuredItems = [
-    {
-      img: "/assets/ugali-mishkaki.jpg",
-      title: "Ugali & Mishkaki",
-      mins: "30 mins",
-      liked: true,
-    },
-    {
-      img: "/assets/spaghetti-meatballs.jpg",
-      title: "Spaghetti & Meatballs",
-      mins: "25 mins",
-      liked: false,
-    },
-    {
-      img: "/assets/fried-chicken-fries.jpg",
-      title: "Fried Chicken & Fries",
-      mins: "45 mins",
-      liked: false,
-    },
-    {
-      img: "/assets/barbecue-wings.jpg",
-      title: "Barbecue Wings",
-      mins: "40 mins",
-      liked: true,
-    },
-    {
-      img: "/assets/ugali-mishkaki.jpg",
-      title: "Ugali & Mishkaki (2)",
-      mins: "30 mins",
-      liked: false,
-    },
-    {
-      img: "/assets/spaghetti-meatballs.jpg",
-      title: "Spaghetti & Meatballs (2)",
-      mins: "25 mins",
-      liked: true,
-    },
-    {
-      img: "/assets/fried-chicken-fries.jpg",
-      title: "Fried Chicken & Fries (2)",
-      mins: "45 mins",
-      liked: false,
-    },
-    {
-      img: "/assets/barbecue-wings.jpg",
-      title: "Barbecue Wings (2)",
-      mins: "40 mins",
-      liked: false,
-    },
-  ];
+  useEffect(() => {
+    async function fetchCarouselRecipes() {
+      const q = query(collection(db, "recipes"), where("featuredType", "==", "carousel"));
+      const querySnapshot = await getDocs(q);
+      const recipes = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setCarouselRecipes(recipes);
+    }
+    fetchCarouselRecipes();
+  }, []);
 
-  // Handle scroll to update dot index
+  // --- CATEGORY CAROUSEL ---
+  const [categories, setCategories] = useState([]);
+  const categoryRef = useRef(null);
+  const [categoryIndex, setCategoryIndex] = useState(0);
+
+  const CATEGORY_IMAGES = {
+    "Kenyan Classics":  { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777091/recipe/kenyan_classics_u7hww0.png", alt: "Kenyan classics" },
+    "Airfyer Recipes":  { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777002/recipe/Airfryer_hgt5vl.png", alt: "Airfryer recipes" },
+    "Breakfast":      { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777103/recipe/breakfast_qah5se.png", alt: "Breakfast recipes" },
+    "Vegetarian":     { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777246/recipe/vegeterian_rrldtz.png", alt: "Vegetarian recipes" },
+    "Fried Foods":    { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755778571/recipe/friedfoods_vzurws.png", alt: "Fried foods" },
+    "Guilty Pleasures": { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777085/recipe/guilty_pleasures_tz38ie.png", alt: "Guilty pleasures" },
+    "One Pot Meals":    { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777171/recipe/onepot_meals_tuyv38.png", alt: "One pot meals" },
+    "Stew & Curries":   { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777070/recipe/stews_curries_jksa9a.jpg", alt: "Stew and curries" },
+    "Sweet Treats":     { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777167/recipe/sweet_treats_mojait.png", alt: "Sweet treats" },
+  };
+
+  const FALLBACK_IMAGE = { url: "/assets/placeholder.jpg", alt: "Recipe image" };
+
+  useEffect(() => {
+    async function fetchCategories() {
+      const querySnapshot = await getDocs(collection(db, "recipes"));
+      const allCategories = querySnapshot.docs.map(doc => doc.data().category);
+      const unique = Array.from(new Set(allCategories)).map(cat => ({
+        title: cat,
+        img: CATEGORY_IMAGES[cat]?.url || FALLBACK_IMAGE.url,
+        alt: CATEGORY_IMAGES[cat]?.alt || cat,
+      }));
+      setCategories(unique);
+    }
+    fetchCategories();
+  }, []);
+
+  // --- Carousel scroll logic ---
+  const scrollCarousel = (direction) => {
+    const el = carouselRef.current;
+    if (!el) return;
+    const cardWidth = el.firstChild?.offsetWidth || 1;
+    const gap = 36;
+    const scrollAmount = cardWidth + gap;
+    el.scrollBy({ left: direction === "left" ? -scrollAmount : scrollAmount, behavior: "smooth" });
+  };
   const handleCarouselScroll = () => {
     const el = carouselRef.current;
     if (!el) return;
     const scrollLeft = el.scrollLeft;
     const cardWidth = el.firstChild?.offsetWidth || 1;
-    const gap = 36; // gap-9 = 2.25rem = 36px
+    const gap = 36;
     const index = Math.round(scrollLeft / (cardWidth + gap));
     setCarouselIndex(index);
   };
 
-
-    
-    const [categories, setCategories] = useState([]);
-    const categoryRef = useRef(null);
-    const [categoryIndex, setCategoryIndex] = useState(0);
-
-    // Use the same mapping as browse page
-    const CATEGORY_IMAGES = {
-      "Kenyan Classics":  { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777091/recipe/kenyan_classics_u7hww0.png", alt: "Kenyan classics" },
-      "Airfyer Recipes":  { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777002/recipe/Airfryer_hgt5vl.png", alt: "Airfryer recipes" },
-      "Breakfast":      { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777103/recipe/breakfast_qah5se.png", alt: "Breakfast recipes" },
-      "Vegetarian":     { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777246/recipe/vegeterian_rrldtz.png", alt: "Vegetarian recipes" },
-      "Fried Foods":    { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755778571/recipe/friedfoods_vzurws.png", alt: "Fried foods" },
-      "Guilty Pleasures": { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777085/recipe/guilty_pleasures_tz38ie.png", alt: "Guilty pleasures" },
-      "One Pot Meals":    { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777171/recipe/onepot_meals_tuyv38.png", alt: "One pot meals" },
-      "Stew & Curries":   { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777070/recipe/stews_curries_jksa9a.jpg", alt: "Stew and curries" },
-      "Sweet Treats":     { url: "https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777167/recipe/sweet_treats_mojait.png", alt: "Sweet treats" },
-    };
-
-    const FALLBACK_IMAGE = { url: "/assets/placeholder.jpg", alt: "Recipe image" };
-
-    // Fetch categories from Firestore on mount
-    useEffect(() => {
-      async function fetchCategories() {
-        const querySnapshot = await getDocs(collection(db, "recipes"));
-        const allCategories = querySnapshot.docs.map(doc => doc.data().category);
-        const unique = Array.from(new Set(allCategories)).map(cat => ({
-          title: cat,
-          img: CATEGORY_IMAGES[cat]?.url || FALLBACK_IMAGE.url,
-          alt: CATEGORY_IMAGES[cat]?.alt || cat,
-        }));
-        setCategories(unique);
-      }
-      fetchCategories();
-    }, []);
-
-    // Carousel scroll logic
-    const scrollCarousel = (direction) => {
-      const el = categoryRef.current;
-      if (!el) return;
-      const cardWidth = el.firstChild?.offsetWidth || 1;
-      const gap = 24;
-      const scrollAmount = cardWidth + gap;
-      el.scrollBy({ left: direction === "left" ? -scrollAmount : scrollAmount, behavior: "smooth" });
-    };
-    const handleCategoryScroll = () => {
-      const el = categoryRef.current;
-      if (!el) return;
-      const scrollLeft = el.scrollLeft;
-      const cardWidth = el.firstChild?.offsetWidth || 1;
-      const gap = 24;
-      const index = Math.round(scrollLeft / (cardWidth + gap));
-      setCategoryIndex(index);
-    };
+  // --- Category carousel scroll logic ---
+  const scrollCategoryCarousel = (direction) => {
+    const el = categoryRef.current;
+    if (!el) return;
+    const cardWidth = el.firstChild?.offsetWidth || 1;
+    const gap = 24;
+    const scrollAmount = cardWidth + gap;
+    el.scrollBy({ left: direction === "left" ? -scrollAmount : scrollAmount, behavior: "smooth" });
+  };
+  const handleCategoryScroll = () => {
+    const el = categoryRef.current;
+    if (!el) return;
+    const scrollLeft = el.scrollLeft;
+    const cardWidth = el.firstChild?.offsetWidth || 1;
+    const gap = 24;
+    const index = Math.round(scrollLeft / (cardWidth + gap));
+    setCategoryIndex(index);
+  };
 
   return (
     <>
@@ -179,9 +147,11 @@ export default function HomePage() {
                 style={{ background: "transparent", aspectRatio: "4/2" }}
               />
               {/* Button */}
+              <Link href="/browse">
               <button className="bg-green-700 hover:bg-green-800 text-white px-6 py-3 rounded-lg font-semibold text-base sm:text-lg shadow-lg transition relative z-10 mt-2 w-full sm:w-auto">
                 Explore Recipes <span className="ml-2">&raquo;&raquo;</span>
               </button>
+              </Link>
             </div>
           </div>
           {/* Right: Dynamic Recipe Cards */}
@@ -196,14 +166,14 @@ export default function HomePage() {
                 >
                   {/* Image */}
                   <div className="w-full flex justify-center absolute left-0 right-0 -top-10 sm:-top-14 z-10">
-                  <Image
-                    src={recipe.heroImage?.url || recipe.image?.url || "/assets/placeholder.jpg"}
-                    alt={recipe.heroImage?.alt || recipe.image?.alt || recipe.title}
-                    width={260}
-                    height={170}
-                    className="absolute left-0 right-0 -top-[50px] sm:-top-[30px] w-full h-[100px] sm:h-[170px] object-contain sm:object-cover"
-                    style={{ background: "transparent" }}
-                  />
+                    <Image
+                      src={recipe.heroImage?.url || recipe.image?.url || "/assets/placeholder.jpg"}
+                      alt={recipe.heroImage?.alt || recipe.image?.alt || recipe.title}
+                      width={260}
+                      height={170}
+                      className="absolute left-0 right-0 -top-[20px] sm:-top-[30px] w-full h-[100px] sm:h-[170px] object-contain sm:object-cover"
+                      style={{ background: "transparent" }}
+                    />
                   </div>
                   {/* Card Content */}
                   <div className="flex flex-col flex-1 w-full justify-between mt-16">
@@ -215,7 +185,7 @@ export default function HomePage() {
                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.921-.755 1.688-1.54 1.118l-3.38-2.455a1 1 0 00-1.175 0l-3.38 2.455c-.784.57-1.838-.197-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.049 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z" />
                           </svg>
                         ) : (
-                          <svg key={idx} className="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 20 20">
+                          <svg key={idx} className="w-5 h-5 inline" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 20 20">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.921-.755 1.688-1.54 1.118l-3.38-2.455a1 1 0 00-1.175 0l-3.38 2.455c-.784.57-1.838-.197-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.049 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z" />
                           </svg>
                         )
@@ -282,45 +252,63 @@ export default function HomePage() {
               className="flex gap-9 overflow-x-auto scrollbar-hide pb-2 pl-4 pr-4 sm:pl-16 sm:pr-16 snap-x snap-mandatory"
               style={{ scrollSnapType: "x mandatory" }}
             >
-              {featuredItems.map((item, idx) => (
+              {carouselRecipes.map((recipe, idx) => (
                 <div
-                  key={idx}
-                  className="bg-[#232323] rounded-xl w-[260px] flex-shrink-0 shadow-lg overflow-visible relative pt-0 snap-start"
+                  key={recipe.id}
+                  className="bg-[#232323] rounded-xl w-[260px] flex-shrink-0 shadow-lg overflow-hidden relative flex flex-col"
                 >
-                  <div className="relative">
-                    <img
-                      src={item.img}
-                      alt={item.title}
-                      className="w-full h-[200px] object-cover rounded-t-xl -mt-4"
-                    />
-                  </div>
-                  <div className="p-4 pt-2">
-                    <h3 className="text-white font-semibold text-lg mb-1">{item.title}</h3>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-300 text-sm">{item.mins}</span>
-                      <button>
-                        <svg
-                          className={`w-6 h-6 ${item.liked ? "text-red-500" : "text-gray-400"}`}
-                          fill={item.liked ? "currentColor" : "none"}
-                          stroke="currentColor"
-                          strokeWidth={2}
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M3 8.25C3 5.35 5.52 3 8.5 3c1.74 0 3.41.81 4.5 2.09C14.09 3.81 15.76 3 17.5 3 20.48 3 23 5.35 23 8.25c0 3.78-3.4 6.86-8.55 11.54a1.25 1.25 0 01-1.7 0C6.4 15.11 3 12.03 3 8.25z"
-                          />
-                        </svg>
-                      </button>
+                  {/* Image (card is clickable) */}
+                  <Link href={`/recipe/${recipe.slug}`} tabIndex={-1}>
+                    <div className="relative w-full h-[200px]">
+                      <Image
+                        src={recipe.image?.url || "/assets/placeholder.jpg"}
+                        alt={recipe.image?.alt || recipe.title}
+                        fill
+                        className="object-cover w-full h-full rounded-t-xl"
+                        sizes="260px"
+                      />
                     </div>
+                  </Link>
+                  {/* Title and Heart Row */}
+                  <div className="flex items-center justify-between px-4 py-4 bg-[#a8323e]">
+                    <h3
+                      className="text-white font-semibold text-base text-left capitalize truncate w-[180px]"
+                      title={recipe.title}
+                    >
+                      {recipe.title}
+                    </h3>
+                    {/* Heart Icon (right) */}
+                    <button
+                      className="ml-2 z-20 bg-transparent p-0 hover:scale-110 transition"
+                      onClick={e => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setFavoriteIds(ids =>
+                          ids.includes(recipe.id)
+                            ? ids.filter(id => id !== recipe.id)
+                            : [...ids, recipe.id]
+                        );
+                      }}
+                      aria-label="Toggle favorite"
+                      tabIndex={0}
+                    >
+                      {favoriteIds.includes(recipe.id) ? (
+                        <svg className="w-6 h-6 text-white-500" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        </svg>
+                      ) : (
+                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M3 8.25C3 5.35 5.52 3 8.5 3c1.74 0 3.41.81 4.5 2.09C14.09 3.81 15.76 3 17.5 3 20.48 3 23 5.35 23 8.25c0 3.78-3.4 6.86-8.55 11.54a1.25 1.25 0 01-1.7 0C6.4 15.11 3 12.03 3 8.25z"/>
+                        </svg>
+                      )}
+                    </button>
                   </div>
                 </div>
               ))}
             </div>
             {/* Pagination Dots */}
             <div className="flex justify-center mt-3 gap-2 sm:hidden">
-              {featuredItems.map((_, i) => (
+              {carouselRecipes.map((_, i) => (
                 <span
                   key={i}
                   className={`h-2 w-2 rounded-full transition-all duration-200 ${i === carouselIndex ? "bg-[#a8323e] scale-125" : "bg-gray-400"}`}
@@ -329,9 +317,11 @@ export default function HomePage() {
             </div>
             {/* Browse More Recipes Button */}
             <div className="flex justify-center mt-6">
-              <button className="bg-[#a8323e] hover:bg-[#d32f2f] text-white px-6 py-2 rounded-lg font-semibold text-base shadow transition">
-                Browse more recipes &raquo;
-              </button>
+              <Link href="/browse">
+                <button className="bg-[#a8323e] hover:bg-[#d32f2f] text-white px-6 py-2 rounded-lg font-semibold text-base shadow transition">
+                  Browse more recipes &raquo;
+                </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -420,79 +410,79 @@ export default function HomePage() {
 
       {/* Category Section */}
       <section className="w-full py-12 px-4 bg-black">
-      <div className="max-w-7xl mx-auto relative">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center">
-            <h2 className="text-2xl sm:text-3xl font-bold text-white mr-2">Browse By Category</h2>
-            <img 
-              src="/assets/tomatoes.png" 
-              alt="Tomatoes" 
-              className="w-16 h-16 sm:w-24 sm:h-24 object-contain"
-              style={{ marginLeft: '-8px', transform: "rotate(-18deg)" }}
-            />
+        <div className="max-w-7xl mx-auto relative">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center">
+              <h2 className="text-2xl sm:text-3xl font-bold text-white mr-2">Browse By Category</h2>
+              <img 
+                src="/assets/tomatoes.png" 
+                alt="Tomatoes" 
+                className="w-16 h-16 sm:w-24 sm:h-24 object-contain"
+                style={{ marginLeft: '-8px', transform: "rotate(-18deg)" }}
+              />
+            </div>
+            <Link href="/browse" className="text-green-500 hover:text-green-400 font-semibold text-sm sm:text-base">See all &raquo;</Link>
           </div>
-          <Link href="/browse" className="text-green-500 hover:text-green-400 font-semibold text-sm sm:text-base">See all &raquo;</Link>
-        </div>
-        {/* Centered arrow buttons */}
-        <div className="relative flex items-center">
-          {/* Left Arrow */}
-          <button
-            className="absolute left-0 z-10 bg-[#2e7d32] bg-opacity-80 rounded-full p-3 shadow hover:bg-green-700 transition hidden sm:flex items-center justify-center"
-            style={{ top: "50%", transform: "translateY(-50%)" }}
-            onClick={() => scrollCarousel("left")}
-            type="button"
-          >
-            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          <div
-            ref={categoryRef}
-            onScroll={handleCategoryScroll}
-            className="flex gap-6 overflow-x-auto scrollbar-hide pb-2 sm:pb-0 w-full"
-            style={{ scrollSnapType: "x mandatory" }}
-          >
-            {categories.map((cat, i) => (
-              <Link
-                key={cat.title}
-                href={`/browse?category=${encodeURIComponent(cat.title)}`}
-                className="bg-[#232323] rounded-xl overflow-hidden shadow hover:shadow-lg transition flex-shrink-0 w-[180px] sm:w-auto snap-start"
-              >
-                <Image
-                  src={cat.img}
-                  alt={cat.alt}
-                  width={180}
-                  height={200}
-                  className="w-full h-[200px] object-cover"
-                />
-                <div className="p-4 text-center text-white font-semibold capitalize">{cat.title}</div>
-              </Link>
+          {/* Centered arrow buttons */}
+          <div className="relative flex items-center">
+            {/* Left Arrow */}
+            <button
+              className="absolute left-0 z-10 bg-[#2e7d32] bg-opacity-80 rounded-full p-3 shadow hover:bg-green-700 transition hidden sm:flex items-center justify-center"
+              style={{ top: "50%", transform: "translateY(-50%)" }}
+              onClick={() => scrollCategoryCarousel("left")}
+              type="button"
+            >
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <div
+              ref={categoryRef}
+              onScroll={handleCategoryScroll}
+              className="flex gap-6 overflow-x-auto scrollbar-hide pb-2 sm:pb-0 w-full"
+              style={{ scrollSnapType: "x mandatory" }}
+            >
+              {categories.map((cat, i) => (
+                <Link
+                  key={cat.title}
+                  href={`/browse?category=${encodeURIComponent(cat.title)}`}
+                  className="bg-[#232323] rounded-xl overflow-hidden shadow hover:shadow-lg transition flex-shrink-0 w-[180px] sm:w-auto snap-start"
+                >
+                  <Image
+                    src={cat.img}
+                    alt={cat.alt}
+                    width={180}
+                    height={200}
+                    className="w-full h-[200px] object-cover"
+                  />
+                  <div className="p-4 text-center text-white font-semibold capitalize">{cat.title}</div>
+                </Link>
+              ))}
+            </div>
+            {/* Right Arrow */}
+            <button
+              className="absolute right-0 z-10 bg-[#2e7d32] bg-opacity-80 rounded-full p-3 shadow hover:bg-green-700 transition hidden sm:flex items-center justify-center"
+              style={{ top: "50%", transform: "translateY(-50%)" }}
+              onClick={() => scrollCategoryCarousel("right")}
+              type="button"
+            >
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+          {/* Pagination Dots for Category Carousel (mobile only) */}
+          <div className="flex justify-center mt-3 gap-2 sm:hidden">
+            {categories.map((_, i) => (
+              <span
+                key={i}
+                className={`h-2 w-2 rounded-full transition-all duration-200 ${
+                  i === categoryIndex ? "bg-green-700 scale-125" : "bg-gray-400"
+                }`}
+              />
             ))}
           </div>
-          {/* Right Arrow */}
-          <button
-            className="absolute right-0 z-10 bg-[#2e7d32] bg-opacity-80 rounded-full p-3 shadow hover:bg-green-700 transition hidden sm:flex items-center justify-center"
-            style={{ top: "50%", transform: "translateY(-50%)" }}
-            onClick={() => scrollCarousel("right")}
-            type="button"
-          >
-            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
         </div>
-        {/* Pagination Dots for Category Carousel (mobile only) */}
-        <div className="flex justify-center mt-3 gap-2 sm:hidden">
-          {categories.map((_, i) => (
-            <span
-              key={i}
-              className={`h-2 w-2 rounded-full transition-all duration-200 ${
-                i === categoryIndex ? "bg-green-700 scale-125" : "bg-gray-400"
-              }`}
-            />
-          ))}
-        </div>
-      </div>
       </section>
 
       {/* --- FIGMA-STYLE FOOTER --- */}
