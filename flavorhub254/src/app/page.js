@@ -147,9 +147,11 @@ export default function HomePage() {
                 style={{ background: "transparent", aspectRatio: "4/2" }}
               />
               {/* Button */}
+              <Link href="/browse">
               <button className="bg-green-700 hover:bg-green-800 text-white px-6 py-3 rounded-lg font-semibold text-base sm:text-lg shadow-lg transition relative z-10 mt-2 w-full sm:w-auto">
                 Explore Recipes <span className="ml-2">&raquo;&raquo;</span>
               </button>
+              </Link>
             </div>
           </div>
           {/* Right: Dynamic Recipe Cards */}
@@ -315,9 +317,11 @@ export default function HomePage() {
             </div>
             {/* Browse More Recipes Button */}
             <div className="flex justify-center mt-6">
-              <button className="bg-[#a8323e] hover:bg-[#d32f2f] text-white px-6 py-2 rounded-lg font-semibold text-base shadow transition">
-                Browse more recipes &raquo;
-              </button>
+              <Link href="/browse">
+                <button className="bg-[#a8323e] hover:bg-[#d32f2f] text-white px-6 py-2 rounded-lg font-semibold text-base shadow transition">
+                  Browse more recipes &raquo;
+                </button>
+              </Link>
             </div>
           </div>
         </div>
