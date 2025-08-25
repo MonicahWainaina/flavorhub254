@@ -5,352 +5,94 @@ import { useState, useRef, useEffect } from "react";
 import FavoriteButton from "@/components/FavoriteButton";
 import Header from "@/components/Header";
 import { useAuth } from "@/context/AuthContext";
-import { useRouter } from "next/navigation"; // <-- Add this
+import { useRouter } from "next/navigation";
+import { db } from "@/lib/firebase";
+import { collection, doc, getDocs, setDoc, deleteDoc } from "firebase/firestore";
 
-// Dummy favorite recipes (replace with real data)
-const favoriteRecipes = [
-	{
-		title: "Barbecue wings",
-		img: "/assets/barbecue-wings.jpg",
-		rating: 5.0,
-		time: 35,
-	},
-	{
-		title: "RedVelvet Cake",
-		img: "/assets/red-velvet.jpg",
-		rating: 5.0,
-		time: 45,
-	},
-	{
-		title: "Mandazi",
-		img: "/assets/mandazi.jpg",
-		rating: 4.0,
-		time: 20,
-	},
-	{
-		title: "Kienyeji Chicken",
-		img: "/assets/vegis.jpg",
-		rating: 3.0,
-		time: 20,
-	},
-	{
-		title: "Vanilla Cake",
-		img: "/assets/vanilla.jpg",
-		rating: 5.0,
-		time: 45,
-	},
-	{
-		title: "Fried Chicken",
-		img: "/assets/fried-chicken-fries.jpg",
-		rating: 5.0,
-		time: 40,
-	},
-   {
-        title: "Veggie Delight",
-        img: "/assets/vegis.jpg",
-        rating: 4.5,
-        time: 25,
-    },
-    {
-        title: "Tropical Fruit Tart",
-        img: "/assets/matoke.jpg",
-        rating: 4.2,
-        time: 40,
-    },
-    {
-        title: "Classic Ugali",
-        img: "/assets/ugali-mishkaki.jpg",
-        rating: 4.8,
-        time: 15,
-    },
-    {
-        title: "Choco Banana Bread",
-        img: "/assets/vanilla.jpg",
-        rating: 4.0,
-        time: 50,
-    },
-    {
-        title: "Zesty Lemon Pie",
-        img: "/assets/pilau.jpg",
-        rating: 3.9,
-        time: 35,
-    },
-    {
-        title: "Mango Lassi",
-        img:"/assets/stew.jpg",
-        rating: 4.7,
-        time: 10,
-    },
-	   {
-        title: "Barbecue wings",
-        img: "/assets/barbecue-wings.jpg",
-        rating: 5.0,
-        time: 35,
-    },
-    {
-        title: "Spaghetti & Meatballs",
-        img: "/assets/spaghetti-meatballs.jpg",
-        rating: 4.0,
-        time: 20,
-    },
-    {
-        title: "Red Velvet",
-        img: "/assets/red-velvet.jpg",
-        rating: 3.0,
-        time: 45,
-    },
-    {
-        title: "Samosas",
-        img: "/assets/samosas.jpg",
-        rating: 5.0,
-        time: 30,
-    },
-    {
-        title: "BlackForest Cake",
-        img: "/assets/blackforest.jpg",
-        rating: 3.0,
-        time: 45,
-    },
-    {
-        title: "Mandazi",
-        img: "/assets/mandazi.jpg",
-        rating: 3.0,
-        time: 20,
-    },
-    // Second half: unique titles and placeholder images
-    {
-        title: "Veggie Delight",
-        img: "/assets/vegis.jpg",
-        rating: 4.5,
-        time: 25,
-    },
-    {
-        title: "Tropical Fruit Tart",
-        img: "/assets/matoke.jpg",
-        rating: 4.2,
-        time: 40,
-    },
-    {
-        title: "Classic Ugali",
-        img: "/assets/ugali-mishkaki.jpg",
-        rating: 4.8,
-        time: 15,
-    },
-    {
-        title: "Choco Banana Bread",
-        img: "/assets/vanilla.jpg",
-        rating: 4.0,
-        time: 50,
-    },
-    {
-        title: "Zesty Lemon Pie",
-        img: "/assets/pilau.jpg",
-        rating: 3.9,
-        time: 35,
-    },
-    {
-        title: "Mango Lassi",
-        img:"/assets/stew.jpg",
-        rating: 4.7,
-        time: 10,
-    },
-	   {
-        title: "Barbecue wings",
-        img: "/assets/barbecue-wings.jpg",
-        rating: 5.0,
-        time: 35,
-    },
-    {
-        title: "Spaghetti & Meatballs",
-        img: "/assets/spaghetti-meatballs.jpg",
-        rating: 4.0,
-        time: 20,
-    },
-    {
-        title: "Red Velvet",
-        img: "/assets/red-velvet.jpg",
-        rating: 3.0,
-        time: 45,
-    },
-    {
-        title: "Samosas",
-        img: "/assets/samosas.jpg",
-        rating: 5.0,
-        time: 30,
-    },
-    {
-        title: "BlackForest Cake",
-        img: "/assets/blackforest.jpg",
-        rating: 3.0,
-        time: 45,
-    },
-    {
-        title: "Mandazi",
-        img: "/assets/mandazi.jpg",
-        rating: 3.0,
-        time: 20,
-    },
-    // Second half: unique titles and placeholder images
-    {
-        title: "Veggie Delight",
-        img: "/assets/vegis.jpg",
-        rating: 4.5,
-        time: 25,
-    },
-    {
-        title: "Tropical Fruit Tart",
-        img: "/assets/matoke.jpg",
-        rating: 4.2,
-        time: 40,
-    },
-    {
-        title: "Classic Ugali",
-        img: "/assets/ugali-mishkaki.jpg",
-        rating: 4.8,
-        time: 15,
-    },
-    {
-        title: "Choco Banana Bread",
-        img: "/assets/vanilla.jpg",
-        rating: 4.0,
-        time: 50,
-    },
-    {
-        title: "Zesty Lemon Pie",
-        img: "/assets/pilau.jpg",
-        rating: 3.9,
-        time: 35,
-    },
-    {
-        title: "Mango Lassi",
-        img:"/assets/stew.jpg",
-        rating: 4.7,
-        time: 10,
-    },
-];
-
-const categories = [
-	{
-		title: "Breakfast",
-		img: "/assets/category-breakfast.jpg",
-		alt: "Breakfast",
-	},
-	{
-		title: "Kenyan Classics",
-		img: "/assets/category-main.jpg",
-		alt: "Kenyan Classics",
-	},
-	{
-		title: "Sweet Bakes",
-		img: "/assets/sweet-bakes.jpg",
-		alt: "Sweet Bakes",
-	},
-	{
-		title: "Fried Favorites",
-		img: "/assets/fried-chicken-fries.jpg",
-		alt: "Fried Favorites",
-	},
-	{
-		title: "Guilty Pleasures",
-		img: "/assets/guiltypleasues.jpg",
-		alt: "Guilty Pleasures",
-	},
-  	{
-		title: "Sweet Bakes",
-		img: "/assets/sweet-bakes.jpg",
-		alt: "Sweet Bakes",
-	},
-	{
-		title: "Fried Favorites",
-		img: "/assets/fried-chicken-fries.jpg",
-		alt: "Fried Favorites",
-	},
-	{
-		title: "Guilty Pleasures",
-		img: "/assets/guiltypleasues.jpg",
-		alt: "Guilty Pleasures",
-	},
-];
 
 export default function FavoritesPage() {
-    const { user, loading, username } = useAuth(); // <-- Use user and loading
-    const router = useRouter(); // <-- Add this
+	const { user, loading, username } = useAuth();
+	const router = useRouter();
 
-    // Carousel logic (same as browse)
-    const carouselRef = useRef(null);
-    const [activeIndex, setActiveIndex] = useState(0);
-    const [cardWidth, setCardWidth] = useState(0);
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+	// --- Carousel logic for categories ---
+	const carouselRef = useRef(null);
+	const [activeIndex, setActiveIndex] = useState(0);
+	const [cardWidth, setCardWidth] = useState(0);
 
-    // Sort dropdown
-    const [sortBy, setSortBy] = useState("recent");
+	// --- Recipes state ---
+	const [favoriteRecipes, setFavoriteRecipes] = useState([]);
+	const [favoriteIds, setFavoriteIds] = useState([]);
+	const [recipesPerPage, setRecipesPerPage] = useState(4);
+	const [recipePage, setRecipePage] = useState(0);
+	const [sortBy, setSortBy] = useState("recent");
 
-    // Responsive recipes per page
-    const [recipesPerPage, setRecipesPerPage] = useState(4);
-    useEffect(() => {
-        function handleResize() {
-            setRecipesPerPage(window.innerWidth >= 640 ? 6 : 4);
-        }
-        handleResize();
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
-    const [recipePage, setRecipePage] = useState(0);
-    const [favoriteStates, setFavoriteStates] = useState(
-        Array(favoriteRecipes.length).fill(true)
-    );
+	// --- Fetch user's favorites from Firestore ---
+	useEffect(() => {
+		if (!user) {
+			setFavoriteRecipes([]);
+			setFavoriteIds([]);
+			return;
+		}
+		async function fetchFavorites() {
+			const favsSnap = await getDocs(collection(db, "users", user.uid, "favorites"));
+			const favs = favsSnap.docs.map(doc => ({ id: doc.id, ...doc.data().recipe }));
+			setFavoriteRecipes(favs);
+			setFavoriteIds(favs.map(f => f.id));
+		}
+		fetchFavorites();
+	}, [user]);
 
-    // Remove from favorites
-    const handleToggleFavorite = (globalIdx) => {
-        const updated = [...favoriteStates];
-        updated[globalIdx] = !updated[globalIdx];
-        setFavoriteStates(updated);
-    };
+	// --- Remove from favorites ---
+	const handleToggleFavorite = async (recipe) => {
+		if (!user) return;
+		const favRef = doc(db, "users", user.uid, "favorites", recipe.id);
+		await deleteDoc(favRef);
+		setFavoriteRecipes(recipes => recipes.filter(r => r.id !== recipe.id));
+		setFavoriteIds(ids => ids.filter(id => id !== recipe.id));
+	};
 
-    // Only show recipes still favorited
-    const filteredRecipes = favoriteRecipes.filter((_, idx) => favoriteStates[idx]);
+	// --- Responsive recipes per page ---
+	useEffect(() => {
+		function handleResize() {
+			setRecipesPerPage(window.innerWidth >= 640 ? 6 : 4);
+		}
+		handleResize();
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
 
-	// Update paginatedRecipes to use filteredRecipes
-	const totalPages = Math.ceil(filteredRecipes.length / recipesPerPage);
-	const paginatedRecipes = filteredRecipes.slice(
-		recipePage * recipesPerPage,
-		(recipePage + 1) * recipesPerPage
-	);
+	// --- Card width for category carousel ---
+	useEffect(() => {
+		function updateCardWidth() {
+			if (carouselRef.current) {
+				// Get the first card element
+				const firstCard = carouselRef.current.querySelector(".carousel-card");
+				if (firstCard) setCardWidth(firstCard.offsetWidth + 24);
+			}
+		}
+		updateCardWidth();
+		window.addEventListener("resize", updateCardWidth);
+		return () => window.removeEventListener("resize", updateCardWidth);
+	}, []);
 
-    // Dynamically calculate card width for carousel
-    useEffect(() => {
-        function updateCardWidth() {
-            if (carouselRef.current) {
-                // Get the first card element
-                const firstCard = carouselRef.current.querySelector(".carousel-card");
-                if (firstCard) {
-                    setCardWidth(firstCard.offsetWidth + 24); // 24px gap-6
-                }
-            }
-        }
-        updateCardWidth();
-        window.addEventListener("resize", updateCardWidth);
-        return () => window.removeEventListener("resize", updateCardWidth);
-    }, []);
+	// --- Scroll to card by index ---
+	const scrollToCard = (idx) => {
+		if (carouselRef.current && cardWidth) {
+			carouselRef.current.scrollTo({
+				left: idx * cardWidth,
+				behavior: "smooth",
+			});
+		}
+	};
 
-	// Scroll to card by index using dynamic cardWidth
-    const scrollToCard = (idx) => {
-        if (carouselRef.current && cardWidth) {
-            carouselRef.current.scrollTo({
-                left: idx * cardWidth,
-                behavior: "smooth",
-            });
-        }
-    };
-
-	// Carousel arrows for all screen sizes
+	// --- Carousel arrows for categories ---
 	const scroll = (direction) => {
-        let newIndex = activeIndex + (direction === "left" ? -1 : 1);
-        newIndex = Math.max(0, Math.min(categories.length - 1, newIndex));
-        scrollToCard(newIndex);
-    };
+		let newIndex = activeIndex + (direction === "left" ? -1 : 1);
+		newIndex = Math.max(0, Math.min(categories.length - 1, newIndex));
+		scrollToCard(newIndex);
+	};
 
-	// Carousel scroll logic for categories (update activeIndex on scroll)
+	// --- Carousel scroll logic for categories ---
 	const handleScroll = () => {
 		if (carouselRef.current && cardWidth) {
 			const scrollLeft = carouselRef.current.scrollLeft;
@@ -366,13 +108,20 @@ export default function FavoritesPage() {
 		}
 	}, [cardWidth]);
 
-	// Sort logic (dummy, just for UI)
+	// --- Sort logic ---
 	const sortedRecipes = [...favoriteRecipes].sort((a, b) => {
 		if (sortBy === "recent") return 0;
-		if (sortBy === "popular") return b.rating - a.rating;
-		if (sortBy === "time") return a.time - b.time;
+		if (sortBy === "popular") return (b.rating || 0) - (a.rating || 0);
+		if (sortBy === "time") return (a.time || 0) - (b.time || 0);
 		return 0;
 	});
+
+	// --- Pagination ---
+	const totalPages = Math.ceil(sortedRecipes.length / recipesPerPage);
+	const paginatedRecipes = sortedRecipes.slice(
+		recipePage * recipesPerPage,
+		(recipePage + 1) * recipesPerPage
+	);
 
 	// --- PROTECT PAGE: redirect if not logged in ---
 	useEffect(() => {
@@ -390,9 +139,40 @@ export default function FavoritesPage() {
 	}
     // --- END PROTECTION ---
 
+	// --- 404/Empty State ---
+	if (favoriteRecipes.length === 0) {
+		return (
+			<>
+				<Header />
+				<main className="min-h-screen bg-[#181818] flex flex-col items-center justify-center">
+					<Image
+						src="/assets/favourite.svg"
+						alt="No favorites"
+						width={320}
+						height={320}
+						className="mb-8"
+					/>
+					<h2 className="text-3xl font-extrabold text-white mb-2 text-center">
+						No Saved Recipes Yet!
+					</h2>
+					<p className="text-white/80 text-lg mb-6 text-center">
+						You have not saved any recipes to your favorites.<br />
+						Browse and add some delicious recipes!
+					</p>
+					<Link href="/browse">
+						<button className="bg-[#3CB371] text-white px-6 py-3 rounded-lg font-bold text-lg shadow hover:bg-[#237a4b] transition">
+							Browse Recipes
+						</button>
+					</Link>
+				</main>
+			</>
+		);
+	}
+
+	// --- Main Page ---
 	return (
 		<>
-			<Header/>
+			<Header />
 			<main className="min-h-screen bg-[#181818] px-0 py-0">
 			{/* Hero Section */}
 			<section className="w-full rounded-none shadow-lg relative">
@@ -423,87 +203,6 @@ export default function FavoritesPage() {
 							</button>
 						</form>
 					</div>
-				</div>
-			</section>
-			{/* Categories Carousel */}
-			<section className="w-full mt-7 px-0">
-				<div className="flex justify-center mb-4">
-					<div className="h-1 w-24 bg-[#3CB371] rounded-full opacity-80"></div>
-				</div>
-				<h2 className="text-3xl font-extrabold text-white text-center mb-2">
-					Categories
-				</h2>
-				{/* Carousel Arrows below title, centered */}
-				<div className="flex justify-center mb-2 gap-4">
-					<button
-						aria-label="Scroll left"
-						onClick={() => scroll("left")}
-						className="flex bg-[#3CB371] rounded-full p-3 text-white hover:bg-[#2e8b57] transition"
-						style={{ minWidth: 48, minHeight: 48 }}
-						disabled={activeIndex === 0}
-					>
-						<svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
-							<path d="M15 19l-7-7 7-7" />
-						</svg>
-					</button>
-					<button
-						aria-label="Scroll right"
-						onClick={() => scroll("right")}
-						className="flex bg-[#3CB371] rounded-full p-3 text-white hover:bg-[#2e8b57] transition"
-						style={{ minWidth: 48, minHeight: 48 }}
-						disabled={activeIndex === categories.length - 1}
-					>
-						<svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
-							<path d="M9 5l7 7-7 7" />
-						</svg>
-					</button>
-				</div>
-				<div className="flex items-center w-full px-2 sm:px-4">
-					{/* Carousel */}
-					<div
-						ref={carouselRef}
-						className="flex gap-6 overflow-x-auto scrollbar-hide py-2 w-full snap-x snap-mandatory"
-						style={{ scrollBehavior: "smooth" }}
-					>
-						{categories.map((cat, idx) => (
-							<div
-								key={cat.title + idx}
-								className="carousel-card bg-[#237a4b] rounded-xl overflow-hidden shadow-md min-w-[80vw] max-w-[80vw] sm:min-w-[260px] sm:max-w-[260px] flex flex-col snap-center transition-all duration-300"
-							>
-								<div className="bg-[#237a4b] text-center">
-									<span className="inline-block text-white px-4 py-1 font-bold text-lg">
-										{cat.title}
-									</span>
-								</div>
-								<Image
-									src={cat.img}
-									alt={cat.alt}
-									width={300}
-									height={180}
-									className="w-full h-44 object-cover"
-									style={{
-										borderTopLeftRadius: 12,
-										borderTopRightRadius: 12,
-									}}
-								/>
-							</div>
-						))}
-					</div>
-				</div>
-				{/* Pagination Dots (always visible, update with scroll) */}
-				<div className="flex justify-center mt-4 gap-2">
-					{categories.map((_, idx) => (
-						<button
-							key={idx}
-							className={`w-3 h-3 rounded-full transition-all duration-200 ${
-							idx === activeIndex
-								? "bg-[#3CB371] scale-125"
-								: "bg-gray-400 opacity-60"
-						}`}
-						onClick={() => scrollToCard(idx)}
-						aria-label={`Go to category ${idx + 1}`}
-					/>
-					))}
 				</div>
 			</section>
 			{/* Divider Line for Recipes Section */}
@@ -566,92 +265,87 @@ export default function FavoritesPage() {
 			{/* Recipes Grid */}
 			<section className="w-full px-2 sm:px-8 flex flex-col">
 				<div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6">
-					{paginatedRecipes.map((recipe, idx) => {
-                        const globalIdx = recipePage * recipesPerPage + idx;
-                        const isFav = favoriteStates.findIndex((v, i) => v && filteredRecipes[i] === recipe) !== -1;
-                        const favIdx = favoriteStates.findIndex((v, i) => v && filteredRecipes[i] === recipe);
-                        return (
-                            <div
-                                key={idx}
-                                className="flex flex-col sm:flex-row bg-[#a94f4f] rounded-[2.5rem] shadow-lg overflow-hidden min-h-[220px] max-h-[340px] sm:min-h-[170px] sm:max-h-[190px]"
-                                style={{ minWidth: 0 }}
-                            >
-                                {/* Image */}
-                                <div className="relative w-full h-[120px] sm:w-[48%] sm:h-full flex-shrink-0">
-                                    <Image
-                                        src={recipe.img}
-                                        alt={recipe.title}
-                                        fill
-                                        className="object-cover w-full h-full sm:rounded-r-[2.5rem] sm:rounded-l-[2.5rem] rounded-t-[2.5rem] sm:rounded-t-none"
-                                        style={{ minHeight: 0, maxHeight: "100%" }}
-                                    />
-                                </div>
-                                {/* Content */}
-                                <div className="flex flex-col justify-between pt-3 px-3 pb-4 sm:p-4 flex-1 min-w-0">
-                                    <div>
-                                        <span className="font-bold text-white text-base block mb-1">
-                                            {recipe.title}
-                                        </span>
-                                        <div className="flex items-center gap-2 mb-1">
-                                            <svg
-                                                width="18"
-                                                height="18"
-                                                fill="#FFD700"
-                                                viewBox="0 0 20 20"
-                                            >
-                                                <path d="M10 15l-5.878 3.09 1.122-6.545L.488 6.91l6.561-.955L10 0l2.951 5.955 6.561.955-4.756 4.635 1.122 6.545z" />
-                                            </svg>
-                                            <span className="text-yellow-300 font-bold text-sm">
-                                                ({recipe.rating.toFixed(1)})
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center gap-3 mb-1">
-                                        <svg
-                                            width="16"
-                                            height="16"
-                                            fill="none"
-                                            stroke="#fff"
-                                            strokeWidth="2"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <circle cx="12" cy="12" r="10" />
-                                            <path d="M12 6v6l4 2" />
-                                        </svg>
-                                        <span className="text-white text-sm">
-                                            {recipe.time} mins
-                                        </span>
-                                        {/* Favorite Icon */}
-                                        <FavoriteButton
-                                            isFav={isFav}
-                                            onClick={() => handleToggleFavorite(favIdx)}
-                                        />
-                                    </div>
-                                    <hr className="border-t border-white/30 my-2" />
-                                    <button className="bg-white text-black px-4 py-2 rounded-lg font-bold w-fit text-sm shadow transition hover:bg-[#3CB371] hover:text-white">
-                                        View Recipe
-                                    </button>
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
-                {/* Pagination Dots */}
-                <div className="flex justify-center mt-4 gap-2">
-                    {Array.from({ length: totalPages }).map((_, idx) => (
-                        <button
-                            key={idx}
-                            className={`w-3 h-3 rounded-full transition-all duration-200 ${
-                                idx === recipePage
-                                    ? "bg-[#3CB371] scale-125"
-                                    : "bg-gray-400 opacity-60"
-                            }`}
-                            onClick={() => setRecipePage(idx)}
-                            aria-label={`Go to page ${idx + 1}`}
-                        />
-                    ))}
-                </div>
-            </section>
+					{paginatedRecipes.map((recipe) => (
+						<div
+							key={recipe.id}
+							className="flex flex-col sm:flex-row bg-[#a94f4f] rounded-[2.5rem] shadow-lg overflow-hidden min-h-[220px] max-h-[340px] sm:min-h-[170px] sm:max-h-[190px]"
+							style={{ minWidth: 0 }}
+						>
+							{/* Image */}
+							<div className="relative w-full h-[120px] sm:w-[48%] sm:h-full flex-shrink-0">
+								<Image
+									src={recipe.image?.url || "/assets/placeholder.jpg"}
+									alt={recipe.image?.alt || recipe.title}
+									fill
+									className="object-cover w-full h-full sm:rounded-r-[2.5rem] sm:rounded-l-[2.5rem] rounded-t-[2.5rem] sm:rounded-t-none"
+									style={{ minHeight: 0, maxHeight: '100%' }}
+								/>
+							</div>
+							{/* Content */}
+							<div className="flex flex-col justify-between pt-3 px-3 pb-4 sm:p-4 flex-1 min-w-0">
+								<div>
+									<span className="font-bold text-white text-base block mb-1">
+										{recipe.title}
+									</span>
+									<div className="flex items-center gap-2 mb-1">
+										<svg
+											width="18"
+											height="18"
+											fill="#FFD700"
+											viewBox="0 0 20 20"
+										>
+											<path d="M10 15l-5.878 3.09 1.122-6.545L.488 6.91l6.561-.955L10 0l2.951 5.955 6.561.955-4.756 4.635 1.122 6.545z" />
+										</svg>
+										<span className="text-yellow-300 font-bold text-sm">
+											({recipe.rating?.toFixed(1) ?? "N/A"})
+										</span>
+									</div>
+								</div>
+								<div className="flex items-center gap-3 mb-1">
+									<svg
+										width="16"
+										height="16"
+										fill="none"
+										stroke="#fff"
+										strokeWidth="2"
+										viewBox="0 0 24 24"
+									>
+										<circle cx="12" cy="12" r="10" />
+										<path d="M12 6v6l4 2" />
+									</svg>
+									<span className="text-white text-sm">
+										{recipe.time} mins
+									</span>
+									{/* Favorite Icon */}
+									<FavoriteButton
+										isFav={favoriteIds.includes(recipe.id)}
+										onClick={() => handleToggleFavorite(recipe)}
+									/>
+								</div>
+								<hr className="border-t border-white/30 my-2" />
+								<button className="bg-white text-black px-4 py-2 rounded-lg font-bold w-fit text-sm shadow transition hover:bg-[#3CB371] hover:text-white">
+									View Recipe
+								</button>
+							</div>
+						</div>
+					))}
+				</div>
+				{/* Pagination Dots */}
+				<div className="flex justify-center mt-4 gap-2">
+					{Array.from({ length: totalPages }).map((_, idx) => (
+						<button
+							key={idx}
+							className={`w-3 h-3 rounded-full transition-all duration-200 ${
+								idx === recipePage
+									? "bg-[#3CB371] scale-125"
+									: "bg-gray-400 opacity-60"
+							}`}
+							onClick={() => setRecipePage(idx)}
+							aria-label={`Go to page ${idx + 1}`}
+						/>
+					))}
+				</div>
+			</section>
 			{/* AI Recipe Generator Section */}
 			<section className="w-full mt-12 px-2 sm:px-8">
 				<div className="relative w-full rounded-2xl overflow-hidden h-[120px] sm:h-[180px] flex items-center justify-center mb-10">
