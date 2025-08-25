@@ -71,7 +71,7 @@ export default function Header({
 
   return (
     <header className="w-full shadow-md bg-transparent absolute top-0 left-0 z-50">
-      <div className="max-w-7xl mx-auto flex items-center px-4 py-4 sm:py-6 justify-between">
+      <div className="max-w-8xl mx-auto flex items-center px-4 py-4 sm:py-6 justify-between">
         {/* Logo and Title */}
         <Link
           href="/"

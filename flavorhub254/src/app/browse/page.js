@@ -4,9 +4,10 @@ import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import FavoriteButton from "@/components/FavoriteButton";
 import Header from "@/components/Header";
-import { collection, getDocs } from "firebase/firestore";
+import { doc, setDoc, deleteDoc, getDocs, collection } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useSearchParams } from "next/navigation";
+import { useAuth } from "@/context/AuthContext"; // <-- Add this import
 
 // Category images lookup
 const CATEGORY_IMAGES = {
@@ -46,6 +47,8 @@ export default function BrowsePage() {
     const [recipes, setRecipes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const { user } = useAuth(); // <-- Add this line
+    const [favoriteIds, setFavoriteIds] = useState([]); // <-- Add this line
 
     // Search/autocomplete state
     const [searchTerm, setSearchTerm] = useState("");
@@ -162,6 +165,32 @@ export default function BrowsePage() {
         let newIndex = activeIndex + (direction === "left" ? -1 : 1);
         newIndex = Math.max(0, Math.min(uniqueCategories.length - 1, newIndex));
         scrollToCard(newIndex);
+    };
+
+    // Fetch user's favorites from Firestore
+    useEffect(() => {
+        if (!user) return setFavoriteIds([]);
+        async function fetchFavorites() {
+            const favsSnap = await getDocs(collection(db, "users", user.uid, "favorites"));
+            setFavoriteIds(favsSnap.docs.map(doc => doc.id));
+        }
+        fetchFavorites();
+    }, [user]);
+
+    // Toggle favorite in Firestore
+    const handleToggleFavorite = async (recipe) => {
+        if (!user) {
+            window.alert("Please log in or sign up to save this recipe!");
+            return;
+        }
+        const favRef = doc(db, "users", user.uid, "favorites", recipe.id);
+        if (favoriteIds.includes(recipe.id)) {
+            await deleteDoc(favRef);
+            setFavoriteIds(ids => ids.filter(id => id !== recipe.id));
+        } else {
+            await setDoc(favRef, { recipe, addedAt: Date.now() });
+            setFavoriteIds(ids => [...ids, recipe.id]);
+        }
     };
 
     // --- UI ---
@@ -464,8 +493,11 @@ export default function BrowsePage() {
                                                     <path d="M12 6v6l4 2" />
                                                 </svg>
                                                 <span className="text-white text-sm">{recipe.time || "N/A"} mins</span>
-                                                {/* Heart-in-Circle SVG Button */}
-                                                <FavoriteButton />
+                                                {/* Favorite Icon */}
+                                                <FavoriteButton
+                                                    isFav={favoriteIds.includes(recipe.id)}
+                                                    onClick={() => handleToggleFavorite(recipe)}
+                                                />
                                             </div>
                                             <hr className="border-t border-white/30 my-2" />
                                             <Link href={`/recipe/${recipe.slug}`}>
@@ -778,8 +810,11 @@ export default function BrowsePage() {
                                                             <path d="M12 6v6l4 2" />
                                                         </svg>
                                                         <span className="text-white text-sm">{recipe.time || "N/A"} mins</span>
-                                                        {/* Heart-in-Circle SVG Button */}
-                                                        <FavoriteButton />
+                                                        {/* Favorite Icon */}
+                                                        <FavoriteButton
+                                                            isFav={favoriteIds.includes(recipe.id)}
+                                                            onClick={() => handleToggleFavorite(recipe)}
+                                                        />
                                                     </div>
                                                     <hr className="border-t border-white/30 my-2" />
                                                     <Link href={`/recipe/${recipe.slug}`}>

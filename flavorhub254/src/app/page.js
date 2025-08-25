@@ -1,11 +1,12 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs, query, where, doc, setDoc, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import Image from "next/image";
 import Link from "next/link";
 import Header from "@/components/Header";
 import { useAuth } from "@/context/AuthContext";
+import FavoriteButton from "@/components/FavoriteButton"; // <-- Import this
 
 export default function HomePage() {
   const { user, username, logOut, loading } = useAuth();
@@ -77,6 +78,35 @@ export default function HomePage() {
     }
     fetchCategories();
   }, []);
+
+  // --- Fetch user's favorites from Firestore ---
+  useEffect(() => {
+    if (!user) {
+      setFavoriteIds([]);
+      return;
+    }
+    async function fetchFavorites() {
+      const favsSnap = await getDocs(collection(db, "users", user.uid, "favorites"));
+      setFavoriteIds(favsSnap.docs.map(doc => doc.id));
+    }
+    fetchFavorites();
+  }, [user]);
+
+  // --- Toggle favorite in Firestore ---
+  const handleToggleFavorite = async (recipe) => {
+    if (!user) {
+      window.alert("Please log in or sign up to save this recipe!");
+      return;
+    }
+    const favRef = doc(db, "users", user.uid, "favorites", recipe.id);
+    if (favoriteIds.includes(recipe.id)) {
+      await deleteDoc(favRef);
+      setFavoriteIds(ids => ids.filter(id => id !== recipe.id));
+    } else {
+      await setDoc(favRef, { recipe, addedAt: Date.now() });
+      setFavoriteIds(ids => [...ids, recipe.id]);
+    }
+  };
 
   // --- Carousel scroll logic ---
   const scrollCarousel = (direction) => {
@@ -277,31 +307,15 @@ export default function HomePage() {
                     >
                       {recipe.title}
                     </h3>
-                    {/* Heart Icon (right) */}
-                    <button
-                      className="ml-2 z-20 bg-transparent p-0 hover:scale-110 transition"
+                    {/* Favorite Icon */}
+                    <FavoriteButton
+                      isFav={favoriteIds.includes(recipe.id)}
                       onClick={e => {
                         e.preventDefault();
                         e.stopPropagation();
-                        setFavoriteIds(ids =>
-                          ids.includes(recipe.id)
-                            ? ids.filter(id => id !== recipe.id)
-                            : [...ids, recipe.id]
-                        );
+                        handleToggleFavorite(recipe);
                       }}
-                      aria-label="Toggle favorite"
-                      tabIndex={0}
-                    >
-                      {favoriteIds.includes(recipe.id) ? (
-                        <svg className="w-6 h-6 text-white-500" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                        </svg>
-                      ) : (
-                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M3 8.25C3 5.35 5.52 3 8.5 3c1.74 0 3.41.81 4.5 2.09C14.09 3.81 15.76 3 17.5 3 20.48 3 23 5.35 23 8.25c0 3.78-3.4 6.86-8.55 11.54a1.25 1.25 0 01-1.7 0C6.4 15.11 3 12.03 3 8.25z"/>
-                        </svg>
-                      )}
-                    </button>
+                    />
                   </div>
                 </div>
               ))}
