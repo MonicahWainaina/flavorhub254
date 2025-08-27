@@ -16,8 +16,8 @@ import "react-toastify/dist/ReactToastify.css";
 function toFraction(decimal) {
   // Round to nearest 0.25
   const rounded = Math.round(decimal * 4) / 4;
-  const map = { 0.25: "1/4", 0.5: "1/2", 0.75: "3/4" };
-  if (rounded === 0) return "";
+  const map = { 0.25: '1/4', 0.5: '1/2', 0.75: '3/4' };
+  if (rounded === 0) return '';
   if (map[rounded]) return map[rounded];
   return rounded.toString();
 }
@@ -25,25 +25,26 @@ function toFraction(decimal) {
 // Utility: smart rounding for ingredient amounts
 function smartRound(amount, unit) {
   if (
-    ["large", "medium", "small", "cloves", "egg", "eggs", "onion", "onions"].some(u =>
-      (unit || "").toLowerCase().includes(u)
-    )
+    [
+      'large',
+      'medium',
+      'small',
+      'cloves',
+      'egg',
+      'eggs',
+      'onion',
+      'onions',
+    ].some((u) => (unit || '').toLowerCase().includes(u))
   ) {
     return Math.round(amount);
   }
-  if (
-    ["tsp", "tbsp"].some(u => (unit || "").toLowerCase().includes(u))
-  ) {
+  if (['tsp', 'tbsp'].some((u) => (unit || '').toLowerCase().includes(u))) {
     const whole = Math.floor(amount);
     const decimal = amount - whole;
     const frac = toFraction(decimal);
-    return frac
-      ? `${whole > 0 ? whole + " " : ""}${frac}`
-      : `${whole}`;
+    return frac ? `${whole > 0 ? whole + ' ' : ''}${frac}` : `${whole}`;
   }
-  if (
-    ["g", "ml"].some(u => (unit || "").toLowerCase().includes(u))
-  ) {
+  if (['g', 'ml'].some((u) => (unit || '').toLowerCase().includes(u))) {
     return Math.round(amount);
   }
   return Math.round(amount * 100) / 100;
@@ -52,40 +53,46 @@ function smartRound(amount, unit) {
 // Utility: scale ingredients and optionally servings
 function scaleIngredients(recipe, { flour, servings }) {
   if (recipe.editable_ingredients) {
-    const flourObj = recipe.ingredients.find(i => i.editable);
+    const flourObj = recipe.ingredients.find((i) => i.editable);
     const baseFlour = flourObj.amount;
     const scale = flour / baseFlour;
     const scaledServings = Math.round((recipe.base_servings || 1) * scale);
     return {
-      ingredients: recipe.ingredients.map(i => ({
+      ingredients: recipe.ingredients.map((i) => ({
         ...i,
         amount: i.editable
           ? smartRound(flour, i.unit)
-          : smartRound(i.amount * scale, i.unit)
+          : smartRound(i.amount * scale, i.unit),
       })),
-      servings: scaledServings
+      servings: scaledServings,
     };
   } else if (recipe.adjustable_servings) {
     const scale = servings / recipe.base_servings;
     return {
-      ingredients: recipe.ingredients.map(i => ({
+      ingredients: recipe.ingredients.map((i) => ({
         ...i,
-        amount: smartRound(i.amount * scale, i.unit)
+        amount: smartRound(i.amount * scale, i.unit),
       })),
-      servings
+      servings,
     };
   }
-  return { ingredients: recipe.ingredients, servings: recipe.base_servings || 1 };
+  return {
+    ingredients: recipe.ingredients,
+    servings: recipe.base_servings || 1,
+  };
 }
 
 // Metric conversion utility (basic, for demo)
 function convertUnit(amount, unit, toMetric) {
   if (!toMetric) {
-    if (unit === "g") return { amount: Math.round(amount / 28.35 * 100) / 100, unit: "oz" };
-    if (unit === "ml") return { amount: Math.round(amount / 240 * 100) / 100, unit: "cups" };
+    if (unit === 'g')
+      return { amount: Math.round((amount / 28.35) * 100) / 100, unit: 'oz' };
+    if (unit === 'ml')
+      return { amount: Math.round((amount / 240) * 100) / 100, unit: 'cups' };
   } else {
-    if (unit === "oz") return { amount: Math.round(amount * 28.35), unit: "g" };
-    if (unit === "cups") return { amount: Math.round(amount * 240), unit: "ml" };
+    if (unit === 'oz') return { amount: Math.round(amount * 28.35), unit: 'g' };
+    if (unit === 'cups')
+      return { amount: Math.round(amount * 240), unit: 'ml' };
   }
   return { amount, unit };
 }
@@ -111,7 +118,7 @@ export default function RecipePage({ params }) {
   useEffect(() => {
     async function fetchRecipe() {
       setLoading(true);
-      const q = query(collection(db, "recipes"), where("slug", "==", slug));
+      const q = query(collection(db, 'recipes'), where('slug', '==', slug));
       const querySnapshot = await getDocs(q);
       if (!querySnapshot.empty) {
         const recipeData = querySnapshot.docs[0].data();
@@ -121,9 +128,9 @@ export default function RecipePage({ params }) {
         // Check if favorite
         if (user) {
           const favDoc = await getDocs(
-            collection(db, "users", user.uid, "favorites")
+            collection(db, 'users', user.uid, 'favorites')
           );
-          const favIds = favDoc.docs.map(doc => doc.id);
+          const favIds = favDoc.docs.map((doc) => doc.id);
           setIsFav(favIds.includes(querySnapshot.docs[0].id));
         } else {
           setIsFav(false);
@@ -139,12 +146,12 @@ export default function RecipePage({ params }) {
   // Toggle favorite
   const handleToggleFavorite = async () => {
     if (!user) {
-      toast.info("Please log in or sign up to save this recipe!");
+      toast.info('Please log in or sign up to save this recipe!');
       return;
     }
     if (!recipe) return;
     const recipeId = recipe.id || slug;
-    const favRef = doc(db, "users", user.uid, "favorites", recipeId);
+    const favRef = doc(db, 'users', user.uid, 'favorites', recipeId);
     if (isFav) {
       await deleteDoc(favRef);
       setIsFav(false);
@@ -157,10 +164,13 @@ export default function RecipePage({ params }) {
   // Adjustment logic
   useEffect(() => {
     if (!recipe) return;
-    let scaled = { ingredients: recipe.ingredients, servings: recipe.base_servings || 1 };
+    let scaled = {
+      ingredients: recipe.ingredients,
+      servings: recipe.base_servings || 1,
+    };
     if (isAdjusting) {
       if (recipe.editable_ingredients) {
-        const flourObj = recipe.ingredients.find(i => i.editable);
+        const flourObj = recipe.ingredients.find((i) => i.editable);
         const flourVal = adjustedFlour ?? flourObj.amount;
         scaled = scaleIngredients(recipe, { flour: flourVal });
       } else if (recipe.adjustable_servings) {
@@ -173,7 +183,7 @@ export default function RecipePage({ params }) {
 
   // Add this after fetching recipe:
   useEffect(() => {
-    if (recipe && recipe.adjustment_rules?.display_unit === "us") {
+    if (recipe && recipe.adjustment_rules?.display_unit === 'us') {
       setMetric(false);
     } else {
       setMetric(true);
@@ -204,7 +214,7 @@ export default function RecipePage({ params }) {
   };
 
   const handleFlourChange = (e) => {
-    const flourObj = recipe.ingredients.find(i => i.editable);
+    const flourObj = recipe.ingredients.find((i) => i.editable);
     const min = flourObj.min || 100;
     const max = flourObj.max || 1000;
     let val = Number(e.target.value);
@@ -215,18 +225,18 @@ export default function RecipePage({ params }) {
 
   const handleDecrease = () => {
     if (recipe && recipe.adjustable_servings && isAdjusting) {
-      setServings(prev => Math.max(recipe.min_servings || 1, prev - 1));
+      setServings((prev) => Math.max(recipe.min_servings || 1, prev - 1));
     }
   };
   const handleIncrease = () => {
     if (recipe && recipe.adjustable_servings && isAdjusting) {
-      setServings(prev => Math.min(recipe.max_servings || 20, prev + 1));
+      setServings((prev) => Math.min(recipe.max_servings || 20, prev + 1));
     }
   };
 
   // Metric dropdown handler
   const handleMetricChange = (e) => {
-    setMetric(e.target.value === "metric");
+    setMetric(e.target.value === 'metric');
   };
 
   // Close prompt handler
@@ -236,9 +246,7 @@ export default function RecipePage({ params }) {
   };
 
   if (loading)
-    return (
-      <div className="text-white text-center py-20">Loading...</div>
-    );
+    return <div className="text-white text-center py-20">Loading...</div>;
   if (!recipe)
     return (
       <div className="text-white text-center py-20">Recipe not found.</div>
@@ -253,7 +261,7 @@ export default function RecipePage({ params }) {
             src="/assets/backdrop.jpg"
             alt=""
             className="w-full h-full object-cover"
-            style={{ objectPosition: "center" }}
+            style={{ objectPosition: 'center' }}
           />
           <div className="absolute inset-0 bg-black opacity-80" />
         </div>
@@ -269,20 +277,26 @@ export default function RecipePage({ params }) {
                   {recipe.category}
                 </span>
                 <div className="flex items-center gap-2 mb-2">
-                  <h1 className="text-3xl font-bold text-white">{recipe.title}</h1>
-                  <FavoriteButton isFav={isFav} onClick={handleToggleFavorite} />
+                  <h1 className="text-3xl font-bold text-white">
+                    {recipe.title}
+                  </h1>
+                  <FavoriteButton
+                    isFav={isFav}
+                    onClick={handleToggleFavorite}
+                  />
                 </div>
                 <div className="flex items-center gap-2 mb-4">
                   <span className="text-yellow-400 text-xl">★</span>
                   <span className="text-white font-semibold">
-                    ({recipe.rating?.toFixed(1) || "N/A"})
+                    ({recipe.rating?.toFixed(1) || 'N/A'})
                   </span>
                 </div>
                 <hr className="border-white/60 mb-2" />
                 <div className="flex items-center justify-between mb-2">
                   <h2 className="text-xl font-bold text-white">INGREDIENTS</h2>
                   {recipe.editable_ingredients ? (
-                    isAdjusting && recipe.adjustment_rules?.show_reset_button ? (
+                    isAdjusting &&
+                    recipe.adjustment_rules?.show_reset_button ? (
                       <button
                         className="bg-yellow-600 text-white px-3 py-1 rounded-lg text-sm font-semibold ml-2"
                         onClick={handleResetClick}
@@ -310,30 +324,33 @@ export default function RecipePage({ params }) {
                 {/* Adjustment UI */}
                 {isAdjusting && recipe.editable_ingredients && (
                   <div className="mb-4">
-                    {recipe.ingredients.filter(i => i.editable).map((flour, idx) => (
-                      <div key={idx} className="flex items-center gap-2">
-                        <label className="text-white font-semibold">
-                          {flour.name}:
-                        </label>
-                        <input
-                          type="number"
-                          min={flour.min}
-                          max={flour.max}
-                          step={recipe.scaling_step || 10}
-                          value={adjustedFlour ?? flour.amount}
-                          onChange={handleFlourChange}
-                          className="rounded px-2 py-1"
-                        />
-                        <span className="text-white">{flour.unit}</span>
-                      </div>
-                    ))}
+                    {recipe.ingredients
+                      .filter((i) => i.editable)
+                      .map((flour, idx) => (
+                        <div key={idx} className="flex items-center gap-2">
+                          <label className="text-white font-semibold">
+                            {flour.name}:
+                          </label>
+                          <input
+                            type="number"
+                            min={flour.min}
+                            max={flour.max}
+                            step={recipe.scaling_step || 10}
+                            value={adjustedFlour ?? flour.amount}
+                            onChange={handleFlourChange}
+                            className="rounded px-2 py-1"
+                          />
+                          <span className="text-white">{flour.unit}</span>
+                        </div>
+                      ))}
                   </div>
                 )}
                 {/* Show message as a closable prompt if neither is adjustable */}
                 {showAdjustMsg && (
                   <div className="mb-4 bg-yellow-100 text-yellow-900 rounded-lg px-4 py-2 font-semibold flex items-center justify-between">
                     <span>
-                      This recipe&apos;s ingredients and servings cannot be adjusted.
+                      This recipe&apos;s ingredients and servings cannot be
+                      adjusted.
                     </span>
                     <button
                       className="ml-4 px-2 py-1 bg-yellow-300 text-yellow-900 rounded"
@@ -348,7 +365,8 @@ export default function RecipePage({ params }) {
                 {showServingsPrompt && (
                   <div className="mb-4 bg-blue-100 text-blue-900 rounded-lg px-4 py-2 font-semibold flex items-center justify-between">
                     <span>
-                      This recipe&apos;s ingredients cannot be adjusted try adjusting the servings instead.
+                      This recipe&apos;s ingredients cannot be adjusted try
+                      adjusting the servings instead.
                     </span>
                     <button
                       className="ml-4 px-2 py-1 bg-blue-300 text-blue-900 rounded"
@@ -361,10 +379,12 @@ export default function RecipePage({ params }) {
                 )}
                 {/* Metrics Dropdown */}
                 <div className="mb-4 bg-white rounded-lg px-3 py-2 inline-block">
-                  <label className="text-black mr-2 font-semibold">Metrics:</label>
+                  <label className="text-black mr-2 font-semibold">
+                    Metrics:
+                  </label>
                   <select
                     className="rounded-lg px-2 py-1 text-black bg-white border border-gray-300"
-                    value={metric ? "metric" : "us"}
+                    value={metric ? 'metric' : 'us'}
                     onChange={handleMetricChange}
                   >
                     <option value="metric">Metric</option>
@@ -374,14 +394,18 @@ export default function RecipePage({ params }) {
                 <ul className="mb-6 space-y-2">
                   {adjustedIngredients && adjustedIngredients.length > 0 ? (
                     adjustedIngredients.map((item, idx) => {
-                      const { amount, unit } = convertUnit(item.amount, item.unit, metric);
+                      const { amount, unit } = convertUnit(
+                        item.amount,
+                        item.unit,
+                        metric
+                      );
                       return (
                         <li
                           key={idx}
                           className="bg-[#d97d7d] rounded-lg px-4 py-2 text-white"
                         >
                           {item.name
-                            ? `${amount ?? ""} ${unit ?? ""} ${item.name}`
+                            ? `${amount ?? ''} ${unit ?? ''} ${item.name}`
                             : String(item)}
                         </li>
                       );
@@ -397,7 +421,9 @@ export default function RecipePage({ params }) {
                 </h2>
                 <ol className="list-decimal list-inside space-y-2 text-white">
                   {recipe.instructions && recipe.instructions.length > 0 ? (
-                    recipe.instructions.map((step, idx) => <li key={idx}>{step}</li>)
+                    recipe.instructions.map((step, idx) => (
+                      <li key={idx}>{step}</li>
+                    ))
                   ) : (
                     <li>No instructions listed.</li>
                   )}
@@ -406,7 +432,7 @@ export default function RecipePage({ params }) {
               {/* Right: Image & Actions */}
               <div className="flex-1 flex flex-col items-center min-w-0">
                 <Image
-                  src={recipe.image?.url || "/assets/placeholder.jpg"}
+                  src={recipe.image?.url || '/assets/placeholder.jpg'}
                   alt={recipe.image?.alt || recipe.title}
                   width={400}
                   height={300}
@@ -431,7 +457,7 @@ export default function RecipePage({ params }) {
                         strokeLinejoin="round"
                       />
                     </svg>
-                    {recipe.time || "N/A"} mins
+                    {recipe.time || 'N/A'} mins
                   </span>
                   {recipe.adjustable_servings && (
                     <span className="bg-[#232323] text-white px-3 py-1 rounded-lg flex items-center gap-2">
@@ -444,7 +470,10 @@ export default function RecipePage({ params }) {
                         -
                       </button>
                       <span className="font-semibold">
-                        {recipe.editable_ingredients ? adjustedServings : servings} Servings
+                        {recipe.editable_ingredients
+                          ? adjustedServings
+                          : servings}{' '}
+                        Servings
                       </span>
                       <button
                         className="text-lg px-2 font-bold hover:bg-[#444] rounded"
@@ -469,7 +498,8 @@ export default function RecipePage({ params }) {
                         s-11,16.2-16.3,16.2c0,0,5.6-7.6,0.5-12.5c-7.3-7-4.2-11.4-4.2-11.4S14.2,42.8,28.1,58.1z"
                         fill="#231F20"
                       />
-                      <path d="M28.1,56.1c0,0-16.1-2.4-16.1-16.1s21-15,16.4-32c0,0,15.7,4.9,11.9,20.2c0,0,2.1-1.3,3.7-3.9c0,0,8,6.2,8,15.5
+                      <path
+                        d="M28.1,56.1c0,0-16.1-2.4-16.1-16.1s21-15,16.4-32c0,0,15.7,4.9,11.9,20.2c0,0,2.1-1.3,3.7-3.9c0,0,8,6.2,8,15.5
                       s-11,16.2-16.3,16.2c0,0,5.6-7.6,0.5-12.5c-7.3-7-4.2-11.4-4.2-11.4S14.2,40.8,28.1,56.1z"
                         fill="#F5CF87"
                       />
