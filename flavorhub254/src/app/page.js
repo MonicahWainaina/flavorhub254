@@ -372,14 +372,16 @@ export default function HomePage() {
           </div>
           {/* Row: Phone image and features side by side */}
           <div className="flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-16 mt-0">
-            {/* Left: Phone mockup under lemon leaves */}
-            <img
-              src="/assets/phone-mockup.png"
+            {/* Left: Laptop mockup */}
+            {/* Right: Phone mockup */}
+                        <img
+              src="/assets/bbb2.png"
               alt="FlavorHUB254 on phone"
-              className="max-w-[320px] w-full object-contain"
+              className="max-w-[500px] w-full h-[480px] object-contain "
+              style={{ minWidth: 0 }}
             />
-            {/* Right: Features, add margin-top on md+ screens */}
-            <div className="flex-1 flex flex-col justify-center h-full mt-0 md:mt-16">
+            {/* Right: Features */}
+            <div className="flex-1 flex flex-col l-18 justify-center h-full mt-0 md:mt-16">
               <ul className="space-y-7 text-base sm:text-lg w-full">
                 <li className="flex items-center">
                   <span className="text-green-500 mr-4" style={{ fontSize: '2.2rem', lineHeight: 1 }}>★</span>
@@ -399,13 +401,13 @@ export default function HomePage() {
                     Generate custom recipes, ask cooking questions or get ideas with FlavorBot.
                   </span>
                 </li>
-                <li className="flex items-center">
+                                <li className="flex items-center">
                   <span className="text-green-500 mr-4" style={{ fontSize: '2.2rem', lineHeight: 1 }}>★</span>
                   <span className="block text-white">
                     Generate custom recipes, ask cooking questions or get ideas with FlavorBot.
                   </span>
                 </li>
-                <li className="flex items-center">
+                                <li className="flex items-center">
                   <span className="text-green-500 mr-4" style={{ fontSize: '2.2rem', lineHeight: 1 }}>★</span>
                   <span className="block text-white">
                     Generate custom recipes, ask cooking questions or get ideas with FlavorBot.
@@ -413,11 +415,7 @@ export default function HomePage() {
                 </li>
               </ul>
             </div>
-            <img
-              src="/assets/phone-mockup.png"
-              alt="FlavorHUB254 on phone"
-              className="max-w-[320px] w-full object-contain"
-            />
+
           </div>
         </div>
       </section>
