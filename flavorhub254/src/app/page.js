@@ -117,11 +117,11 @@ export default function HomePage() {
   };
 
   return (
-    <>
+    <main className="min-h-screen bg-gradient-to-br from-[#1a1a1a] to-black">
       <Header showSearch />
 
       {/* Hero + Cards Section */}
-      <section className="w-full bg-gradient-to-br from-[#232323] to-black py-8 sm:py-12 min-h-[90vh] pt-28 sm:pt-34">
+      <section className="w-full  py-8 sm:py-12 min-h-[90vh] pt-28 sm:pt-34">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row px-4 relative gap-10">
           {/* Left: Hero */}
           <div className="flex-1 flex flex-col items-start justify-start z-10 relative mb-10 md:mb-0">
@@ -136,19 +136,19 @@ export default function HomePage() {
               <img
                 src="/assets/leaves.png"
                 alt="Leaves"
-                className="absolute right-[-120px] top-10 w-50 h-120 sm:w-45 sm:h-70 z-0 hidden md:block"
+                className="absolute right-[-120px] top-10 w-50 h-120 sm:w-45 sm:h-70 z-0 hidden md:block animate-pulse"
                 style={{ pointerEvents: "none" }}
               />
               {/* Hero Image (optional, can keep or remove) */}
               <img
                 src="/assets/ugaliskumabeef.png"
                 alt="Ugali, Sukuma, Beef Stew"
-                className="w-full max-w-[400px] object-cover relative z-5 right-[-2px] mb-4 self-start -ml-4 sm:-ml-6"
+                className="w-full max-w-[400px] object-cover relative z-5 right-[-2px] mb-8 self-start -ml-4 sm:-ml-6 animate-float"
                 style={{ background: "transparent", aspectRatio: "4/2" }}
               />
               {/* Button */}
               <Link href="/browse">
-              <button className="bg-green-700 hover:bg-green-800 text-white px-6 py-3 rounded-lg font-semibold text-base sm:text-lg shadow-lg transition relative z-10 mt-2 w-full sm:w-auto">
+              <button className="bg-green-700 hover:bg-green-800 text-white px-6 py-3 rounded-lg font-semibold text-base sm:text-lg shadow-lg transition relative z-10 mt-5 w-full sm:w-auto">
                 Explore Recipes <span className="ml-2">&raquo;&raquo;</span>
               </button>
               </Link>
@@ -210,7 +210,7 @@ export default function HomePage() {
       </section>
 
       {/* Featured Recipes Carousel Section */}
-      <section className="w-full mt-8 sm:mt-10 px-4">
+      <section className=" w-full mt-8 sm:mt-10 px-4 sm:mb-7">
         <div className="max-w-7xl mx-auto">
           {/* Section Title */}
           <div className="flex items-center mb-6">
@@ -328,10 +328,10 @@ export default function HomePage() {
       </section>
     
       {/* --- NEW: What You Can Do Here Section --- */}
-      <section className="w-full bg-gradient-to-br from-[#1a1a1a] to-black py-16 px-4 mt-12 overflow-visible">
+      <section className="w-full  py-5 px-4 mt-10 overflow-visible">
         <div className="max-w-7xl mx-auto">
           {/* Title row */}
-          <div className="flex items-start mb-2 overflow-visible relative">
+          <div className="flex items-start mt-6 overflow-visible relative">
             <div className="flex items-center overflow-visible w-full">
               <h2 className="text-2xl sm:text-4xl font-bold text-white mr-2 sm:mr-3 whitespace-nowrap z-10">
                 What&nbsp; You Can Do Here
@@ -357,17 +357,16 @@ export default function HomePage() {
             </div>
           </div>
           {/* Row: Phone image and features side by side */}
-          <div className="flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-16 mt-0">
+          <div className="flex flex-col md:flex-row items-center md:items-start  md:gap-16">
             {/* Left: Laptop mockup */}
-            {/* Right: Phone mockup */}
-                        <img
-              src="/assets/bbb2.png"
+            <img
+              src="/assets/about.png"
               alt="FlavorHUB254 on phone"
-              className="max-w-[500px] w-full h-[480px] object-contain "
+              className="max-w-[570px] w-full sm:h-[500px] h-auto object-contain  md:mt-9 "
               style={{ minWidth: 0 }}
             />
             {/* Right: Features */}
-            <div className="flex-1 flex flex-col l-18 justify-center h-full mt-0 md:mt-16">
+            <div className="flex-1 flex flex-col l-18 justify-center h-full mt-0 sm:mt-10 sm:mt-2">
               <ul className="space-y-7 text-base sm:text-lg w-full">
                 <li className="flex items-center">
                   <span className="text-green-500 mr-4" style={{ fontSize: '2.2rem', lineHeight: 1 }}>★</span>
@@ -401,13 +400,12 @@ export default function HomePage() {
                 </li>
               </ul>
             </div>
-
           </div>
         </div>
       </section>
 
       {/* Category Section */}
-      <section className="w-full py-12 px-4 bg-black">
+      <section className=" w-full py-2 px-4 bg-black mt-10 sm:mb-15">
         <div className="max-w-7xl mx-auto relative">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center">
@@ -484,7 +482,7 @@ export default function HomePage() {
       </section>
 
       {/* --- FIGMA-STYLE FOOTER --- */}
-      <footer className="w-full bg-[#111] text-white py-12 px-4 mt-12 relative overflow-hidden">
+      <footer className="w-full  text-white py-12 px-4 mt-12 relative overflow-hidden">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-5 relative z-10">
           {/* Left: Logo, tagline, burger image */}
           <div className="flex flex-col justify-between relative ml-4">
@@ -565,6 +563,6 @@ export default function HomePage() {
         </svg>
         Ask Flavorbot
       </button>
-    </>
+    </main>
   );
 }
