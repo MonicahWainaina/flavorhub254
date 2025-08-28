@@ -969,9 +969,20 @@ export default function BrowsePage() {
                           {/* Content */}
                           <div className="flex flex-col justify-between pt-3 px-3 pb-4 sm:p-4 flex-1 min-w-0">
                             <div>
-                              <span className="font-bold text-white text-base block mb-1">
-                                {recipe.title}
-                              </span>
+<span
+  className="font-bold text-white text-base block mb-1"
+  style={{
+    display: '-webkit-box',
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: 'vertical',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    height: '3.1em', // increased from 2.7em to 3.1em
+    lineHeight: '1.55', // ensures enough vertical space per line
+  }}
+>
+  {recipe.title}
+</span>
                               <div className="flex items-center gap-2 mb-1">
                                 {/* Star SVG */}
                                 <svg
