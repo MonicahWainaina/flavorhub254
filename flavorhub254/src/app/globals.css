@@ -24,7 +24,7 @@
 
 /* Base styles */
 body {
-  background-color: var(--background);
+  background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
@@ -42,4 +42,13 @@ main {
 .scrollbar-hide {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;     /* Firefox */
+}
+
+/* Add this for a gentle float effect */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+.animate-float {
+  animation: float 4s ease-in-out infinite;
 }
