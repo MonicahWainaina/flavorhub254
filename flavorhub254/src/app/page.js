@@ -173,7 +173,7 @@ export default function HomePage() {
               <img
                 src="/assets/ugaliskumabeef.png"
                 alt="Ugali, Sukuma, Beef Stew"
-                className="w-full max-w-[400px] object-cover relative z-5 right-[-2px] mb-8 self-start -ml-4 sm:-ml-6 animate-float"
+                className="w-full max-w-[400px] object-cover relative z-5 right-[-2px] mb-8 self-start -ml-4 sm:-ml-6 "
                 style={{ background: "transparent", aspectRatio: "4/2" }}
               />
               {/* Button */}
@@ -565,7 +565,7 @@ export default function HomePage() {
       
     {/* Ask Flavorbot Button */}
       <button
-        className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 bg-green-700 hover:bg-green-800 text-white flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 rounded-xl shadow-lg z-[1000]"
+        className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 bg-green-700 hover:bg-green-800 text-white flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 rounded-xl shadow-lg z-[1000] animate-float-"
         style={{ fontWeight: 600, fontSize: '1.1rem' }}
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
