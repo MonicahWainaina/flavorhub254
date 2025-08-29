@@ -62,9 +62,9 @@ function useRecipesPerPage() {
   const [recipesPerPage, setRecipesPerPage] = useState(4);
   useEffect(() => {
     function handleResize() {
-      if (window.innerWidth >= 1024)
+      if (window.innerWidth >= 1300)
         setRecipesPerPage(9); // desktop
-      else if (window.innerWidth >= 640)
+      else if (window.innerWidth >= 1024)
         setRecipesPerPage(6); // tablet
       else setRecipesPerPage(4); // mobile
     }
@@ -961,7 +961,7 @@ export default function BrowsePage() {
                     </button>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                  <div className="grid grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
                     {paginatedRecipes.map((recipe, idx) => {
                       const globalIdx = recipePage * recipesPerPage + idx;
                       const isFav = favoriteStates[globalIdx];
