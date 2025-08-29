@@ -1,17 +1,17 @@
-"use client";
-import Link from "next/link";
-import { useAuth } from "@/context/AuthContext";
-import { useState, useEffect, useRef } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "@/lib/firebase";
-import Image from "next/image";
+'use client';
+import Link from 'next/link';
+import { useAuth } from '@/context/AuthContext';
+import { useState, useEffect, useRef } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import Image from 'next/image';
 
 export default function Header({
   navLinks = [
-    { href: "/", label: "Home" },
-    { href: "/browse", label: "Browse recipes" },
-    { href: "/flavorbot", label: "AI Recipe generator" },
+    { href: '/', label: 'Home' },
+    { href: '/browse', label: 'Browse recipes' },
+    { href: '/flavorbot', label: 'AI Recipe generator' },
   ],
   showSearch = false,
   searchBar = null,
@@ -23,7 +23,7 @@ export default function Header({
   // Add "Favourite Recipes" if logged in
   const links = [...navLinks];
   if (user) {
-    links.push({ href: "/favourites", label: "Favourite Recipes" });
+    links.push({ href: '/favourites', label: 'Favourite Recipes' });
   }
 
   // Filter out the current page
@@ -32,7 +32,7 @@ export default function Header({
 
   // --- Mini Search Logic ---
   const router = useRouter();
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [allRecipes, setAllRecipes] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const inputRef = useRef(null);
@@ -40,12 +40,12 @@ export default function Header({
   useEffect(() => {
     // Fetch all recipes for suggestions (title, slug, image)
     async function fetchRecipes() {
-      const snapshot = await getDocs(collection(db, "recipes"));
+      const snapshot = await getDocs(collection(db, 'recipes'));
       setAllRecipes(
         snapshot.docs.map((doc) => ({
           slug: doc.data().slug,
           title: doc.data().title,
-          image: doc.data().image?.url || "/assets/placeholder.jpg",
+          image: doc.data().image?.url || '/assets/placeholder.jpg',
         }))
       );
     }
@@ -54,9 +54,11 @@ export default function Header({
 
   // Filtered suggestions
   const suggestions = searchTerm.trim()
-    ? allRecipes.filter((r) =>
-        r.title.toLowerCase().includes(searchTerm.trim().toLowerCase())
-      ).slice(0, 6)
+    ? allRecipes
+        .filter((r) =>
+          r.title.toLowerCase().includes(searchTerm.trim().toLowerCase())
+        )
+        .slice(0, 6)
     : [];
 
   // Handle search submit
@@ -70,33 +72,34 @@ export default function Header({
   };
 
   return (
-    <header className="w-full shadow-md bg-transparent absolute top-0 left-0 z-50">
-      <div className="max-w-8xl mx-auto flex items-center px-4 py-4 sm:py-6 justify-between">
+    <header className="w-full shadow-md bg-white/90 dark:bg-[#181818]/95 backdrop-blur-md fixed top-0 left-0 z-50 transition-colors">
+      <div className="max-w-8xl mx-auto flex items-center px-2 py-2 sm:px-4 sm:py-3 justify-between">
         {/* Logo and Title */}
         <Link
           href="/"
           className="flex items-center space-x-1 cursor-pointer"
-          style={{ userSelect: "none" }}
+          style={{ userSelect: 'none' }}
         >
           <img
             src="/assets/flavorhubicon.png"
             alt="FlavorHUB254 Logo"
-            className="h-12 w-12 sm:h-16 sm:w-16 object-contain"
+            className="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 object-contain"
           />
-          <span className="text-2xl sm:text-3xl font-bold leading-none">
+          <span className="text-2xl sm:text-3xl font-bold leading-none text-gray-900 dark:text-white">
             flavor
-            <span style={{ color: "#D32F2F" }}>HUB</span>
-            <span style={{ color: "#2E7D32" }}>254</span>
+            <span style={{ color: '#D32F2F' }}>HUB</span>
+            <span style={{ color: '#2E7D32' }}>254</span>
           </span>
         </Link>
-        <div className="hidden md:flex flex-1 items-center justify-end gap-x-8 ml-8">
+        <div className="hidden lg:flex flex-1 items-center justify-end gap-x-4 lg:gap-x-8 ml-4 lg:ml-8">
+          {/* Navigation, search, login/logout */}
           {/* Navigation */}
-          <nav className="flex gap-x-6 items-center">
+          <nav className="flex flex-wrap gap-x-3 md:gap-x-4 lg:gap-x-6 items-center">
             {filteredLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="capitalize hover:text-green-500 transition text-base"
+                className="capitalize hover:text-green-500 transition text-base text-gray-900 dark:text-white"
               >
                 {link.label}
               </Link>
@@ -117,7 +120,11 @@ export default function Header({
                     stroke="currentColor"
                     strokeWidth={2}
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z"
+                    />
                   </svg>
                 </span>
                 <input
@@ -130,7 +137,9 @@ export default function Header({
                     setShowSuggestions(true);
                   }}
                   onFocus={() => setShowSuggestions(true)}
-                  onBlur={() => setTimeout(() => setShowSuggestions(false), 120)}
+                  onBlur={() =>
+                    setTimeout(() => setShowSuggestions(false), 120)
+                  }
                   className="pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 text-sm bg-white text-black"
                   style={{ minWidth: 160 }}
                 />
@@ -149,7 +158,7 @@ export default function Header({
                         className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-green-100"
                         onMouseDown={() => {
                           setShowSuggestions(false);
-                          setSearchTerm("");
+                          setSearchTerm('');
                           router.push(`/recipe/${r.slug}`);
                         }}
                       >
@@ -191,8 +200,8 @@ export default function Header({
             )}
           </div>
         </div>
-        {/* Mobile Nav */}
-        <div className="md:hidden flex items-center gap-2">
+        {/* Mobile/Tablet Nav */}
+        <div className="flex items-center gap-2 lg:hidden">
           <button
             className="px-3 py-2 bg-green-600 text-white rounded-lg"
             onClick={() => setMobileNavOpen(true)}
@@ -205,8 +214,8 @@ export default function Header({
       {/* Mobile Nav Overlay */}
       {mobileNavOpen && (
         <div
-          className="fixed top-0 left-0 w-full bg-[#181818] bg-opacity-95 z-[999] flex flex-col items-center py-8 px-6 rounded-b-2xl shadow-lg md:hidden transition-all"
-          style={{ maxHeight: "80vh" }}
+          className="fixed top-0 left-0 w-full bg-[#181818] bg-opacity-95 z-[999] flex flex-col items-center py-8 px-6 rounded-b-2xl shadow-lg lg:hidden transition-all"
+          style={{ maxHeight: '80vh' }}
         >
           <button
             className="absolute top-4 right-6 text-white text-3xl"
@@ -241,7 +250,11 @@ export default function Header({
                     stroke="currentColor"
                     strokeWidth={2}
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z"
+                    />
                   </svg>
                 </span>
                 <input
@@ -249,12 +262,14 @@ export default function Header({
                   type="text"
                   placeholder="search recipes"
                   value={searchTerm}
-                  onChange={e => {
+                  onChange={(e) => {
                     setSearchTerm(e.target.value);
                     setShowSuggestions(true);
                   }}
                   onFocus={() => setShowSuggestions(true)}
-                  onBlur={() => setTimeout(() => setShowSuggestions(false), 120)}
+                  onBlur={() =>
+                    setTimeout(() => setShowSuggestions(false), 120)
+                  }
                   className="pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 text-sm bg-white text-black w-full"
                   style={{ minWidth: 160, maxWidth: 320 }}
                 />
@@ -267,13 +282,13 @@ export default function Header({
                 {/* Suggestions Dropdown */}
                 {showSuggestions && suggestions.length > 0 && (
                   <div className="absolute left-0 right-0 top-full bg-gray-100 border border-gray-300 rounded-b-lg shadow-lg z-20 mt-1 max-h-72 overflow-y-auto">
-                    {suggestions.map(r => (
+                    {suggestions.map((r) => (
                       <div
                         key={r.slug}
                         className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-green-100"
                         onMouseDown={() => {
                           setShowSuggestions(false);
-                          setSearchTerm("");
+                          setSearchTerm('');
                           setMobileNavOpen(false);
                           router.push(`/recipe/${r.slug}`);
                         }}
