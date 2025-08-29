@@ -91,7 +91,8 @@ export default function Header({
             <span style={{ color: '#2E7D32' }}>254</span>
           </span>
         </Link>
-        <div className="hidden md:flex flex-1 items-center justify-end gap-x-4 md:gap-x-4 lg:gap-x-8 ml-4 md:ml-4 lg:ml-8">
+        <div className="hidden lg:flex flex-1 items-center justify-end gap-x-4 lg:gap-x-8 ml-4 lg:ml-8">
+          {/* Navigation, search, login/logout */}
           {/* Navigation */}
           <nav className="flex flex-wrap gap-x-3 md:gap-x-4 lg:gap-x-6 items-center">
             {filteredLinks.map((link) => (
@@ -199,8 +200,8 @@ export default function Header({
             )}
           </div>
         </div>
-        {/* Mobile Nav */}
-        <div className="md:hidden flex items-center gap-2">
+        {/* Mobile/Tablet Nav */}
+        <div className="flex items-center gap-2 lg:hidden">
           <button
             className="px-3 py-2 bg-green-600 text-white rounded-lg"
             onClick={() => setMobileNavOpen(true)}
@@ -213,7 +214,7 @@ export default function Header({
       {/* Mobile Nav Overlay */}
       {mobileNavOpen && (
         <div
-          className="fixed top-0 left-0 w-full bg-[#181818] bg-opacity-95 z-[999] flex flex-col items-center py-8 px-6 rounded-b-2xl shadow-lg md:hidden transition-all"
+          className="fixed top-0 left-0 w-full bg-[#181818] bg-opacity-95 z-[999] flex flex-col items-center py-8 px-6 rounded-b-2xl shadow-lg lg:hidden transition-all"
           style={{ maxHeight: '80vh' }}
         >
           <button
