@@ -62,8 +62,10 @@ function useRecipesPerPage() {
   const [recipesPerPage, setRecipesPerPage] = useState(4);
   useEffect(() => {
     function handleResize() {
-      if (window.innerWidth >= 1024) setRecipesPerPage(9); // desktop
-      else if (window.innerWidth >= 640) setRecipesPerPage(6); // tablet
+      if (window.innerWidth >= 1024)
+        setRecipesPerPage(9); // desktop
+      else if (window.innerWidth >= 640)
+        setRecipesPerPage(6); // tablet
       else setRecipesPerPage(4); // mobile
     }
     handleResize();
@@ -972,7 +974,9 @@ export default function BrowsePage() {
                           {/* Image */}
                           <div className="relative w-full h-[120px] lg:w-[48%] lg:h-full flex-shrink-0">
                             <Image
-                              src={recipe.image?.url || '/assets/placeholder.jpg'}
+                              src={
+                                recipe.image?.url || '/assets/placeholder.jpg'
+                              }
                               alt={recipe.image?.alt || recipe.title}
                               fill
                               className="object-cover w-full h-full lg:rounded-r-[2.5rem] lg:rounded-l-[2.5rem] rounded-t-[2.5rem] lg:rounded-t-none"
