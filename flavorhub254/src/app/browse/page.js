@@ -5,6 +5,7 @@ import Link from 'next/link';
 import FavoriteButton from '@/components/FavoriteButton';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { CarouselRecipeSkeleton, CategorySkeleton } from "@/components/Loaders";
 import {
   doc,
   setDoc,
@@ -13,6 +14,7 @@ import {
   collection,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import { toast } from "react-toastify";
 import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 
@@ -62,9 +64,9 @@ function useRecipesPerPage() {
   const [recipesPerPage, setRecipesPerPage] = useState(4);
   useEffect(() => {
     function handleResize() {
-      if (window.innerWidth >= 1024)
+      if (window.innerWidth >= 1300)
         setRecipesPerPage(9); // desktop
-      else if (window.innerWidth >= 640)
+      else if (window.innerWidth >= 1024)
         setRecipesPerPage(6); // tablet
       else setRecipesPerPage(4); // mobile
     }
@@ -221,7 +223,7 @@ export default function BrowsePage() {
   // Toggle favorite in Firestore
   const handleToggleFavorite = async (recipe) => {
     if (!user) {
-      window.alert('Please log in or sign up to save this recipe!');
+      toast.error('Please log in or sign up to save this recipe!');
       return;
     }
     const favRef = doc(db, 'users', user.uid, 'favorites', recipe.id);
@@ -532,8 +534,13 @@ export default function BrowsePage() {
               </div>
               {/* Grid of Recipe Cards */}
               {loading ? (
-                <div className="text-white text-center py-20">
-                  Loading recipes...
+                <div className="grid grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+                  <CarouselRecipeSkeleton />
+                  <CarouselRecipeSkeleton />
+                  <CarouselRecipeSkeleton />
+                  <CarouselRecipeSkeleton />
+                  <CarouselRecipeSkeleton />
+                  <CarouselRecipeSkeleton />
                 </div>
               ) : paginatedRecipes.length === 0 ? (
                 <div className="text-white text-center py-20">
@@ -691,38 +698,47 @@ export default function BrowsePage() {
                   className="flex gap-6 overflow-x-auto scrollbar-hide py-2 w-full snap-x snap-mandatory"
                   style={{ scrollBehavior: 'smooth' }}
                 >
-                  {uniqueCategories.map((cat, idx) => (
-                    <button
-                      key={cat.title + idx}
-                      className={`bg-[#237a4b] rounded-xl overflow-hidden shadow-md min-w-[80vw] max-w-[80vw] sm:min-w-[260px] sm:max-w-[260px] flex flex-col snap-center transition-all duration-300 border-4 ${
-                        selectedCategory === cat.title
-                          ? 'border-[#a8323e] ring-2 ring-[#a8323e]'
-                          : 'border-transparent'
-                      }`}
-                      onClick={() =>
-                        setSelectedCategory(
-                          selectedCategory === cat.title ? null : cat.title
-                        )
-                      }
-                    >
-                      <div className="bg-[#237a4b] text-center">
-                        <span className="inline-block text-white px-4 py-1 font-bold text-lg">
-                          {cat.title}
-                        </span>
-                      </div>
-                      <Image
-                        src={cat.img}
-                        alt={cat.alt}
-                        width={300}
-                        height={180}
-                        className="w-full h-44 object-cover"
-                        style={{
-                          borderTopLeftRadius: 12,
-                          borderTopRightRadius: 12,
-                        }}
-                      />
-                    </button>
-                  ))}
+                  {loading ? (
+                    <>
+                      <CategorySkeleton />
+                      <CategorySkeleton />
+                      <CategorySkeleton />
+                      <CategorySkeleton />
+                    </>
+                  ) : (
+                    uniqueCategories.map((cat, idx) => (
+                      <button
+                        key={cat.title + idx}
+                        className={`bg-[#237a4b] rounded-xl overflow-hidden shadow-md min-w-[80vw] max-w-[80vw] sm:min-w-[260px] sm:max-w-[260px] flex flex-col snap-center transition-all duration-300 border-4 ${
+                          selectedCategory === cat.title
+                            ? 'border-[#a8323e] ring-2 ring-[#a8323e]'
+                            : 'border-transparent'
+                        }`}
+                        onClick={() =>
+                          setSelectedCategory(
+                            selectedCategory === cat.title ? null : cat.title
+                          )
+                        }
+                      >
+                        <div className="bg-[#237a4b] text-center">
+                          <span className="inline-block text-white px-4 py-1 font-bold text-lg">
+                            {cat.title}
+                          </span>
+                        </div>
+                        <Image
+                          src={cat.img}
+                          alt={cat.alt}
+                          width={300}
+                          height={180}
+                          className="w-full h-44 object-cover"
+                          style={{
+                            borderTopLeftRadius: 12,
+                            borderTopRightRadius: 12,
+                          }}
+                        />
+                      </button>
+                    ))
+                  )}
                 </div>
                 {/* Right Arrow */}
                 <button
@@ -942,8 +958,13 @@ export default function BrowsePage() {
                 </div>
                 {/* Grid of Recipe Cards */}
                 {loading ? (
-                  <div className="text-white text-center py-20">
-                    Loading recipes...
+                  <div className="grid grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+                    <CarouselRecipeSkeleton />
+                    <CarouselRecipeSkeleton />
+                    <CarouselRecipeSkeleton />
+                    <CarouselRecipeSkeleton />
+                    <CarouselRecipeSkeleton />
+                    <CarouselRecipeSkeleton />
                   </div>
                 ) : paginatedRecipes.length === 0 ? (
                   <div className="text-white text-center py-20">
@@ -961,7 +982,7 @@ export default function BrowsePage() {
                     </button>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                  <div className="grid grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
                     {paginatedRecipes.map((recipe, idx) => {
                       const globalIdx = recipePage * recipesPerPage + idx;
                       const isFav = favoriteStates[globalIdx];
@@ -974,9 +995,7 @@ export default function BrowsePage() {
                           {/* Image */}
                           <div className="relative w-full h-[120px] lg:w-[48%] lg:h-full flex-shrink-0">
                             <Image
-                              src={
-                                recipe.image?.url || '/assets/placeholder.jpg'
-                              }
+                              src={recipe.image?.url || '/assets/placeholder.jpg'}
                               alt={recipe.image?.alt || recipe.title}
                               fill
                               className="object-cover w-full h-full lg:rounded-r-[2.5rem] lg:rounded-l-[2.5rem] rounded-t-[2.5rem] lg:rounded-t-none"

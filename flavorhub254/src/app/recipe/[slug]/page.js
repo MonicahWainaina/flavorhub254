@@ -1,16 +1,25 @@
-"use client";
-import Link from "next/link";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { useState, useEffect } from "react";
-import FavoriteButton from "@/components/FavoriteButton";
-import { collection, query, where, getDocs, doc, setDoc, deleteDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
-import Image from "next/image";
-import { use } from "react";
-import { useAuth } from "@/context/AuthContext";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+'use client';
+import Link from 'next/link';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import { useState, useEffect } from 'react';
+import FavoriteButton from '@/components/FavoriteButton';
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  setDoc,
+  deleteDoc,
+} from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import Image from 'next/image';
+import { use } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { Loader, RecipeSkeleton } from '@/components/Loaders';
 
 // Utility: convert decimals to kitchen fractions for tsp/tbsp
 function toFraction(decimal) {
@@ -146,7 +155,7 @@ export default function RecipePage({ params }) {
   // Toggle favorite
   const handleToggleFavorite = async () => {
     if (!user) {
-      toast.info('Please log in or sign up to save this recipe!');
+      toast.error('Please log in or sign up to save this recipe!');
       return;
     }
     if (!recipe) return;
@@ -246,7 +255,12 @@ export default function RecipePage({ params }) {
   };
 
   if (loading)
-    return <div className="text-white text-center py-20">Loading...</div>;
+    return (
+      <div className="flex flex-col items-center pt-28 pb-12 px-2 sm:px-4 min-h-screen">
+        <RecipeSkeleton />
+      </div>
+    );
+
   if (!recipe)
     return (
       <div className="text-white text-center py-20">Recipe not found.</div>
@@ -313,7 +327,7 @@ export default function RecipePage({ params }) {
                     )
                   ) : (
                     <button
-                      className="bg-green-600 text-white px-3 py-1 rounded-lg text-sm font-semibold ml-2"
+                      className="bg-green-700  hover:bg-green-800 text-white px-3 py-1 rounded-lg text-sm font-semibold ml-2"
                       onClick={handleAdjustClick}
                     >
                       Adjust Amount
@@ -363,13 +377,13 @@ export default function RecipePage({ params }) {
                 )}
                 {/* Show prompt for servings adjustment */}
                 {showServingsPrompt && (
-                  <div className="mb-4 bg-blue-100 text-blue-900 rounded-lg px-4 py-2 font-semibold flex items-center justify-between">
+                  <div className="mb-4 bg-green-900 text-white-900 rounded-lg px-4 py-2 font-semibold flex items-center justify-between">
                     <span>
                       This recipe&apos;s ingredients cannot be adjusted try
                       adjusting the servings instead.
                     </span>
                     <button
-                      className="ml-4 px-2 py-1 bg-blue-300 text-blue-900 rounded"
+                      className="ml-4 px-2 py-1 bg-black-300 text-white-900 rounded"
                       onClick={handleClosePrompt}
                       aria-label="Close"
                     >
@@ -569,7 +583,6 @@ export default function RecipePage({ params }) {
           <Footer />
         </div>
       </div>
-      <ToastContainer />
     </>
   );
 }

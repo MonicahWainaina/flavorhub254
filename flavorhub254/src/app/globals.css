@@ -14,6 +14,17 @@
   --font-mono: var(--font-geist-mono);
 }
 
+@theme {
+  /* override Tailwind's defaults */
+  --breakpoint-xs: 480px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1300px; /* move xl up a bit so Nest Hub Max uses lg */
+  --breakpoint-2xl: 1536px;
+  --breakpoint-3xl: 1920px;
+}
+
 /* Dark mode variables */
 @media (prefers-color-scheme: dark) {
   :root {
