@@ -13,6 +13,7 @@ import {
   collection,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import { toast } from "react-toastify";
 import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 
@@ -221,7 +222,7 @@ export default function BrowsePage() {
   // Toggle favorite in Firestore
   const handleToggleFavorite = async (recipe) => {
     if (!user) {
-      window.alert('Please log in or sign up to save this recipe!');
+      toast.error('Please log in or sign up to save this recipe!');
       return;
     }
     const favRef = doc(db, 'users', user.uid, 'favorites', recipe.id);

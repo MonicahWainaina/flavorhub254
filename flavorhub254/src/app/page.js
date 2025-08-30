@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { toast } from "react-toastify";
 import { useAuth } from "@/context/AuthContext";
 import FavoriteButton from "@/components/FavoriteButton"; // <-- Import this
 
@@ -96,7 +97,7 @@ export default function HomePage() {
   // --- Toggle favorite in Firestore ---
   const handleToggleFavorite = async (recipe) => {
     if (!user) {
-      window.alert("Please log in or sign up to save this recipe!");
+      toast.error("Please log in or sign up to save this recipe!");
       return;
     }
     const favRef = doc(db, "users", user.uid, "favorites", recipe.id);
@@ -400,7 +401,7 @@ export default function HomePage() {
           <div className="flex flex-col md:flex-col lg:flex-row items-center lg:items-start md:items-center lg:gap-16">
             {/* Left: Laptop mockup */}
             <img
-              src="/assets/about.png"
+              src="/assets/laptopmockup.png"
               alt="FlavorHUB254 on phone"
               className="max-w-[570px] w-full sm:h-[500px] h-auto object-contain  md:mt-9 "
               style={{ minWidth: 0 }}

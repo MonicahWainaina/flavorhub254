@@ -26,7 +26,25 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>{children}</AuthProvider>
-        <ToastContainer position="top-center" autoClose={2500} />
+        <ToastContainer
+          position="top-center"
+          autoClose={2500}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark" // Try "colored" or "light" if you prefer
+          style={{
+            fontFamily: "inherit",
+            borderRadius: "10px",
+            background: "#232323",
+            color: "#fff",
+            fontSize: "1rem",
+          }}
+        />
       </body>
     </html>
   );
