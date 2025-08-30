@@ -1,16 +1,25 @@
-"use client";
-import Link from "next/link";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { useState, useEffect } from "react";
-import FavoriteButton from "@/components/FavoriteButton";
-import { collection, query, where, getDocs, doc, setDoc, deleteDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
-import Image from "next/image";
-import { use } from "react";
-import { useAuth } from "@/context/AuthContext";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+'use client';
+import Link from 'next/link';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import { useState, useEffect } from 'react';
+import FavoriteButton from '@/components/FavoriteButton';
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  setDoc,
+  deleteDoc,
+} from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import Image from 'next/image';
+import { use } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { Loader, RecipeSkeleton } from '@/components/Loaders';
 
 // Utility: convert decimals to kitchen fractions for tsp/tbsp
 function toFraction(decimal) {
@@ -246,7 +255,12 @@ export default function RecipePage({ params }) {
   };
 
   if (loading)
-    return <div className="text-white text-center py-20">Loading...</div>;
+    return (
+      <div className="flex flex-col items-center pt-28 pb-12 px-2 sm:px-4 min-h-screen">
+        <RecipeSkeleton />
+      </div>
+    );
+
   if (!recipe)
     return (
       <div className="text-white text-center py-20">Recipe not found.</div>
