@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import FavoriteButton from '@/components/FavoriteButton';
 import Header from '@/components/Header';
@@ -166,20 +166,20 @@ export default function BrowsePage() {
       });
     }
   };
-  const handleScroll = () => {
+  const handleScroll = useCallback(() => {
     if (carouselRef.current) {
       const scrollLeft = carouselRef.current.scrollLeft;
       const idx = Math.round(scrollLeft / CARD_WIDTH);
       setActiveIndex(idx);
     }
-  };
+  }, [CARD_WIDTH]);
   useEffect(() => {
     const ref = carouselRef.current;
     if (ref) {
       ref.addEventListener('scroll', handleScroll, { passive: true });
       return () => ref.removeEventListener('scroll', handleScroll);
     }
-  }, []);
+  }, [handleScroll]);
   const scroll = (direction) => {
     let newIndex = activeIndex + (direction === 'left' ? -1 : 1);
     newIndex = Math.max(0, Math.min(uniqueCategories.length - 1, newIndex));
