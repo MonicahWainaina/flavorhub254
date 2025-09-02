@@ -5,7 +5,8 @@ import Link from 'next/link';
 import FavoriteButton from '@/components/FavoriteButton';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { CarouselRecipeSkeleton, CategorySkeleton } from "@/components/Loaders";
+import { filterRecipes } from '@/lib/filterRecipes';
+import { CarouselRecipeSkeleton, CategorySkeleton } from '@/components/Loaders';
 import {
   doc,
   setDoc,
@@ -14,7 +15,7 @@ import {
   collection,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { toast } from "react-toastify";
+import { toast } from 'react-toastify';
 import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 
@@ -139,33 +140,10 @@ export default function BrowsePage() {
   }, [searchParams]);
 
   // Filtering logic
-  const filteredRecipes = recipes.filter((r) => {
-    const matchesCategory = selectedCategory
-      ? r.category === selectedCategory
-      : true;
-    const matchesSearch =
-      !term ||
-      r.title?.toLowerCase().includes(term) ||
-      r.tags?.some((tag) => tag.toLowerCase().includes(term)) ||
-      (Array.isArray(r.ingredients) &&
-        r.ingredients.some((ing) =>
-          typeof ing === 'string'
-            ? ing.toLowerCase().includes(term)
-            : ing.name?.toLowerCase().includes(term)
-        ));
-
-    // Ingredient filter
-    const matchesIngredients =
-      selectedIngredients.length === 0 ||
-      selectedIngredients.every((selected) =>
-        r.ingredients?.some((ing) =>
-          typeof ing === 'string'
-            ? ing.toLowerCase().includes(selected.toLowerCase())
-            : ing.name?.toLowerCase().includes(selected.toLowerCase())
-        )
-      );
-
-    return matchesCategory && matchesSearch && matchesIngredients;
+  const filteredRecipes = filterRecipes(recipes, {
+    searchTerm,
+    selectedCategory,
+    selectedIngredients,
   });
 
   const totalPages = Math.ceil(filteredRecipes.length / recipesPerPage);
@@ -995,7 +973,9 @@ export default function BrowsePage() {
                           {/* Image */}
                           <div className="relative w-full h-[120px] lg:w-[48%] lg:h-full flex-shrink-0">
                             <Image
-                              src={recipe.image?.url || '/assets/placeholder.jpg'}
+                              src={
+                                recipe.image?.url || '/assets/placeholder.jpg'
+                              }
                               alt={recipe.image?.alt || recipe.title}
                               fill
                               className="object-cover w-full h-full lg:rounded-r-[2.5rem] lg:rounded-l-[2.5rem] rounded-t-[2.5rem] lg:rounded-t-none"

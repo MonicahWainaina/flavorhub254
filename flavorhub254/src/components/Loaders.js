@@ -3,7 +3,8 @@ import React from "react";
 export function Loader() {
   return (
     <div className="flex justify-center items-center min-h-[60vh]">
-      <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#ff914d]"></div>
+      <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#ff914d]" />
+      <span role="status" className="sr-only">Loading...</span>
     </div>
   );
 }
@@ -54,7 +55,7 @@ export function CategorySkeleton() {
 
 export function RecipeSkeleton() {
   return (
-    <section className="w-full max-w-6xl flex flex-col md:flex-row gap-12 bg-[#a94f4f]/90 rounded-3xl shadow-2xl border border-white/20 p-4 sm:p-10 backdrop-blur-sm animate-pulse">
+    <section  data-testid="recipe-skeleton" className="w-full max-w-6xl flex flex-col md:flex-row gap-12 bg-[#a94f4f]/90 rounded-3xl shadow-2xl border border-white/20 p-4 sm:p-10 backdrop-blur-sm animate-pulse">
       {/* Left: Info */}
       <div className="flex-1 min-w-0">
         <div className="h-6 w-32 bg-green-700 rounded-full mb-3" />
