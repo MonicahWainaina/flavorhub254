@@ -151,25 +151,27 @@ export default function LoginPage() {
             <h1 className="text-3xl font-bold text-white mb-8">
               {isSignup ? "Sign Up" : "Login"}
             </h1>
-            <form className="space-y-5" onSubmit={handleSubmit}>
-            {isSignup && (
-              <div className="flex items-center bg-white rounded-md px-3 py-3">
-                <FaUser className="text-gray-400 mr-2" />
-                <input
-                  type="text"
-                  placeholder="Username"
-                  className="bg-transparent outline-none flex-1 text-gray-700"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  required
-                />
-              </div>
-            )}
+            <form className="space-y-5" onSubmit={handleSubmit} noValidate>
+              {isSignup && (
+                <div className="flex items-center bg-white rounded-md px-3 py-3">
+                  <FaUser className="text-gray-400 mr-2" />
+                  <input
+                    type="text"
+                    placeholder="Username"
+                    aria-label="Username"
+                    className="bg-transparent outline-none flex-1 text-gray-700"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                  />
+                </div>
+              )}
               <div className="flex items-center bg-white rounded-md px-3 py-3">
                 <MdEmail className="text-gray-400 mr-2" />
                 <input
                   type="email"
                   placeholder="Email"
+                  aria-label="Email"
                   className="bg-transparent outline-none flex-1 text-gray-700"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -181,6 +183,7 @@ export default function LoginPage() {
                 <input
                   type="password"
                   placeholder="Password"
+                  aria-label="Password"
                   className="bg-transparent outline-none flex-1 text-gray-700"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}

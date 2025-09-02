@@ -26,6 +26,7 @@ export default function FavoritesPage() {
   const [recipePage, setRecipePage] = useState(0);
   const [sortBy, setSortBy] = useState('recent');
   const [favoritesFetched, setFavoritesFetched] = useState(false); // NEW
+  const [error, setError] = useState(''); // Error state
 
   // --- Fetch user's favorites from Firestore ---
   useEffect(() => {
@@ -36,16 +37,21 @@ export default function FavoritesPage() {
       return;
     }
     async function fetchFavorites() {
-      const favsSnap = await getDocs(
-        collection(db, 'users', user.uid, 'favorites')
-      );
-      const favs = favsSnap.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data().recipe,
-      }));
-      setFavoriteRecipes(favs);
-      setFavoriteIds(favs.map((f) => f.id));
-      setFavoritesFetched(true); // SET FETCHED TO TRUE
+      try {
+        const favsSnap = await getDocs(
+          collection(db, 'users', user.uid, 'favorites')
+        );
+        const favs = favsSnap.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data().recipe,
+        }));
+        setFavoriteRecipes(favs);
+        setFavoriteIds(favs.map((f) => f.id));
+      } catch (e) {
+        setError('Failed to load favorites.');
+      } finally {
+        setFavoritesFetched(true);
+      }
     }
     fetchFavorites();
   }, [user]);
@@ -110,6 +116,26 @@ export default function FavoritesPage() {
 
   if (loading || !user || !favoritesFetched) {
     return <Loader />;
+  }
+
+  // --- Show error if present ---
+  if (error) {
+    return (
+      <>
+        <Header />
+        <main className="min-h-screen flex flex-col items-center justify-center bg-[#181818]">
+          <div role="alert" className="text-red-500 text-xl font-bold mb-8">
+            {error}
+          </div>
+          <Link href="/browse">
+            <button className="bg-[#3CB371] text-white px-6 py-3 rounded-lg font-bold text-lg shadow hover:bg-[#237a4b] transition">
+              Browse Recipes
+            </button>
+          </Link>
+        </main>
+        <Footer />
+      </>
+    );
   }
 
   // --- 404/Empty State ---
@@ -486,6 +512,7 @@ export default function FavoritesPage() {
         {/* Footer */}
         <Footer />
       </main>
+      {error && <div role="alert">{error}</div>}
     </>
   );
 }
