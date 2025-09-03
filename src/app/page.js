@@ -239,7 +239,7 @@ export default function HomePage() {
                 mx-auto
               "
               >
-                Rwa’s Smart <br className="block lg:block md:hidden" /> Recipe
+                Kenya’s Smart <br className="block lg:block md:hidden" /> Recipe
                 Library
               </h1>
               <p
