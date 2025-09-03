@@ -44,7 +44,7 @@ export default function HomePage() {
       setHeroRecipes(recipes.slice(0, 4)); // Only show 4
     }
     fetchHeroRecipes();
-  }, []);
+  }, []); 
 
   // --- CAROUSEL FEATURED RECIPES ---
   const [carouselRecipes, setCarouselRecipes] = useState([]);
@@ -66,7 +66,7 @@ export default function HomePage() {
       setCarouselRecipes(recipes);
     }
     fetchCarouselRecipes();
-  }, []);
+  }, []); 
 
   // --- CATEGORY CAROUSEL ---
   const [categories, setCategories] = useState([]);
@@ -131,7 +131,7 @@ export default function HomePage() {
       setCategories(unique);
     }
     fetchCategories();
-  }, []);
+  }, [db, CATEGORY_IMAGES, FALLBACK_IMAGE.url]); // <-- Added db, CATEGORY_IMAGES, FALLBACK_IMAGE.url
 
   // --- Fetch user's favorites from Firestore ---
   useEffect(() => {
@@ -146,7 +146,7 @@ export default function HomePage() {
       setFavoriteIds(favsSnap.docs.map((doc) => doc.id));
     }
     fetchFavorites();
-  }, [user]);
+  }, [user, db]); // <-- Added db as dependency
 
   // --- Toggle favorite in Firestore ---
   const handleToggleFavorite = async (recipe) => {
