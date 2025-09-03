@@ -239,7 +239,7 @@ export default function HomePage() {
                 mx-auto
               "
               >
-                Kenya’s Smart <br className="block lg:block md:hidden" /> Recipe
+                Rwanda’s Smart <br className="block lg:block md:hidden" /> Recipe
                 Library
               </h1>
               <p
