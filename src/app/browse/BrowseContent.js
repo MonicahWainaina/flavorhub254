@@ -338,7 +338,7 @@ export default function BrowseContent() {
           </div>
         </section>
         {/* --- MOBILE STICKY CATEGORY & FILTER BAR --- */}
-        <div className="sm:hidden sticky top-0 z-30 bg-[#181818] flex items-center gap-2 px-2 py-2 border-b border-[#3CB371]/30">
+        <div className="sm:hidden sticky top-0 z-30 bg-[#181818] flex items-center gap-2 px-2 py-1 border-b border-[#3CB371]/30">
           <div className="flex overflow-x-auto gap-2 flex-1 scrollbar-hide">
             {uniqueCategories.map((cat) => (
               <button
@@ -398,6 +398,11 @@ export default function BrowseContent() {
               <h3 className="text-lg font-bold text-white mb-2">
                 Filter by Ingredients
               </h3>
+              {selectedIngredients.length > 0 && (
+                <p className="text-white text-sm mb-2">
+                  {filteredRecipes.length} recipes found
+                </p>
+              )}
               <hr className="border-t border-white/30 mb-2" />
               <form
                 className="flex flex-col gap-4"
@@ -420,6 +425,10 @@ export default function BrowseContent() {
                                     ...selectedIngredients,
                                     ingredient,
                                   ]);
+                                } else {
+                                  toast.info(
+                                    'You can only select up to 2 ingredients.'
+                                  );
                                 }
                               } else {
                                 setSelectedIngredients(
@@ -429,10 +438,6 @@ export default function BrowseContent() {
                                 );
                               }
                             }}
-                            disabled={
-                              !selectedIngredients.includes(ingredient) &&
-                              selectedIngredients.length >= 2
-                            }
                           />{' '}
                           {ingredient}
                         </label>
@@ -456,6 +461,10 @@ export default function BrowseContent() {
                                   ...selectedIngredients,
                                   ingredient,
                                 ]);
+                              } else {
+                                toast.info(
+                                  'You can only select up to 2 ingredients.'
+                                );
                               }
                             } else {
                               setSelectedIngredients(
@@ -465,10 +474,6 @@ export default function BrowseContent() {
                               );
                             }
                           }}
-                          disabled={
-                            !selectedIngredients.includes(ingredient) &&
-                            selectedIngredients.length >= 2
-                          }
                         />{' '}
                         {ingredient}
                       </label>
@@ -491,6 +496,10 @@ export default function BrowseContent() {
                                   ...selectedIngredients,
                                   ingredient,
                                 ]);
+                              } else {
+                                toast.info(
+                                  'You can only select up to 2 ingredients.'
+                                );
                               }
                             } else {
                               setSelectedIngredients(
@@ -500,24 +509,29 @@ export default function BrowseContent() {
                               );
                             }
                           }}
-                          disabled={
-                            !selectedIngredients.includes(ingredient) &&
-                            selectedIngredients.length >= 2
-                          }
                         />{' '}
                         {ingredient}
                       </label>
                     ))}
                   </div>
                 </div>
-                <button
-                  type="button"
-                  className="mt-4 bg-[#3CB371] text-white px-4 py-2 rounded-lg font-bold hover:bg-[#2e8b57] transition"
-                  onClick={() => setSelectedIngredients([])}
-                  disabled={selectedIngredients.length === 0}
-                >
-                  Clear Filter
-                </button>
+                <div className="flex gap-2 mt-4">
+                  <button
+                    type="button"
+                    className="flex-1 bg-[#3CB371] text-white px-4 py-2 rounded-lg font-bold hover:bg-[#2e8b57] transition"
+                    onClick={() => setShowFilterModal(false)}
+                  >
+                    Apply
+                  </button>
+                  <button
+                    type="button"
+                    className="flex-1 bg-gray-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-gray-700 transition"
+                    onClick={() => setSelectedIngredients([])}
+                    disabled={selectedIngredients.length === 0}
+                  >
+                    Clear
+                  </button>
+                </div>
               </form>
             </div>
           </div>
@@ -798,10 +812,11 @@ export default function BrowseContent() {
                             />
                           </div>
                           <hr className="border-t border-white/30 my-2" />
-                          <Link href={`/recipe/${recipe.slug}`}>
-                            <button className="bg-white text-black px-4 py-2 rounded-lg font-bold w-fit text-sm shadow transition hover:bg-[#3CB371] hover:text-white">
-                              View Recipe
-                            </button>
+                          <Link
+                            href={`/recipe/${recipe.slug}`}
+                            className="bg-white text-black px-4 py-2 rounded-lg font-bold w-fit text-sm shadow transition hover:bg-[#3CB371] hover:text-white inline-block text-center"
+                          >
+                            View Recipe
                           </Link>
                         </div>
                       </div>
@@ -977,6 +992,10 @@ export default function BrowseContent() {
                                       ...selectedIngredients,
                                       ingredient,
                                     ]);
+                                  } else {
+                                    toast.info(
+                                      'You can only select up to 2 ingredients.'
+                                    );
                                   }
                                 } else {
                                   setSelectedIngredients(
@@ -986,10 +1005,6 @@ export default function BrowseContent() {
                                   );
                                 }
                               }}
-                              disabled={
-                                !selectedIngredients.includes(ingredient) &&
-                                selectedIngredients.length >= 2
-                              }
                             />{' '}
                             {ingredient}
                           </label>
@@ -1013,6 +1028,10 @@ export default function BrowseContent() {
                                     ...selectedIngredients,
                                     ingredient,
                                   ]);
+                                } else {
+                                  toast.info(
+                                    'You can only select up to 2 ingredients.'
+                                  );
                                 }
                               } else {
                                 setSelectedIngredients(
@@ -1022,10 +1041,6 @@ export default function BrowseContent() {
                                 );
                               }
                             }}
-                            disabled={
-                              !selectedIngredients.includes(ingredient) &&
-                              selectedIngredients.length >= 2
-                            }
                           />{' '}
                           {ingredient}
                         </label>
@@ -1048,6 +1063,10 @@ export default function BrowseContent() {
                                     ...selectedIngredients,
                                     ingredient,
                                   ]);
+                                } else {
+                                  toast.info(
+                                    'You can only select up to 2 ingredients.'
+                                  );
                                 }
                               } else {
                                 setSelectedIngredients(
@@ -1057,10 +1076,6 @@ export default function BrowseContent() {
                                 );
                               }
                             }}
-                            disabled={
-                              !selectedIngredients.includes(ingredient) &&
-                              selectedIngredients.length >= 2
-                            }
                           />{' '}
                           {ingredient}
                         </label>
