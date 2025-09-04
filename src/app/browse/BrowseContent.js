@@ -94,6 +94,7 @@ export default function BrowseContent() {
   const [searchTerm, setSearchTerm] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedIngredients, setSelectedIngredients] = useState([]);
+  const [showFilterModal, setShowFilterModal] = useState(false);
 
   const term = searchTerm.trim().toLowerCase();
 
@@ -215,7 +216,6 @@ export default function BrowseContent() {
   };
 
   // --- UI ---
-  // (Paste the entire return (...) JSX from your previous BrowsePage here)
   return (
     <>
       <Header
@@ -239,7 +239,7 @@ export default function BrowseContent() {
             {/* Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/40 to-black/80">
               {/* Hero Content */}
-              <div className="flex flex-col items-center justify-center h-[200px] sm:h-[340px] mt-4 sm:mt-8 px-2">
+              <div className="flex flex-col items-center justify-center h-[200px] sm:h-[340px] mt-15 md:mt-12 px-2">
                 <h1 className="text-3xl sm:text-5xl font-extrabold text-white mb-4 sm:mb-8 text-center drop-shadow-2xl">
                   Browse & Cook
                 </h1>
@@ -337,10 +337,196 @@ export default function BrowseContent() {
             </div>
           </div>
         </section>
+        {/* --- MOBILE STICKY CATEGORY & FILTER BAR --- */}
+        <div className="sm:hidden sticky top-0 z-30 bg-[#181818] flex items-center gap-2 px-2 py-2 border-b border-[#3CB371]/30">
+          <div className="flex overflow-x-auto gap-2 flex-1 scrollbar-hide">
+            {uniqueCategories.map((cat) => (
+              <button
+                key={cat.title}
+                className={`px-3 py-1 rounded-full text-xs whitespace-nowrap ${
+                  selectedCategory === cat.title
+                    ? 'bg-[#3CB371] text-white'
+                    : 'bg-white text-black'
+                }`}
+                onClick={() =>
+                  setSelectedCategory(
+                    selectedCategory === cat.title ? null : cat.title
+                  )
+                }
+              >
+                {cat.title}
+              </button>
+            ))}
+          </div>
+          <button
+            className="ml-2 px-3 py-1 bg-[#3CB371] text-white rounded-full text-xs font-semibold flex items-center gap-1"
+            onClick={() => setShowFilterModal(true)}
+            aria-label="Filter recipes by ingredients"
+          >
+            {/* Filter icon */}
+            <svg
+              width="16"
+              height="16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+            >
+              <path d="M4 4h16M6 8h12M8 12h8M10 16h4" strokeLinecap="round" />
+            </svg>
+            Ingredients
+          </button>
+        </div>
+
+        {/* --- FILTER MODAL FOR MOBILE --- */}
+        {showFilterModal && (
+          <div className="sm:hidden fixed inset-0 z-50 flex items-end justify-center">
+            <div
+              className="fixed inset-0 bg-black/40"
+              onClick={() => setShowFilterModal(false)}
+            />
+            <div className="bg-[#181818] w-full rounded-t-2xl p-6 max-h-[60vh] overflow-y-auto relative z-50 animate-slideUp">
+              {/* Drag handle */}
+              <div className="w-12 h-1.5 bg-gray-400 rounded-full mx-auto mb-4" />
+              <button
+                className="absolute top-2 right-4 text-white text-2xl"
+                onClick={() => setShowFilterModal(false)}
+                aria-label="Close"
+              >
+                &times;
+              </button>
+              <h3 className="text-lg font-bold text-white mb-2">
+                Filter by Ingredients
+              </h3>
+              <hr className="border-t border-white/30 mb-2" />
+              <form
+                className="flex flex-col gap-4"
+                onSubmit={(e) => e.preventDefault()}
+              >
+                {/* Vegetables */}
+                <div>
+                  <span className="font-semibold text-white">Vegetables</span>
+                  <div className="flex flex-col gap-1 mt-1">
+                    {['Tomato', 'Spinach', 'Kale', 'Potatoes'].map(
+                      (ingredient) => (
+                        <label className="text-white" key={ingredient}>
+                          <input
+                            type="checkbox"
+                            checked={selectedIngredients.includes(ingredient)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                if (selectedIngredients.length < 2) {
+                                  setSelectedIngredients([
+                                    ...selectedIngredients,
+                                    ingredient,
+                                  ]);
+                                }
+                              } else {
+                                setSelectedIngredients(
+                                  selectedIngredients.filter(
+                                    (ing) => ing !== ingredient
+                                  )
+                                );
+                              }
+                            }}
+                            disabled={
+                              !selectedIngredients.includes(ingredient) &&
+                              selectedIngredients.length >= 2
+                            }
+                          />{' '}
+                          {ingredient}
+                        </label>
+                      )
+                    )}
+                  </div>
+                </div>
+                {/* Meats */}
+                <div>
+                  <span className="font-semibold text-white">Meats</span>
+                  <div className="flex flex-col gap-1 mt-1">
+                    {['Chicken', 'Beef', 'Goat', 'Fish'].map((ingredient) => (
+                      <label className="text-white" key={ingredient}>
+                        <input
+                          type="checkbox"
+                          checked={selectedIngredients.includes(ingredient)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              if (selectedIngredients.length < 2) {
+                                setSelectedIngredients([
+                                  ...selectedIngredients,
+                                  ingredient,
+                                ]);
+                              }
+                            } else {
+                              setSelectedIngredients(
+                                selectedIngredients.filter(
+                                  (ing) => ing !== ingredient
+                                )
+                              );
+                            }
+                          }}
+                          disabled={
+                            !selectedIngredients.includes(ingredient) &&
+                            selectedIngredients.length >= 2
+                          }
+                        />{' '}
+                        {ingredient}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                {/* Dairy */}
+                <div>
+                  <span className="font-semibold text-white">Dairy</span>
+                  <div className="flex flex-col gap-1 mt-1">
+                    {['Eggs', 'Milk', 'Cheese'].map((ingredient) => (
+                      <label className="text-white" key={ingredient}>
+                        <input
+                          type="checkbox"
+                          checked={selectedIngredients.includes(ingredient)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              if (selectedIngredients.length < 2) {
+                                setSelectedIngredients([
+                                  ...selectedIngredients,
+                                  ingredient,
+                                ]);
+                              }
+                            } else {
+                              setSelectedIngredients(
+                                selectedIngredients.filter(
+                                  (ing) => ing !== ingredient
+                                )
+                              );
+                            }
+                          }}
+                          disabled={
+                            !selectedIngredients.includes(ingredient) &&
+                            selectedIngredients.length >= 2
+                          }
+                        />{' '}
+                        {ingredient}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  className="mt-4 bg-[#3CB371] text-white px-4 py-2 rounded-lg font-bold hover:bg-[#2e8b57] transition"
+                  onClick={() => setSelectedIngredients([])}
+                  disabled={selectedIngredients.length === 0}
+                >
+                  Clear Filter
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
+
         {/* --- MAIN CONTENT --- */}
         {searchTerm.trim() ? (
           // Show filtered recipes grid here
-          <section className="w-full px-2 sm:px-8 flex flex-col sm:flex-row gap-8 mt-6">
+          <section className="w-full px-2 sm:px-8 flex flex-col sm:flex-row gap-8 mt-2">
             {/* Filter Sidebar (optional, you can remove this if not needed) */}
             <aside className="sm:w-1/4 w-full bg-[#181818] rounded-xl p-6 shadow-lg flex flex-col gap-6">
               <h3 className="text-xl font-bold text-white mb-2">
@@ -643,7 +829,7 @@ export default function BrowseContent() {
         ) : (
           <>
             {/* Categories Carousel */}
-            <section className="w-full mt-7 px-0">
+            <section className="w-full mt-7 px-0 hidden sm:block ">
               {/* Centered horizontal line */}
               <div className="flex justify-center mb-4">
                 <div className="h-1 w-24 bg-[#3CB371] rounded-full opacity-80"></div>
@@ -756,16 +942,16 @@ export default function BrowseContent() {
               </div>
             </section>
             {/* Divider Line for Recipes Section */}
-            <div className="flex justify-center my-8">
+            <div className="flex justify-center my-6">
               <div className="h-1 w-24 bg-[#3CB371] rounded-full opacity-80"></div>
             </div>
-            <h2 className="text-3xl font-extrabold text-white text-center mb-6">
+            <h2 className="text-3xl font-extrabold text-white text-center mb-3">
               {selectedCategory ? selectedCategory : 'Recipes'}
             </h2>
             {/* Recipes Section */}
             <section className="w-full px-2 sm:px-8 flex flex-col sm:flex-row gap-8">
               {/* Filter Sidebar */}
-              <aside className="sm:w-1/4 w-full bg-[#181818] rounded-xl p-6 shadow-lg flex flex-col gap-6">
+              <aside className="hidden sm:block sm:w-1/4 w-full bg-[#181818] rounded-xl p-6 shadow-lg flex flex-col gap-6">
                 <h3 className="text-xl font-bold text-white mb-2">
                   Filter By Ingredients
                 </h3>
