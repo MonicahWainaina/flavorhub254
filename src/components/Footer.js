@@ -31,7 +31,7 @@ export default function Footer() {
                 <li><Link href="/" className="hover:text-green-400 transition">Home</Link></li>
                 <li><Link href="/browse" className="hover:text-green-400 transition">Browse Recipes</Link></li>
                 <li><Link href="/flavorbot" className="hover:text-green-400 transition">Ask FlavorBot</Link></li>
-                <li><Link href="/contact" className="hover:text-green-400 transition">Login/ Sign Up</Link></li>
+                <li><Link href="/login" className="hover:text-green-400 transition">Login/ Sign Up</Link></li>
               </ul>
             </div> 
             {/* Right: Contact, social, herbs image */}
