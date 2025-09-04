@@ -294,7 +294,7 @@ export default function HomePage() {
                   className="relative flex flex-col items-center w-full sm:w-[260px] bg-[#e5d0d0] rounded-xl border-b-4 border-[#d97d7d] shadow-md px-2 sm:px-4 mx-auto h-full pt-8"
                 >
                   {/* Image */}
-                  <div className="w-full flex justify-center absolute left-0 right-0 -top-10 sm:-top-14 z-10">
+                  <div className="w-full flex justify-center absolute -top-10 md:-top-14 z-10">
                     <Image
                       src={
                         recipe.heroImage?.url ||
@@ -308,7 +308,7 @@ export default function HomePage() {
                       }
                       width={260}
                       height={170}
-                      className="absolute left-0 right-0 -top-[20px] sm:-top-[30px] w-full h-[100px] sm:h-[170px] object-contain sm:object-cover"
+                      className="absolute -top-[28px] md:-top-[30px]  h-[165px] md:h-[170px] object-cover sm:object-cover"
                       style={{ background: 'transparent' }}
                     />
                   </div>

@@ -1,7 +1,6 @@
 'use client';
 import Link from 'next/link';
 import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { useState, useEffect } from 'react';
 import FavoriteButton from '@/components/FavoriteButton';
 import {
@@ -23,7 +22,6 @@ import { Loader, RecipeSkeleton } from '@/components/Loaders';
 
 // Utility: convert decimals to kitchen fractions for tsp/tbsp
 function toFraction(decimal) {
-  // Round to nearest 0.25
   const rounded = Math.round(decimal * 4) / 4;
   const map = { 0.25: '1/4', 0.5: '1/2', 0.75: '3/4' };
   if (rounded === 0) return '';
@@ -284,13 +282,14 @@ export default function RecipePage({ params }) {
         <div className="relative z-10 flex flex-col min-h-screen">
           <Header showSearch />
           <main className="flex-1 flex flex-col items-center pt-28 pb-12 px-2 sm:px-4">
-            <section className="w-full max-w-6xl flex flex-col md:flex-row gap-12 bg-[#a94f4f]/90 rounded-3xl shadow-2xl border border-white/20 p-4 sm:p-10 backdrop-blur-sm">
+            <section className="w-full max-w-6xl flex flex-col-reverse md:flex-row gap-12 bg-[#a94f4f]/90 rounded-3xl shadow-2xl border border-white/20 p-4 sm:p-10 backdrop-blur-sm">
               {/* Left: Recipe Info */}
               <div className="flex-1 min-w-0">
-                <span className="inline-block bg-green-700 text-white px-4 py-1 rounded-full mb-3 text-sm font-semibold">
+                {/* Desktop: Category, Title, Favorite, Rating */}
+                <span className="hidden md:inline-block bg-green-700 text-white px-4 py-1 rounded-full mb-3 text-sm font-semibold">
                   {recipe.category}
                 </span>
-                <div className="flex items-center gap-2 mb-2">
+                <div className="hidden md:flex items-center gap-2 mb-2">
                   <h1 className="text-3xl font-bold text-white">
                     {recipe.title}
                   </h1>
@@ -299,7 +298,7 @@ export default function RecipePage({ params }) {
                     onClick={handleToggleFavorite}
                   />
                 </div>
-                <div className="flex items-center gap-2 mb-4">
+                <div className="hidden md:flex items-center gap-2 mb-2">
                   <span className="text-yellow-400 text-xl">★</span>
                   <span className="text-white font-semibold">
                     ({recipe.rating?.toFixed(1) || 'N/A'})
@@ -335,6 +334,61 @@ export default function RecipePage({ params }) {
                   )}
                 </div>
                 <hr className="border-white/60 mb-4" />
+                {/* --- Time & Servings badges --- */}
+                <div className="flex items-center gap-4 mb-4">
+                  <span className="bg-[#232323] text-white px-3 py-1 rounded-lg flex items-center gap-1">
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      />
+                      <path
+                        d="M12 6v6l4 2"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                    {recipe.time || 'N/A'} mins
+                  </span>
+                  <span className="bg-[#232323] text-white px-3 py-1 rounded-lg flex items-center gap-2">
+                    {recipe.adjustable_servings && (
+                      <>
+                        <button
+                          className="text-lg px-2 font-bold hover:bg-[#444] rounded"
+                          aria-label="Decrease servings"
+                          onClick={handleDecrease}
+                          disabled={!isAdjusting}
+                        >
+                          -
+                        </button>
+                      </>
+                    )}
+                    <span className="font-semibold">
+                      {recipe.editable_ingredients
+                        ? adjustedServings
+                        : servings}{' '}
+                      Servings
+                    </span>
+                    {recipe.adjustable_servings && (
+                      <>
+                        <button
+                          className="text-lg px-2 font-bold hover:bg-[#444] rounded"
+                          aria-label="Increase servings"
+                          onClick={handleIncrease}
+                          disabled={!isAdjusting}
+                        >
+                          +
+                        </button>
+                      </>
+                    )}
+                  </span>
+                </div>
+                {/* --- End Time & Servings badges --- */}
                 {/* Adjustment UI */}
                 {isAdjusting && recipe.editable_ingredients && (
                   <div className="mb-4">
@@ -345,15 +399,37 @@ export default function RecipePage({ params }) {
                           <label className="text-white font-semibold">
                             {flour.name}:
                           </label>
-                          <input
-                            type="number"
-                            min={flour.min}
-                            max={flour.max}
-                            step={recipe.scaling_step || 10}
-                            value={adjustedFlour ?? flour.amount}
-                            onChange={handleFlourChange}
-                            className="rounded px-2 py-1"
-                          />
+                          <button
+                            type="button"
+                            className="bg-[#232323] text-white px-2 rounded disabled:opacity-50"
+                            onClick={() => {
+                              const min = flour.min || 100;
+                              const step = recipe.scaling_step || 10;
+                              const val = (adjustedFlour ?? flour.amount) - step;
+                              if (val >= min) setAdjustedFlour(val);
+                            }}
+                            disabled={(adjustedFlour ?? flour.amount) <= (flour.min || 100)}
+                            aria-label="Decrease amount"
+                          >
+                            –
+                          </button>
+                          <span className="bg-white text-black px-3 py-1 rounded min-w-[48px] text-center">
+                            {adjustedFlour ?? flour.amount}
+                          </span>
+                          <button
+                            type="button"
+                            className="bg-[#232323] text-white px-2 rounded disabled:opacity-50"
+                            onClick={() => {
+                              const max = flour.max || 1000;
+                              const step = recipe.scaling_step || 10;
+                              const val = (adjustedFlour ?? flour.amount) + step;
+                              if (val <= max) setAdjustedFlour(val);
+                            }}
+                            disabled={(adjustedFlour ?? flour.amount) >= (flour.max || 1000)}
+                            aria-label="Increase amount"
+                          >
+                            +
+                          </button>
                           <span className="text-white">{flour.unit}</span>
                         </div>
                       ))}
@@ -445,6 +521,26 @@ export default function RecipePage({ params }) {
               </div>
               {/* Right: Image & Actions */}
               <div className="flex-1 flex flex-col items-center min-w-0">
+                {/* Mobile: Category, Title, Favorite, Rating */}
+                <span className="inline-block md:hidden bg-green-700 text-white px-4 py-1 rounded-full mb-3 text-sm font-semibold">
+                  {recipe.category}
+                </span>
+                <div className="flex md:hidden items-center gap-2 mb-2">
+                  <h1 className="text-2xl font-bold text-white text-center">
+                    {recipe.title}
+                  </h1>
+                  <FavoriteButton
+                    isFav={isFav}
+                    onClick={handleToggleFavorite}
+                  />
+                </div>
+                <div className="flex md:hidden items-center gap-2 mb-2">
+                  <span className="text-yellow-400 text-xl">★</span>
+                  <span className="text-white font-semibold">
+                    ({recipe.rating?.toFixed(1) || 'N/A'})
+                  </span>
+                </div>
+                {/* Image */}
                 <Image
                   src={recipe.image?.url || '/assets/placeholder.jpg'}
                   alt={recipe.image?.alt || recipe.title}
@@ -452,55 +548,7 @@ export default function RecipePage({ params }) {
                   height={300}
                   className="rounded-xl w-full max-w-lg mb-4 shadow-lg object-cover"
                 />
-                {/* Adjustable Servings */}
-                <div className="flex items-center gap-4 mb-4">
-                  <span className="bg-[#232323] text-white px-3 py-1 rounded-lg flex items-center gap-1">
-                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
-                      <circle
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      />
-                      <path
-                        d="M12 6v6l4 2"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                    {recipe.time || 'N/A'} mins
-                  </span>
-                  {recipe.adjustable_servings && (
-                    <span className="bg-[#232323] text-white px-3 py-1 rounded-lg flex items-center gap-2">
-                      <button
-                        className="text-lg px-2 font-bold hover:bg-[#444] rounded"
-                        aria-label="Decrease servings"
-                        onClick={handleDecrease}
-                        disabled={!isAdjusting}
-                      >
-                        -
-                      </button>
-                      <span className="font-semibold">
-                        {recipe.editable_ingredients
-                          ? adjustedServings
-                          : servings}{' '}
-                        Servings
-                      </span>
-                      <button
-                        className="text-lg px-2 font-bold hover:bg-[#444] rounded"
-                        aria-label="Increase servings"
-                        onClick={handleIncrease}
-                        disabled={!isAdjusting}
-                      >
-                        +
-                      </button>
-                    </span>
-                  )}
-                </div>
-                {/* Action Buttons Side by Side */}
+                {/* CTAs */}
                 <div className="flex flex-row gap-3 w-full mb-4">
                   {/* Start Cooking (Flame) */}
                   <button className="flex-1 flex items-center justify-center gap-2 bg-green-700 hover:bg-green-800 text-white px-2 py-2 rounded-lg font-semibold text-sm transition">
@@ -580,7 +628,6 @@ export default function RecipePage({ params }) {
               </div>
             </section>
           </main>
-          <Footer />
         </div>
       </div>
     </>

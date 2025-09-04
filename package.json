@@ -11,6 +11,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.7",
     "firebase": "^12.1.0",
     "firebase-admin": "^13.4.0",
     "react": "19.1.0",

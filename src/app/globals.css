@@ -63,3 +63,12 @@ main {
 .animate-float {
   animation: float 4s ease-in-out infinite;
 }
+
+/* Add to your global CSS or Tailwind config */
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+.animate-slideUp {
+  animation: slideUp 0.3s cubic-bezier(0.4,0,0.2,1);
+}
