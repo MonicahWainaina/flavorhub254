@@ -318,12 +318,9 @@ export default function FavoritesPage() {
           </div>
         </section>
         {/* Divider Line for Recipes Section */}
-        <div className="flex justify-center my-8">
+        <div className="flex justify-center my-2">
           <div className="h-1 w-24 bg-[#3CB371] rounded-full opacity-80"></div>
         </div>
-        <h2 className="text-3xl font-extrabold text-white text-center mb-6">
-          Your Saved Recipes
-        </h2>
         {/* Recipes Carousel Arrows (Desktop only) */}
         <div className="hidden sm:flex justify-center sm:justify-end px-4 sm:px-12 mb-4 gap-2">
           <button
@@ -379,12 +376,6 @@ export default function FavoritesPage() {
         </div>
         {/* --- MOBILE FAVORITES CAROUSEL --- */}
         <div className="sm:hidden w-full mt-4">
-          <div className="flex justify-center my-6">
-            <div className="h-1 w-24 bg-[#3CB371] rounded-full opacity-80"></div>
-          </div>
-          <h2 className="text-3xl font-extrabold text-white text-center mb-3">
-            Your Saved Recipes
-          </h2>
           {loading || !favoritesFetched ? (
             <div className="grid grid-cols-2 gap-3 mt-6">
               <CarouselRecipeSkeleton />
