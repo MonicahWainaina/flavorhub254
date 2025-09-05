@@ -11,6 +11,14 @@ import { useRouter } from 'next/navigation';
 import { db } from '@/lib/firebase';
 import { collection, doc, getDocs, deleteDoc } from 'firebase/firestore';
 
+function chunkArray(array, size) {
+  const result = [];
+  for (let i = 0; i < array.length; i += size) {
+    result.push(array.slice(i, i + size));
+  }
+  return result;
+}
+
 export default function FavoritesPage() {
   const { user, loading, username } = useAuth();
   const router = useRouter();
@@ -25,8 +33,18 @@ export default function FavoritesPage() {
   const [recipesPerPage, setRecipesPerPage] = useState(4);
   const [recipePage, setRecipePage] = useState(0);
   const [sortBy, setSortBy] = useState('recent');
-  const [favoritesFetched, setFavoritesFetched] = useState(false); // NEW
-  const [error, setError] = useState(''); // Error state
+  const [favoritesFetched, setFavoritesFetched] = useState(false);
+  const [error, setError] = useState('');
+
+  // --- Responsive recipes per page ---
+  useEffect(() => {
+    function handleResize() {
+      setRecipesPerPage(window.innerWidth >= 640 ? 6 : 4);
+    }
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // --- Fetch user's favorites from Firestore ---
   useEffect(() => {
@@ -56,26 +74,7 @@ export default function FavoritesPage() {
     fetchFavorites();
   }, [user]);
 
-  // --- Remove from favorites ---
-  const handleToggleFavorite = async (recipe) => {
-    if (!user) return;
-    const favRef = doc(db, 'users', user.uid, 'favorites', recipe.id);
-    await deleteDoc(favRef);
-    setFavoriteRecipes((recipes) => recipes.filter((r) => r.id !== recipe.id));
-    setFavoriteIds((ids) => ids.filter((id) => id !== recipe.id));
-  };
-
-  // --- Responsive recipes per page ---
-  useEffect(() => {
-    function handleResize() {
-      setRecipesPerPage(window.innerWidth >= 640 ? 6 : 4);
-    }
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  // --- Sort logic (best-practice options) ---
+  // --- Sort logic ---
   const sortedRecipes = [...favoriteRecipes].sort((a, b) => {
     if (sortBy === 'recent') return 0;
     if (sortBy === 'az') return a.title.localeCompare(b.title);
@@ -100,7 +99,43 @@ export default function FavoritesPage() {
     );
   });
 
-  // --- Pagination ---
+  // --- Mobile carousel logic ---
+  const mobileRecipePages = chunkArray(filteredRecipes, 4);
+  const [mobilePage, setMobilePage] = useState(0);
+  const mobileCarouselRef = useRef(null);
+
+  // --- Sync mobilePage with scroll ---
+  useEffect(() => {
+    const ref = mobileCarouselRef.current;
+    if (!ref) return;
+    const handleScroll = () => {
+      const scrollLeft = ref.scrollLeft;
+      const pageWidth = ref.offsetWidth;
+      const idx = Math.round(scrollLeft / pageWidth);
+      setMobilePage(idx);
+    };
+    ref.addEventListener('scroll', handleScroll, { passive: true });
+    return () => ref.removeEventListener('scroll', handleScroll);
+  }, [mobileRecipePages.length]);
+
+  // --- Reset scroll on filter/sort/search ---
+  useEffect(() => {
+    setMobilePage(0);
+    if (mobileCarouselRef.current) {
+      mobileCarouselRef.current.scrollTo({ left: 0, behavior: 'auto' });
+    }
+  }, [filteredRecipes.length, searchTerm, sortBy]);
+
+  // --- Remove from favorites ---
+  const handleToggleFavorite = async (recipe) => {
+    if (!user) return;
+    const favRef = doc(db, 'users', user.uid, 'favorites', recipe.id);
+    await deleteDoc(favRef);
+    setFavoriteRecipes((recipes) => recipes.filter((r) => r.id !== recipe.id));
+    setFavoriteIds((ids) => ids.filter((id) => id !== recipe.id));
+  };
+
+  // --- Pagination for desktop ---
   const totalPages = Math.ceil(filteredRecipes.length / recipesPerPage);
   const paginatedRecipes = filteredRecipes.slice(
     recipePage * recipesPerPage,
@@ -139,7 +174,6 @@ export default function FavoritesPage() {
   }
 
   // --- 404/Empty State ---
-  // Only show this if NOT loading, user is present, and fetch is done
   if (!loading && user && favoritesFetched && favoriteRecipes.length === 0) {
     return (
       <>
@@ -290,8 +324,8 @@ export default function FavoritesPage() {
         <h2 className="text-3xl font-extrabold text-white text-center mb-6">
           Your Saved Recipes
         </h2>
-        {/* Recipes Carousel Arrows */}
-        <div className="flex justify-center sm:justify-end px-4 sm:px-12 mb-4 gap-2">
+        {/* Recipes Carousel Arrows (Desktop only) */}
+        <div className="hidden sm:flex justify-center sm:justify-end px-4 sm:px-12 mb-4 gap-2">
           <button
             aria-label="Previous"
             className="bg-[#3CB371] rounded-full p-2 text-white hover:bg-[#2e8b57] transition disabled:opacity-50"
@@ -343,8 +377,134 @@ export default function FavoritesPage() {
             <option value="popular">Most Popular</option>
           </select>
         </div>
-        {/* Recipes Grid */}
-        <section className="w-full px-2 sm:px-8 flex flex-col">
+        {/* --- MOBILE FAVORITES CAROUSEL --- */}
+        <div className="sm:hidden w-full mt-4">
+          <div className="flex justify-center my-6">
+            <div className="h-1 w-24 bg-[#3CB371] rounded-full opacity-80"></div>
+          </div>
+          <h2 className="text-3xl font-extrabold text-white text-center mb-3">
+            Your Saved Recipes
+          </h2>
+          {loading || !favoritesFetched ? (
+            <div className="grid grid-cols-2 gap-3 mt-6">
+              <CarouselRecipeSkeleton />
+              <CarouselRecipeSkeleton />
+              <CarouselRecipeSkeleton />
+              <CarouselRecipeSkeleton />
+            </div>
+          ) : filteredRecipes.length === 0 ? (
+            <div className="text-white text-center py-20">
+              No recipes found.
+              <br />
+              <button
+                className="mt-4 bg-[#3CB371] text-white px-4 py-2 rounded-lg font-bold hover:bg-[#2e8b57] transition"
+                onClick={() => {
+                  setSearchTerm('');
+                }}
+              >
+                Clear Filters
+              </button>
+            </div>
+          ) : (
+            <>
+              <div
+                ref={mobileCarouselRef}
+                className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide"
+                style={{ scrollBehavior: 'smooth' }}
+              >
+                {mobileRecipePages.map((page, pageIdx) => (
+                  <div
+                    key={pageIdx}
+                    className="min-w-full snap-center px-1"
+                    style={{ width: '100vw' }}
+                  >
+                    <div className="grid grid-cols-2 gap-3">
+                      {page.map((recipe, idx) => (
+                        <div
+                          key={recipe.id || idx}
+                          className="bg-[#a94f4f] rounded-2xl shadow-lg overflow-hidden flex flex-col min-h-[180px] relative"
+                        >
+                          {/* Image */}
+                          <div className="relative w-full h-[90px]">
+                            <Image
+                              src={recipe.image?.url || '/assets/placeholder.jpg'}
+                              alt={recipe.image?.alt || recipe.title}
+                              fill
+                              className="object-cover rounded-t-2xl"
+                            />
+                          </div>
+                          {/* Content */}
+                          <div className="flex flex-col justify-between p-2 flex-1 relative">
+                            <span className="font-bold text-white text-sm mb-1 truncate">
+                              {recipe.title}
+                            </span>
+                            <div className="flex items-center gap-2 mb-1">
+                              {/* Star SVG */}
+                              <svg width="14" height="14" fill="#FFD700" viewBox="0 0 20 20">
+                                <path d="M10 15l-5.878 3.09 1.122-6.545L.488 6.91l6.561-.955L10 0l2.951 5.955 6.561.955-4.756 4.635 1.122 6.545z" />
+                              </svg>
+                              <span className="text-yellow-300 font-bold text-xs">
+                                ({recipe.rating?.toFixed(1) || 'N/A'})
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              {/* Clock SVG */}
+                              <svg width="12" height="12" fill="none" stroke="#fff" strokeWidth="2" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M12 6v6l4 2" />
+                              </svg>
+                              <span className="text-white text-xs">
+                                {recipe.time || 'N/A'} mins
+                              </span>
+                            </div>
+                            <Link
+                              href={`/recipe/${recipe.slug}`}
+                              className="bg-white text-black px-2 py-1 rounded-lg font-bold w-fit text-xs shadow mt-2"
+                            >
+                              View Recipe
+                            </Link>
+                            {/* Favorite Icon at bottom right */}
+                            <div className="absolute bottom-2 right-2">
+                              <FavoriteButton
+                                isFav={favoriteIds.includes(recipe.id)}
+                                onClick={() => handleToggleFavorite(recipe)}
+                                size={28}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {/* Pagination Dots */}
+              <div className="flex justify-center mt-3 gap-2">
+                {mobileRecipePages.map((_, idx) => (
+                  <button
+                    key={idx}
+                    className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${
+                      idx === mobilePage
+                        ? 'bg-[#3CB371] scale-125'
+                        : 'bg-gray-400 opacity-60'
+                    }`}
+                    onClick={() => {
+                      if (mobileCarouselRef.current) {
+                        mobileCarouselRef.current.scrollTo({
+                          left: idx * window.innerWidth,
+                          behavior: 'smooth',
+                        });
+                      }
+                    }}
+                    aria-label={`Go to page ${idx + 1}`}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+        {/* Recipes Grid (Desktop) */}
+        <section className="hidden sm:flex w-full px-2 sm:px-8 flex flex-col">
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {loading || !favoritesFetched ? (
               <>

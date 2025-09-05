@@ -461,7 +461,7 @@ export default function BrowseContent() {
                           {page.map((recipe, idx) => (
                             <div
                               key={recipe.id || idx}
-                              className="bg-[#a94f4f] rounded-2xl shadow-lg overflow-hidden flex flex-col min-h-[180px]"
+                              className="bg-[#a94f4f] rounded-2xl shadow-lg overflow-hidden flex flex-col min-h-[180px] relative"
                             >
                               {/* Image */}
                               <div className="relative w-full h-[90px]">
@@ -476,7 +476,7 @@ export default function BrowseContent() {
                                 />
                               </div>
                               {/* Content */}
-                              <div className="flex flex-col justify-between p-2 flex-1">
+                              <div className="flex flex-col justify-between p-2 flex-1 relative">
                                 <span className="font-bold text-white text-sm mb-1 truncate">
                                   {recipe.title}
                                 </span>
@@ -517,6 +517,14 @@ export default function BrowseContent() {
                                 >
                                   View Recipe
                                 </Link>
+                                {/* Favorite Icon at bottom right */}
+                                <div className="absolute bottom-2 right-2">
+                                  <FavoriteButton
+                                    isFav={favoriteIds.includes(recipe.id)}
+                                    onClick={() => handleToggleFavorite(recipe)}
+                                    size={28}
+                                  />
+                                </div>
                               </div>
                             </div>
                           ))}
