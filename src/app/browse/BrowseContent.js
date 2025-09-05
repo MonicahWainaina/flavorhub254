@@ -78,6 +78,15 @@ function useRecipesPerPage() {
   return recipesPerPage;
 }
 
+// Utility to chunk array into pages of 4
+function chunkArray(array, size) {
+  const result = [];
+  for (let i = 0; i < array.length; i += size) {
+    result.push(array.slice(i, i + size));
+  }
+  return result;
+}
+
 export default function BrowseContent() {
   const carouselRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -97,6 +106,10 @@ export default function BrowseContent() {
   const [showFilterModal, setShowFilterModal] = useState(false);
 
   const term = searchTerm.trim().toLowerCase();
+
+  // Mobile carousel state
+  const [mobilePage, setMobilePage] = useState(0);
+  const mobileCarouselRef = useRef(null);
 
   // Shuffle function
   function shuffleArray(array) {
@@ -146,18 +159,42 @@ export default function BrowseContent() {
     selectedCategory,
     selectedIngredients,
   });
-
   const totalPages = Math.ceil(filteredRecipes.length / recipesPerPage);
   const paginatedRecipes = filteredRecipes.slice(
     recipePage * recipesPerPage,
     (recipePage + 1) * recipesPerPage
   );
 
+  // For mobile carousel: chunk filteredRecipes into pages of 4
+  const mobileRecipePages = chunkArray(filteredRecipes, 4);
+
   useEffect(() => {
     setRecipePage(0);
   }, [recipesPerPage, selectedCategory, searchTerm]);
 
-  // Carousel logic (same as before)
+  // --- Mobile carousel: sync page index with scroll ---
+  useEffect(() => {
+    const ref = mobileCarouselRef.current;
+    if (!ref) return;
+    const handleScroll = () => {
+      const scrollLeft = ref.scrollLeft;
+      const pageWidth = ref.offsetWidth;
+      const idx = Math.round(scrollLeft / pageWidth);
+      setMobilePage(idx);
+    };
+    ref.addEventListener('scroll', handleScroll, { passive: true });
+    return () => ref.removeEventListener('scroll', handleScroll);
+  }, [mobileRecipePages.length]);
+
+  // Reset mobile page and scroll position when recipes change
+  useEffect(() => {
+    setMobilePage(0);
+    if (mobileCarouselRef.current) {
+      mobileCarouselRef.current.scrollTo({ left: 0, behavior: 'auto' });
+    }
+  }, [filteredRecipes.length, selectedCategory, searchTerm]);
+
+  // Desktop carousel logic (same as before)
   const CARD_WIDTH = 260 + 24;
   const scrollToCard = (idx) => {
     if (carouselRef.current) {
@@ -275,18 +312,7 @@ export default function BrowseContent() {
                       {recipes
                         .filter((r) => {
                           const term = searchTerm.trim().toLowerCase();
-                          return (
-                            r.title?.toLowerCase().includes(term) ||
-                            r.tags?.some((tag) =>
-                              tag.toLowerCase().includes(term)
-                            ) ||
-                            (Array.isArray(r.ingredients) &&
-                              r.ingredients.some((ing) =>
-                                typeof ing === 'string'
-                                  ? ing.toLowerCase().includes(term)
-                                  : ing.name?.toLowerCase().includes(term)
-                              ))
-                          );
+                          return r.title?.toLowerCase().includes(term);
                         })
                         .slice(0, 8)
                         .map((r) => (
@@ -313,18 +339,7 @@ export default function BrowseContent() {
                       {/* No results */}
                       {recipes.filter((r) => {
                         const term = searchTerm.trim().toLowerCase();
-                        return (
-                          r.title?.toLowerCase().includes(term) ||
-                          r.tags?.some((tag) =>
-                            tag.toLowerCase().includes(term)
-                          ) ||
-                          (Array.isArray(r.ingredients) &&
-                            r.ingredients.some((ing) =>
-                              typeof ing === 'string'
-                                ? ing.toLowerCase().includes(term)
-                                : ing.name?.toLowerCase().includes(term)
-                            ))
-                        );
+                        return r.title?.toLowerCase().includes(term);
                       }).length === 0 && (
                         <div className="px-4 py-2 text-gray-400">
                           No suggestions found.
@@ -337,210 +352,395 @@ export default function BrowseContent() {
             </div>
           </div>
         </section>
-        {/* --- MOBILE STICKY CATEGORY & FILTER BAR --- */}
-        <div className="sm:hidden sticky top-0 z-30 bg-[#181818] flex items-center gap-2 px-2 py-1 border-b border-[#3CB371]/30">
-          <div className="flex overflow-x-auto gap-2 flex-1 scrollbar-hide">
-            {uniqueCategories.map((cat) => (
-              <button
-                key={cat.title}
-                className={`px-3 py-1 rounded-full text-xs whitespace-nowrap ${
-                  selectedCategory === cat.title
-                    ? 'bg-[#3CB371] text-white'
-                    : 'bg-white text-black'
-                }`}
-                onClick={() =>
-                  setSelectedCategory(
-                    selectedCategory === cat.title ? null : cat.title
-                  )
-                }
-              >
-                {cat.title}
-              </button>
-            ))}
-          </div>
-          <button
-            className="ml-2 px-3 py-1 bg-[#3CB371] text-white rounded-full text-xs font-semibold flex items-center gap-1"
-            onClick={() => setShowFilterModal(true)}
-            aria-label="Filter recipes by ingredients"
-          >
-            {/* Filter icon */}
-            <svg
-              width="16"
-              height="16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
-              <path d="M4 4h16M6 8h12M8 12h8M10 16h4" strokeLinecap="round" />
-            </svg>
-            Ingredients
-          </button>
-        </div>
+        {!showSuggestions && (
+          <>
+            {/* --- MOBILE CATEGORY CAROUSEL & FILTER BUTTON --- */}
+            {!searchTerm.trim() && (
+              <div className="sm:hidden w-full bg-[#181818] flex flex-col gap-3 px-2 py-3 border-b border-[#3CB371]/30">
+                <span className="text-[#3CB371] font-bold text-base mb-1 flex items-center gap-2">
+                  <svg
+                    width="20"
+                    height="20"
+                    fill="none"
+                    stroke="#3CB371"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M8 12h8M12 8v8" />
+                  </svg>
+                  Filter By Category
+                </span>
+                <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-1">
+                  {uniqueCategories.map((cat) => (
+                    <button
+                      key={cat.title}
+                      className={`px-5 py-3 rounded-full font-semibold whitespace-nowrap transition-all shadow border-2 inline-flex items-center ${
+                        selectedCategory === cat.title
+                          ? 'bg-[#3CB371] text-white border-[#3CB371] scale-105'
+                          : 'bg-white text-[#232323] border-[#3CB371]/40'
+                      }`}
+                      onClick={() =>
+                        setSelectedCategory(
+                          selectedCategory === cat.title ? null : cat.title
+                        )
+                      }
+                    >
+                      {cat.title}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  className="mt-2 px-4 py-2 bg-[#3CB371] text-white rounded-full text-base font-semibold flex items-center gap-2 shadow transition"
+                  style={{ maxWidth: 220 }}
+                  onClick={() => setShowFilterModal(true)}
+                  aria-label="Filter recipes by ingredients"
+                >
+                  <svg
+                    width="18"
+                    height="18"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M4 4h16M6 8h12M8 12h8M10 16h4"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  Filter By Ingredients
+                </button>
+              </div>
+            )}
 
-        {/* --- FILTER MODAL FOR MOBILE --- */}
-        {showFilterModal && (
-          <div className="sm:hidden fixed inset-0 z-50 flex items-end justify-center">
-            <div
-              className="fixed inset-0 bg-black/40"
-              onClick={() => setShowFilterModal(false)}
-            />
-            <div className="bg-[#181818] w-full rounded-t-2xl p-6 max-h-[60vh] overflow-y-auto relative z-50 animate-slideUp">
-              {/* Drag handle */}
-              <div className="w-12 h-1.5 bg-gray-400 rounded-full mx-auto mb-4" />
-              <button
-                className="absolute top-2 right-4 text-white text-2xl"
-                onClick={() => setShowFilterModal(false)}
-                aria-label="Close"
-              >
-                &times;
-              </button>
-              <h3 className="text-lg font-bold text-white mb-2">
-                Filter by Ingredients
-              </h3>
-              {selectedIngredients.length > 0 && (
-                <p className="text-white text-sm mb-2">
-                  {filteredRecipes.length} recipes found
-                </p>
+            {/* --- MOBILE RECIPE CAROUSEL --- */}
+            <div className="sm:hidden w-full mt-4">
+              <div className="flex justify-center my-6">
+                <div className="h-1 w-24 bg-[#3CB371] rounded-full opacity-80"></div>
+              </div>
+              <h2 className="text-3xl font-extrabold text-white text-center mb-3">
+                {selectedCategory ? selectedCategory : 'Recipes'}
+              </h2>
+              {loading ? (
+                <div className="grid grid-cols-2 gap-3 mt-6">
+                  <CarouselRecipeSkeleton />
+                  <CarouselRecipeSkeleton />
+                  <CarouselRecipeSkeleton />
+                  <CarouselRecipeSkeleton />
+                </div>
+              ) : filteredRecipes.length === 0 ? (
+                <div className="text-white text-center py-20">
+                  No recipes found.
+                  <br />
+                  <button
+                    className="mt-4 bg-[#3CB371] text-white px-4 py-2 rounded-lg font-bold hover:bg-[#2e8b57] transition"
+                    onClick={() => {
+                      setSelectedIngredients([]);
+                      setSelectedCategory(null);
+                      setSearchTerm('');
+                    }}
+                  >
+                    Clear Filters
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div
+                    ref={mobileCarouselRef}
+                    className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide"
+                    style={{ scrollBehavior: 'smooth' }}
+                  >
+                    {mobileRecipePages.map((page, pageIdx) => (
+                      <div
+                        key={pageIdx}
+                        className="min-w-full snap-center px-1"
+                        style={{ width: '100vw' }}
+                      >
+                        <div className="grid grid-cols-2 gap-3">
+                          {page.map((recipe, idx) => (
+                            <div
+                              key={recipe.id || idx}
+                              className="bg-[#a94f4f] rounded-2xl shadow-lg overflow-hidden flex flex-col min-h-[180px] relative"
+                            >
+                              {/* Image */}
+                              <div className="relative w-full h-[90px]">
+                                <Image
+                                  src={
+                                    recipe.image?.url ||
+                                    '/assets/placeholder.jpg'
+                                  }
+                                  alt={recipe.image?.alt || recipe.title}
+                                  fill
+                                  className="object-cover rounded-t-2xl"
+                                />
+                              </div>
+                              {/* Content */}
+                              <div className="flex flex-col justify-between p-2 flex-1 relative">
+                                <span className="font-bold text-white text-sm mb-1 truncate">
+                                  {recipe.title}
+                                </span>
+                                <div className="flex items-center gap-2 mb-1">
+                                  {/* Star SVG */}
+                                  <svg
+                                    width="14"
+                                    height="14"
+                                    fill="#FFD700"
+                                    viewBox="0 0 20 20"
+                                  >
+                                    <path d="M10 15l-5.878 3.09 1.122-6.545L.488 6.91l6.561-.955L10 0l2.951 5.955 6.561.955-4.756 4.635 1.122 6.545z" />
+                                  </svg>
+                                  <span className="text-yellow-300 font-bold text-xs">
+                                    ({recipe.rating?.toFixed(1) || 'N/A'})
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  {/* Clock SVG */}
+                                  <svg
+                                    width="12"
+                                    height="12"
+                                    fill="none"
+                                    stroke="#fff"
+                                    strokeWidth="2"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <circle cx="12" cy="12" r="10" />
+                                    <path d="M12 6v6l4 2" />
+                                  </svg>
+                                  <span className="text-white text-xs">
+                                    {recipe.time || 'N/A'} mins
+                                  </span>
+                                </div>
+                                <Link
+                                  href={`/recipe/${recipe.slug}`}
+                                  className="bg-white text-black px-2 py-1 rounded-lg font-bold w-fit text-xs shadow mt-2"
+                                >
+                                  View Recipe
+                                </Link>
+                                {/* Favorite Icon at bottom right */}
+                                <div className="absolute bottom-2 right-2">
+                                  <FavoriteButton
+                                    isFav={favoriteIds.includes(recipe.id)}
+                                    onClick={() => handleToggleFavorite(recipe)}
+                                    size={28}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  {/* Pagination Dots */}
+                  <div className="flex justify-center mt-3 gap-2">
+                    {mobileRecipePages.map((_, idx) => (
+                      <button
+                        key={idx}
+                        className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${
+                          idx === mobilePage
+                            ? 'bg-[#3CB371] scale-125'
+                            : 'bg-gray-400 opacity-60'
+                        }`}
+                        onClick={() => {
+                          if (mobileCarouselRef.current) {
+                            mobileCarouselRef.current.scrollTo({
+                              left: idx * window.innerWidth,
+                              behavior: 'smooth',
+                            });
+                          }
+                        }}
+                        aria-label={`Go to page ${idx + 1}`}
+                      />
+                    ))}
+                  </div>
+                </>
               )}
-              <hr className="border-t border-white/30 mb-2" />
-              <form
-                className="flex flex-col gap-4"
-                onSubmit={(e) => e.preventDefault()}
-              >
-                {/* Vegetables */}
-                <div>
-                  <span className="font-semibold text-white">Vegetables</span>
-                  <div className="flex flex-col gap-1 mt-1">
-                    {['Tomato', 'Spinach', 'Kale', 'Potatoes'].map(
-                      (ingredient) => (
-                        <label className="text-white" key={ingredient}>
-                          <input
-                            type="checkbox"
-                            checked={selectedIngredients.includes(ingredient)}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                if (selectedIngredients.length < 2) {
-                                  setSelectedIngredients([
-                                    ...selectedIngredients,
-                                    ingredient,
-                                  ]);
+            </div>
+
+            {/* --- FILTER MODAL FOR MOBILE --- */}
+            {showFilterModal && (
+              <div className="sm:hidden fixed inset-0 z-50 flex items-end justify-center">
+                <div
+                  className="fixed inset-0 bg-black/40"
+                  onClick={() => setShowFilterModal(false)}
+                />
+                <div className="bg-[#181818] w-full rounded-t-2xl p-6 max-h-[60vh] overflow-y-auto relative z-50 animate-slideUp">
+                  <div className="w-12 h-1.5 bg-gray-400 rounded-full mx-auto mb-4" />
+                  <button
+                    className="absolute top-2 right-4 text-white text-2xl"
+                    onClick={() => setShowFilterModal(false)}
+                    aria-label="Close"
+                  >
+                    &times;
+                  </button>
+                  <h3 className="text-lg font-bold text-white mb-1">
+                    Filter Recipes By Ingredients
+                  </h3>
+                  <p className="text-gray-300 text-sm mb-3">
+                    Select up to 2 ingredients to narrow your results.
+                  </p>
+                  {selectedIngredients.length > 0 && (
+                    <p className="text-white text-sm mb-2">
+                      {filteredRecipes.length} recipes found
+                    </p>
+                  )}
+                  <hr className="border-t border-white/30 mb-2" />
+                  <form
+                    className="flex flex-col gap-4"
+                    onSubmit={(e) => e.preventDefault()}
+                  >
+                    {/* Vegetables */}
+                    <div>
+                      <span className="font-semibold text-white">
+                        Vegetables
+                      </span>
+                      <div className="flex flex-col gap-2 mt-2">
+                        {['Tomato', 'Spinach', 'Kale', 'Potatoes'].map(
+                          (ingredient) => (
+                            <label
+                              className="text-white text-base flex items-center gap-2"
+                              key={ingredient}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={selectedIngredients.includes(
+                                  ingredient
+                                )}
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    if (selectedIngredients.length < 2) {
+                                      setSelectedIngredients([
+                                        ...selectedIngredients,
+                                        ingredient,
+                                      ]);
+                                    } else {
+                                      toast.info(
+                                        'You can only select up to 2 ingredients.'
+                                      );
+                                    }
+                                  } else {
+                                    setSelectedIngredients(
+                                      selectedIngredients.filter(
+                                        (ing) => ing !== ingredient
+                                      )
+                                    );
+                                  }
+                                }}
+                              />
+                              {ingredient}
+                            </label>
+                          )
+                        )}
+                      </div>
+                    </div>
+                    {/* Meats */}
+                    <div>
+                      <span className="font-semibold text-white">Meats</span>
+                      <div className="flex flex-col gap-2 mt-2">
+                        {['Chicken', 'Beef', 'Goat', 'Fish'].map(
+                          (ingredient) => (
+                            <label
+                              className="text-white text-base flex items-center gap-2"
+                              key={ingredient}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={selectedIngredients.includes(
+                                  ingredient
+                                )}
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    if (selectedIngredients.length < 2) {
+                                      setSelectedIngredients([
+                                        ...selectedIngredients,
+                                        ingredient,
+                                      ]);
+                                    } else {
+                                      toast.info(
+                                        'You can only select up to 2 ingredients.'
+                                      );
+                                    }
+                                  } else {
+                                    setSelectedIngredients(
+                                      selectedIngredients.filter(
+                                        (ing) => ing !== ingredient
+                                      )
+                                    );
+                                  }
+                                }}
+                              />
+                              {ingredient}
+                            </label>
+                          )
+                        )}
+                      </div>
+                    </div>
+                    {/* Dairy */}
+                    <div>
+                      <span className="font-semibold text-white">Dairy</span>
+                      <div className="flex flex-col gap-2 mt-2">
+                        {['Eggs', 'Milk', 'Cheese'].map((ingredient) => (
+                          <label
+                            className="text-white text-base flex items-center gap-2"
+                            key={ingredient}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={selectedIngredients.includes(ingredient)}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  if (selectedIngredients.length < 2) {
+                                    setSelectedIngredients([
+                                      ...selectedIngredients,
+                                      ingredient,
+                                    ]);
+                                  } else {
+                                    toast.info(
+                                      'You can only select up to 2 ingredients.'
+                                    );
+                                  }
                                 } else {
-                                  toast.info(
-                                    'You can only select up to 2 ingredients.'
+                                  setSelectedIngredients(
+                                    selectedIngredients.filter(
+                                      (ing) => ing !== ingredient
+                                    )
                                   );
                                 }
-                              } else {
-                                setSelectedIngredients(
-                                  selectedIngredients.filter(
-                                    (ing) => ing !== ingredient
-                                  )
-                                );
-                              }
-                            }}
-                          />{' '}
-                          {ingredient}
-                        </label>
-                      )
-                    )}
-                  </div>
+                              }}
+                            />
+                            {ingredient}
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="flex gap-2 mt-4">
+                      <button
+                        type="button"
+                        className="flex-1 bg-[#3CB371] text-white px-4 py-2 rounded-lg font-bold hover:bg-[#2e8b57] transition"
+                        onClick={() => setShowFilterModal(false)}
+                      >
+                        Apply
+                      </button>
+                      <button
+                        type="button"
+                        className="flex-1 bg-gray-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-gray-700 transition"
+                        onClick={() => setSelectedIngredients([])}
+                        disabled={selectedIngredients.length === 0}
+                      >
+                        Clear
+                      </button>
+                    </div>
+                  </form>
                 </div>
-                {/* Meats */}
-                <div>
-                  <span className="font-semibold text-white">Meats</span>
-                  <div className="flex flex-col gap-1 mt-1">
-                    {['Chicken', 'Beef', 'Goat', 'Fish'].map((ingredient) => (
-                      <label className="text-white" key={ingredient}>
-                        <input
-                          type="checkbox"
-                          checked={selectedIngredients.includes(ingredient)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              if (selectedIngredients.length < 2) {
-                                setSelectedIngredients([
-                                  ...selectedIngredients,
-                                  ingredient,
-                                ]);
-                              } else {
-                                toast.info(
-                                  'You can only select up to 2 ingredients.'
-                                );
-                              }
-                            } else {
-                              setSelectedIngredients(
-                                selectedIngredients.filter(
-                                  (ing) => ing !== ingredient
-                                )
-                              );
-                            }
-                          }}
-                        />{' '}
-                        {ingredient}
-                      </label>
-                    ))}
-                  </div>
-                </div>
-                {/* Dairy */}
-                <div>
-                  <span className="font-semibold text-white">Dairy</span>
-                  <div className="flex flex-col gap-1 mt-1">
-                    {['Eggs', 'Milk', 'Cheese'].map((ingredient) => (
-                      <label className="text-white" key={ingredient}>
-                        <input
-                          type="checkbox"
-                          checked={selectedIngredients.includes(ingredient)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              if (selectedIngredients.length < 2) {
-                                setSelectedIngredients([
-                                  ...selectedIngredients,
-                                  ingredient,
-                                ]);
-                              } else {
-                                toast.info(
-                                  'You can only select up to 2 ingredients.'
-                                );
-                              }
-                            } else {
-                              setSelectedIngredients(
-                                selectedIngredients.filter(
-                                  (ing) => ing !== ingredient
-                                )
-                              );
-                            }
-                          }}
-                        />{' '}
-                        {ingredient}
-                      </label>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex gap-2 mt-4">
-                  <button
-                    type="button"
-                    className="flex-1 bg-[#3CB371] text-white px-4 py-2 rounded-lg font-bold hover:bg-[#2e8b57] transition"
-                    onClick={() => setShowFilterModal(false)}
-                  >
-                    Apply
-                  </button>
-                  <button
-                    type="button"
-                    className="flex-1 bg-gray-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-gray-700 transition"
-                    onClick={() => setSelectedIngredients([])}
-                    disabled={selectedIngredients.length === 0}
-                  >
-                    Clear
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
+              </div>
+            )}
+          </>
         )}
-
         {/* --- MAIN CONTENT --- */}
         {searchTerm.trim() ? (
           // Show filtered recipes grid here
-          <section className="w-full px-2 sm:px-8 flex flex-col sm:flex-row gap-8 mt-2">
+          <section className="hidden sm:flex w-full px-2 sm:px-8 flex flex-col sm:flex-row gap-8 mt-2">
             {/* Filter Sidebar (optional, you can remove this if not needed) */}
             <aside className="sm:w-1/4 w-full bg-[#181818] rounded-xl p-6 shadow-lg flex flex-col gap-6">
               <h3 className="text-xl font-bold text-white mb-2">
@@ -957,14 +1157,14 @@ export default function BrowseContent() {
               </div>
             </section>
             {/* Divider Line for Recipes Section */}
-            <div className="flex justify-center my-6">
+            <div className="hidden sm:flex justify-center my-6">
               <div className="h-1 w-24 bg-[#3CB371] rounded-full opacity-80"></div>
             </div>
-            <h2 className="text-3xl font-extrabold text-white text-center mb-3">
+            <h2 className="hidden sm:block text-3xl font-extrabold text-white text-center mb-3">
               {selectedCategory ? selectedCategory : 'Recipes'}
             </h2>
             {/* Recipes Section */}
-            <section className="w-full px-2 sm:px-8 flex flex-col sm:flex-row gap-8">
+            <section className="hidden sm:flex w-full px-2 sm:px-8 flex flex-col sm:flex-row gap-8">
               {/* Filter Sidebar */}
               <aside className="hidden sm:block sm:w-1/4 w-full bg-[#181818] rounded-xl p-6 shadow-lg flex flex-col gap-6">
                 <h3 className="text-xl font-bold text-white mb-2">
@@ -1094,7 +1294,7 @@ export default function BrowseContent() {
               </aside>
 
               {/* Recipe Cards Grid Carousel */}
-              <div className="sm:w-3/4 w-full flex flex-col">
+              <div className=" sm:w-3/4 w-full flex flex-col">
                 <div className="flex items-center justify-end mb-4">
                   {/* Carousel Arrows */}
                   <div className="flex gap-2">

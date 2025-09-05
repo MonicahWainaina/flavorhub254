@@ -213,10 +213,10 @@ export default function HomePage() {
       <Header showSearch />
 
       {/* Hero + Cards Section */}
-      <section className="w-full py-8 sm:py-12 min-h-[90vh] pt-28  sm:pt-34 ">
+      <section className="w-full py-8 sm:py-12  pt-28  sm:pt-34 ">
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row px-4 md:px-8 lg:px-12 xl:px-0 relative gap-10 w-full">
           {/* Left: Hero */}
-          <div className="flex-1 flex flex-col lg:max-w-[600px] md:max-w-[700px] md:items-center sm:items-start lg:items-start justify-start z-10 relative mb-10 lg:mb-0">
+          <div className="flex-1 flex flex-col lg:max-w-[600px] md:max-w-[700px] md:items-center sm:items-start lg:items-start justify-start z-10 relative  lg:mb-0">
             <div
               className="
               relative w-full
@@ -279,7 +279,7 @@ export default function HomePage() {
             </div>
           </div>
           {/* Right: Dynamic Recipe Cards */}
-          <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-16 sm:gap-y-24 mt-2">
+          <div className="hidden sm:grid flex-1 grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-16 sm:gap-y-24 mt-2">
             {heroRecipes.length === 0 ? (
               <>
                 <HeroRecipeSkeleton />
@@ -370,7 +370,7 @@ export default function HomePage() {
       </section>
 
       {/* Featured Recipes Carousel Section */}
-      <section className=" w-full mt-8 sm:mt-10 px-4 sm:mb-7">
+      <section className=" w-full mt-3 sm:mt-10 px-4 sm:mb-7">
         <div className="max-w-7xl mx-auto">
           {/* Section Title */}
           <div className="flex items-center mb-6">

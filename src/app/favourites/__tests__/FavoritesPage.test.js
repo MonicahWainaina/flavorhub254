@@ -2,6 +2,14 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import FavoritesPage from '../page';
 import * as firestore from 'firebase/firestore';
 
+
+beforeAll(() => {
+  // Mock scrollTo on all elements
+  Object.defineProperty(window.HTMLElement.prototype, 'scrollTo', {
+    configurable: true,
+    value: function () {},
+  });
+});
 // Mock AuthContext
 jest.mock('@/context/AuthContext', () => ({
   useAuth: () => ({
@@ -52,11 +60,12 @@ describe('FavoritesPage', () => {
     firestore.deleteDoc.mockResolvedValue();
   });
 
-  it('renders favorite recipes', async () => {
-    render(<FavoritesPage />);
-    expect(await screen.findByText('Chapati')).toBeInTheDocument();
-    expect(screen.getByText('Pilau')).toBeInTheDocument();
-  });
+it('renders favorite recipes', async () => {
+  render(<FavoritesPage />);
+  const chapatiEls = await screen.findAllByText('Chapati');
+  expect(chapatiEls.length).toBeGreaterThan(0);
+  expect(screen.getAllByText('Pilau').length).toBeGreaterThan(0);
+});
 
   it('removes a recipe from favorites when FavoriteButton is clicked', async () => {
     render(<FavoritesPage />);

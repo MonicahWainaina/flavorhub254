@@ -192,24 +192,39 @@ export default function Header({
                 </button>
               </div>
             ) : (
-              <Link href="/login">
-                <button className="px-4 py-2 rounded-lg bg-green-700 text-white hover:bg-green-800 transition text-base font-semibold lowercase">
-                  Login/Signup
-                </button>
-              </Link>
+   pathname !== "/login" && (
+    <Link href="/login">
+      <button className="px-4 py-2 rounded-lg bg-green-700 text-white hover:bg-green-800 transition text-base font-semibold lowercase">
+        Login/Signup
+      </button>
+    </Link>
+  )
             )}
           </div>
         </div>
         {/* Mobile/Tablet Nav */}
-        <div className="flex items-center gap-2 lg:hidden">
-          <button
-            className="px-3 py-2 bg-green-600 text-white rounded-lg"
-            onClick={() => setMobileNavOpen(true)}
-            aria-label="Open menu"
-          >
-            Menu
-          </button>
-        </div>
+<div className="flex items-center gap-2 lg:hidden">
+  <button
+    className="p-2 bg-white rounded-lg"
+    onClick={() => setMobileNavOpen(true)}
+    aria-label="Open menu"
+  >
+    {/* Kenyan Flag Hamburger Icon */}
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-6 w-6"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      {/* Top: Black */}
+      <line x1="4" y1="6" x2="20" y2="6" stroke="black" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Middle: White-Red-White */}
+      <line x1="4" y1="12" x2="20" y2="12" stroke="#D32F2F" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Bottom: Green */}
+      <line x1="4" y1="18" x2="20" y2="18" stroke="#2E7D32" strokeWidth="2.5" strokeLinecap="round" />
+    </svg>
+  </button>
+</div>
       </div>
       {/* Mobile Nav Overlay */}
       {mobileNavOpen && (
@@ -318,13 +333,15 @@ export default function Header({
                 Logout
               </button>
             ) : (
-              <Link
-                href="/login"
-                className="text-xl text-white font-semibold"
-                onClick={() => setMobileNavOpen(false)}
-              >
-                Login/Signup
-              </Link>
+     pathname !== "/login" && (
+    <Link
+      href="/login"
+      className="text-xl text-white font-semibold"
+      onClick={() => setMobileNavOpen(false)}
+    >
+      Login/Signup
+    </Link>
+  )
             )}
           </nav>
         </div>
