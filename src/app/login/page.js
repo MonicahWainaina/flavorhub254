@@ -123,7 +123,7 @@ export default function LoginPage() {
                 <div className="flex items-center justify-between text-sm text-white">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    Remember me
+                    Remember Me
                   </label>
                   <a href="#" className="hover:underline">
                     Forgot Password?

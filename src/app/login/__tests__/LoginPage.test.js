@@ -2,12 +2,23 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import LoginPage from '../page';
 import userEvent from '@testing-library/user-event';
 
+jest.mock('@/context/AuthContext', () => ({
+  useAuth: () => ({
+    user: null,
+    username: null,
+    logOut: jest.fn(),
+    loading: false,
+  }),
+})); 
+
 // Mock next/navigation if your component uses router
 jest.mock('next/navigation', () => ({
   useRouter: () => ({
     push: jest.fn(),
   }),
+  usePathname: () => '/login', // Mock usePathname to return the login path
 }));
+
 
 // Mock Firebase Auth methods if used in your component
 jest.mock('firebase/auth', () => ({
