@@ -5,6 +5,7 @@ import { MdEmail } from "react-icons/md";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { auth, db } from "@/lib/firebase";
+import Header from "@/components/Header";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -69,79 +70,7 @@ export default function LoginPage() {
       </div>
 
       {/* Header/Nav */}
-      <header className="relative z-20 flex items-center justify-between px-4 sm:px-8 py-4 h-16 md:h-28">
-        <Link
-          href="/"
-          className="flex items-center space-x-1 cursor-pointer"
-          style={{ userSelect: "none" }}
-        >
-          <img
-            src="/assets/flavorhubicon.png"
-            alt="FlavorHUB254 Logo"
-            className="h-12 w-12 sm:h-16 sm:w-16 object-contain"
-          />
-          <span className="text-2xl sm:text-3xl font-bold leading-none">
-            flavor
-            <span style={{ color: "#D32F2F" }}>HUB</span>
-            <span style={{ color: "#2E7D32" }}>254</span>
-          </span>
-        </Link>
-        {/* Desktop nav */}
-        <nav className="space-x-10 hidden md:flex">
-          <Link
-            href="/"
-            className="text-white text-lg font-medium hover:text-green-400"
-          >
-            Home
-          </Link>
-          <Link
-            href="/browse"
-            className="text-white text-lg font-medium hover:text-green-400"
-          >
-            Browse recipes
-          </Link>
-          <Link
-            href="/flavorbot"
-            className="text-white text-lg font-medium hover:text-green-400"
-          >
-            AI Recipe generator
-          </Link>
-        </nav>
-        {/* Hamburger menu for mobile */}
-        <button
-          className="md:hidden text-white text-3xl focus:outline-none"
-          onClick={() => setNavOpen((open) => !open)}
-          aria-label="Open menu"
-        >
-          {navOpen ? <FaTimes /> : <FaBars />}
-        </button>
-        {/* Mobile nav dropdown */}
-        {navOpen && (
-          <nav className="absolute right-4 top-full mt-2 bg-black bg-opacity-90 rounded-lg shadow-lg flex flex-col gap-4 py-4 px-8 md:hidden z-30">
-            <Link
-              href="/"
-              className="text-white text-lg font-semibold hover:text-green-400"
-              onClick={() => setNavOpen(false)}
-            >
-              Home
-            </Link>
-            <Link
-              href="/browse"
-              className="text-white text-lg font-semibold hover:text-green-400"
-              onClick={() => setNavOpen(false)}
-            >
-              Browse recipes
-            </Link>
-            <Link
-              href="/flavorbot"
-              className="text-white text-lg font-semibold hover:text-green-400"
-              onClick={() => setNavOpen(false)}
-            >
-              AI Recipe generator
-            </Link>
-          </nav>
-        )}
-      </header>
+      <Header />
 
       {/* Login/Signup Card */}
       <main className="relative z-10 flex flex-1 items-center justify-center px-2 pt-2 md:pb-20">
