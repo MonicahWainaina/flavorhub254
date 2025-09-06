@@ -170,25 +170,26 @@ export default function RecipePage({ params }) {
   };
 
   // Adjustment logic
-  useEffect(() => {
-    if (!recipe) return;
-    let scaled = {
-      ingredients: recipe.ingredients,
-      servings: recipe.base_servings || 1,
-    };
-    if (isAdjusting) {
-      if (recipe.editable_ingredients) {
-        const flourObj = recipe.ingredients.find((i) => i.editable);
-        const flourVal = adjustedFlour ?? flourObj.amount;
-        scaled = scaleIngredients(recipe, { flour: flourVal });
-      } else if (recipe.adjustable_servings) {
-        scaled = scaleIngredients(recipe, { servings });
-      }
-    }
-    setAdjustedIngredients(scaled.ingredients);
-    setAdjustedServings(scaled.servings);
-  }, [isAdjusting, adjustedFlour, servings, recipe]);
+useEffect(() => {
+  if (!recipe) return;
+  let scaled = {
+    ingredients: recipe.ingredients,
+    servings: recipe.base_servings || 1,
+  };
 
+  if (isAdjusting && recipe.editable_ingredients) {
+    // If adjusting and editable_ingredients, scale by flour
+    const flourObj = recipe.ingredients.find((i) => i.editable);
+    const flourVal = adjustedFlour ?? flourObj.amount;
+    scaled = scaleIngredients(recipe, { flour: flourVal });
+  } else if (recipe.adjustable_servings) {
+    // Always scale by servings if adjustable_servings is true
+    scaled = scaleIngredients(recipe, { servings });
+  }
+
+  setAdjustedIngredients(scaled.ingredients);
+  setAdjustedServings(scaled.servings);
+}, [isAdjusting, adjustedFlour, servings, recipe]);
   // Add this after fetching recipe:
   useEffect(() => {
     if (recipe && recipe.adjustment_rules?.display_unit === 'us') {
