@@ -410,61 +410,65 @@ export default function FavoritesPage() {
                     style={{ width: '100vw' }}
                   >
                     <div className="grid grid-cols-2 gap-3">
-                      {page.map((recipe, idx) => (
-                        <div
-                          key={recipe.id || idx}
-                          className="bg-[#a94f4f] rounded-2xl shadow-lg overflow-hidden flex flex-col min-h-[180px] relative"
-                        >
-                          {/* Image */}
-                          <div className="relative w-full h-[90px]">
-                            <Image
-                              src={recipe.image?.url || '/assets/placeholder.jpg'}
-                              alt={recipe.image?.alt || recipe.title}
-                              fill
-                              className="object-cover rounded-t-2xl"
-                            />
-                          </div>
-                          {/* Content */}
-                          <div className="flex flex-col justify-between p-2 flex-1 relative">
-                            <span className="font-bold text-white text-sm mb-1 truncate">
-                              {recipe.title}
-                            </span>
-                            <div className="flex items-center gap-2 mb-1">
-                              {/* Star SVG */}
-                              <svg width="14" height="14" fill="#FFD700" viewBox="0 0 20 20">
-                                <path d="M10 15l-5.878 3.09 1.122-6.545L.488 6.91l6.561-.955L10 0l2.951 5.955 6.561.955-4.756 4.635 1.122 6.545z" />
-                              </svg>
-                              <span className="text-yellow-300 font-bold text-xs">
-                                ({recipe.rating?.toFixed(1) || 'N/A'})
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              {/* Clock SVG */}
-                              <svg width="12" height="12" fill="none" stroke="#fff" strokeWidth="2" viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="10" />
-                                <path d="M12 6v6l4 2" />
-                              </svg>
-                              <span className="text-white text-xs">
-                                {recipe.time || 'N/A'} mins
-                              </span>
-                            </div>
-                            <Link
-                              href={`/recipe/${recipe.slug}`}
-                              className="bg-white text-black px-2 py-1 rounded-lg font-bold w-fit text-xs shadow mt-2"
-                            >
-                              View Recipe
-                            </Link>
-                            {/* Favorite Icon at bottom right */}
-                            <div className="absolute bottom-2 right-2">
-                              <FavoriteButton
-                                isFav={favoriteIds.includes(recipe.id)}
-                                onClick={() => handleToggleFavorite(recipe)}
-                                size={28}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      ))}
+{page.map((recipe, idx) => (
+  <Link
+    key={recipe.id || idx}
+    href={`/recipe/${recipe.slug}`}
+    className="bg-[#a94f4f] rounded-2xl shadow-lg overflow-hidden flex flex-col min-h-[180px] relative transition hover:scale-[1.02] active:scale-95"
+    style={{ textDecoration: 'none' }}
+  >
+    {/* Image */}
+    <div className="relative w-full h-[90px]">
+      <Image
+        src={recipe.image?.url || '/assets/placeholder.jpg'}
+        alt={recipe.image?.alt || recipe.title}
+        fill
+        className="object-cover rounded-t-2xl"
+      />
+    </div>
+    {/* Content */}
+    <div className="flex flex-col justify-between p-2 flex-1 relative">
+      <span className="font-bold text-white text-sm mb-1 truncate">
+        {recipe.title}
+      </span>
+      <div className="flex items-center gap-2 mb-1">
+        {/* Star SVG */}
+        <svg width="14" height="14" fill="#FFD700" viewBox="0 0 20 20">
+          <path d="M10 15l-5.878 3.09 1.122-6.545L.488 6.91l6.561-.955L10 0l2.951 5.955 6.561.955-4.756 4.635 1.122 6.545z" />
+        </svg>
+        <span className="text-yellow-300 font-bold text-xs">
+          ({recipe.rating?.toFixed(1) || 'N/A'})
+        </span>
+      </div>
+      <div className="flex items-center gap-2">
+        {/* Clock SVG */}
+        <svg width="12" height="12" fill="none" stroke="#fff" strokeWidth="2" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 6v6l4 2" />
+        </svg>
+        <span className="text-white text-xs">
+          {recipe.time || 'N/A'} mins
+        </span>
+      </div>
+      {/* Remove the View Recipe button on mobile */}
+      {/* Favorite Icon at bottom right */}
+      <div
+        className="absolute bottom-2 right-2 z-10"
+        onClick={e => {
+          e.preventDefault(); // Prevent Link navigation
+          e.stopPropagation();
+          handleToggleFavorite(recipe);
+        }}
+      >
+        <FavoriteButton
+          isFav={favoriteIds.includes(recipe.id)}
+          onClick={() => {}} // No-op, handled above
+          size={28}
+        />
+      </div>
+    </div>
+  </Link>
+))}
                     </div>
                   </div>
                 ))}
