@@ -1,6 +1,4 @@
 const admin = require('firebase-admin');
-
-// Use the relative path to your service account file
 const serviceAccount = require('./serviceAccountKey.json');
 
 admin.initializeApp({
@@ -9,19 +7,19 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-async function findRecipesWithBothTrue() {
+async function findRecipesWithBothFalse() {
   const recipesRef = db.collection('recipes');
-  const snapshot = await recipesRef.where('adjustable_servings', '==', true).get();
+  const snapshot = await recipesRef.get();
 
   let found = 0;
   for (const doc of snapshot.docs) {
     const data = doc.data();
-    if (data.editable_ingredients === true) {
+    if (data.adjustable_servings === false && data.editable_ingredients === false) {
       found++;
       console.log(`Found: ${doc.id} | ${data.title || '(no title)'}`);
     }
   }
-  console.log(`Total recipes with both adjustable_servings and editable_ingredients true: ${found}`);
+  console.log(`Total recipes with both adjustable_servings and editable_ingredients false: ${found}`);
 }
 
-findRecipesWithBothTrue().then(() => process.exit());
+findRecipesWithBothFalse().then(() => process.exit());
