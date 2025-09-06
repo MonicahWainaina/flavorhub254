@@ -32,18 +32,12 @@ function toFraction(decimal) {
 
 // Utility: smart rounding for ingredient amounts
 function smartRound(amount, unit) {
-  if (
-    [
-      'large',
-      'medium',
-      'small',
-      'cloves',
-      'egg',
-      'eggs',
-      'onion',
-      'onions',
-    ].some((u) => (unit || '').toLowerCase().includes(u))
-  ) {
+const countables = [
+  'large', 'medium', 'small', 'cloves', 'clove', 'egg', 'eggs',
+  'onion', 'onions', 'banana', 'bananas', 'piece', 'pieces',
+  'fillet', 'fillets', 'drumstick', 'drumsticks', 'leg', 'legs'
+];
+  if (countables.some((u) => (unit || '').toLowerCase().includes(u))) {
     return Math.round(amount);
   }
   if (['tsp', 'tbsp'].some((u) => (unit || '').toLowerCase().includes(u))) {
@@ -52,9 +46,19 @@ function smartRound(amount, unit) {
     const frac = toFraction(decimal);
     return frac ? `${whole > 0 ? whole + ' ' : ''}${frac}` : `${whole}`;
   }
-  if (['g', 'ml'].some((u) => (unit || '').toLowerCase().includes(u))) {
-    return Math.round(amount);
+if (['g', 'ml', 'kg'].some((u) => (unit || '').toLowerCase().includes(u))) {
+  // For kg, round to 0.05 (50g) or 0.1 (100g) for kitchen-friendliness
+  if ((unit || '').toLowerCase().includes('kg')) {
+    return Math.round(amount * 10) / 10; // 1 decimal place (e.g., 0.5 kg)
   }
+  return Math.round(amount / 5) * 5;
+}
+  if (['cup', 'cups'].some((u) => (unit || '').toLowerCase().includes(u))) {
+    // Round to nearest quarter cup
+    const quarters = Math.round(amount * 4) / 4;
+    return quarters % 1 === 0 ? quarters : quarters.toFixed(2);
+  }
+  // Default: round to 2 decimals (for rare cases)
   return Math.round(amount * 100) / 100;
 }
 
