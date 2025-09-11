@@ -99,7 +99,7 @@ To run this app locally:
 
 ## 📄 License  
 
-MIT  
+[MIT](./LICENSE)
 
 ---
 
