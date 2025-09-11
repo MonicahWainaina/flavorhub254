@@ -1,53 +1,64 @@
-# flavorHUB254 - Recipe Web App
+# flavorHUB254 – Kenya’s Smart Recipe Library  
 
+[![Live Demo](https://img.shields.io/badge/demo-live-green)](https://flavorhub254.vercel.app)
 [![CI](https://github.com/MonicahWainaina/flavorhub254/actions/workflows/ci.yml/badge.svg)](https://github.com/MonicahWainaina/flavorhub254/actions)
 
 Welcome to **flavorHUB254**, a modern recipe web app built with Next.js, Firebase, and React.  
-Discover, browse, and save your favorite Kenyan and global recipes—all in one place.
+Discover, browse, and save your favourite Kenyan and global recipes — all in one place.  
+MVP features are complete and Post-MVP work (audio, Smart Cooking, FlavorBot) is now in progress.
 
 ---
 
-## Author
+## 👩🏾‍🍳 Author  
 
-Monicah Wainaina
+Monicah Wainaina  
 
 ---
 
-## User Interface
+## 🖥️ User Interface  
 
-Here are some snapshots of the app's interface:
+Here are some snapshots of the app’s interface:
 
 | Home Page | Browse Recipes | Recipe Details |
 |-----------|----------------|---------------|
 | ![Home](https://res.cloudinary.com/djlcnpdtn/image/upload/v1756908843/recipe/Homepage.png) | ![Browse](https://res.cloudinary.com/djlcnpdtn/image/upload/v1756908810/recipe/Browse.png) | ![Recipe](https://res.cloudinary.com/djlcnpdtn/image/upload/v1756908449/recipe/Recipepage.png) |
 
-*(Replace with your own screenshots for best results!)*
+*(Replace with your own screenshots for best results.)*
 
 ---
 
-## Features
+## ✨ Current Features (MVP Complete)
 
 - **User Authentication:** Secure login and sign-up with Firebase Auth.
 - **Browse & Filter Recipes:** Explore recipes by category, ingredient, or search.
-- **Favorites:** Save and manage your favorite recipes (requires login).
+- **Favorites:** Save and manage your favourite recipes (requires login).
 - **Serving Adjustment:** Scale ingredient quantities for different servings.
 - **Responsive Design:** Works on mobile, tablet, and desktop.
-- **Firebase Integration:** Recipes and favorites stored securely in Firebase.
+- **Firebase Integration:** Recipes and favourites stored securely.
 
 ---
 
-## Technologies Used
+## 🚀 Upcoming Features (Post-MVP Roadmap)
 
-- **Next.js** (React framework)
-- **Firebase** (Firestore & Auth)
-- **React** (UI library)
-- **Tailwind CSS** (styling)
-- **Jest** (testing)
-- **Vercel** (hosting & CI/CD)
+- **Downloadable Audio Instructions** (MP3 per recipe).
+- **Smart Cooking Mode**: Step-by-step, timer-enabled, with optional browser-based narration.
+- **FlavorBot (AI Assistant)**: Ask questions about food, cooking, and recipes.
+- **Premium Features**: Audio, Smart Cooking, and PDF downloads for subscribed users.
 
 ---
 
-## Getting Started
+## 🛠️ Technologies Used  
+
+- **Next.js** (React framework)  
+- **Firebase** (Firestore & Auth)  
+- **React** (UI library)  
+- **Tailwind CSS** (styling)  
+- **Jest** (testing)  
+- **Vercel** (hosting & CI/CD)  
+
+---
+
+## 🔧 Getting Started  
 
 To run this app locally:
 
@@ -86,10 +97,11 @@ To run this app locally:
 
 ---
 
-## License
+## 📄 License  
 
-MIT
+MIT  
 
 ---
 
-*Built with ❤️ by Monicah Wainaina*
+*Built with ❤️ by Monicah Wainaina*  
+[Live Demo → flavorhub254.vercel.app](https://flavorhub254.vercel.app)
