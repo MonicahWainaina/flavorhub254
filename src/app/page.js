@@ -210,7 +210,7 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-[#1a1a1a] to-black">
-      <Header showSearch />
+      <Header />
 
       {/* Hero + Cards Section */}
       <section className="w-full py-8 sm:py-12  pt-28  sm:pt-34 ">
