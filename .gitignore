@@ -43,6 +43,6 @@ serviceAccountKey.json
 next-env.d.ts
 
 # ignore recipes folder
-recipes/
+/recipes/
 
 
