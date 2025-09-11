@@ -21,7 +21,7 @@ Here are some snapshots of the app’s interface:
 
 | Home Page | Browse Recipes | Recipe Details |
 |-----------|----------------|---------------|
-| ![Home](https://res.cloudinary.com/djlcnpdtn/image/upload/v1756908843/recipe/Homepage.png) | ![Browse](https://res.cloudinary.com/djlcnpdtn/image/upload/v1756908810/recipe/Browse.png) | ![Recipe](https://res.cloudinary.com/djlcnpdtn/image/upload/v1756908449/recipe/Recipepage.png) |
+| ![Home](https://res.cloudinary.com/djlcnpdtn/image/upload/v1757619486/recipe/Homepage.png) | ![Browse](https://res.cloudinary.com/djlcnpdtn/image/upload/v1756908810/recipe/Browse.png) | ![Recipe](https://res.cloudinary.com/djlcnpdtn/image/upload/v1756908449/recipe/Recipepage.png) |
 
 *(Replace with your own screenshots for best results.)*
 
