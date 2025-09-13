@@ -2,6 +2,7 @@
 
 [![Live Demo](https://img.shields.io/badge/demo-live-green)](https://flavorhub254.vercel.app)
 [![CI](https://github.com/MonicahWainaina/flavorhub254/actions/workflows/ci.yml/badge.svg)](https://github.com/MonicahWainaina/flavorhub254/actions)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](./LICENSE)
 
 Welcome to **flavorHUB254**, a modern recipe web app built with Next.js, Firebase, and React.  
 Discover, browse, and save your favourite Kenyan and global recipes — all in one place.  
@@ -20,7 +21,7 @@ Monicah Wainaina
 Here are some snapshots of the app’s interface:
 
 | Home Page | Browse Recipes | Recipe Details |
-|-----------|----------------|---------------|
+|-----------|----------------|----------------|
 | ![Home](https://res.cloudinary.com/djlcnpdtn/image/upload/v1757619486/recipe/Homepage.png) | ![Browse](https://res.cloudinary.com/djlcnpdtn/image/upload/v1756908810/recipe/Browse.png) | ![Recipe](https://res.cloudinary.com/djlcnpdtn/image/upload/v1756908449/recipe/Recipepage.png) |
 
 *(Replace with your own screenshots for best results.)*
@@ -97,10 +98,10 @@ To run this app locally:
 
 ---
 
-## 📄 License
+## 📄 License  
 
-Licensed under the [Apache License, Version 2.0](./LICENSE).
-
+Licensed under the [Apache License, Version 2.0](./LICENSE).  
+See the [NOTICE](./NOTICE) file for attribution information.
 
 ---
 
