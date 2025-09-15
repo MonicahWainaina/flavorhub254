@@ -2,6 +2,18 @@
   "compilerOptions": {
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "checkJs": true,
+    "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    ".next",
+    "coverage",
+    "**/*.spec.js",
+    "**/*.test.js"
+  ]
   }
 }
+
+
