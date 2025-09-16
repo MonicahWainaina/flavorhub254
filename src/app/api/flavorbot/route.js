@@ -8,6 +8,24 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 export async function POST(req) {
   const { prompt } = await req.json();
 
+  // Handle greetings/intros
+  const greetings = [
+    "hi",
+    "hello",
+    "hey",
+    "who are you",
+    "what can you do",
+    "help",
+    "about you",
+  ];
+  if (greetings.some((greet) => prompt.trim().toLowerCase() === greet)) {
+    return NextResponse.json({
+      role: "assistant",
+      content:
+        "Hi! I’m FlavorBot — your smart kitchen companion. I can help you find recipes, answer cooking questions, and share tips on ingredients and nutrition. What’s cooking in your mind today?",
+    });
+  }
+
   // Step 1: Use OpenAI to classify if the prompt is food-related
   const classification = await openai.chat.completions.create({
     model: "gpt-3.5-turbo",
@@ -15,12 +33,12 @@ export async function POST(req) {
       {
         role: "system",
         content:
-          "You are a helpful assistant. Only answer 'yes' or 'no'. Answer 'yes' if the question is about food, cooking, recipes, nutrition, ingredients, or anything related to eating or preparing food. Otherwise, answer 'no'."
+          "You are a helpful assistant. Only answer 'yes' or 'no'. Answer 'yes' if the question is about food, cooking, recipes, nutrition, ingredients, or anything related to eating or preparing food. Otherwise, answer 'no'.",
       },
       {
         role: "user",
-        content: `Is this about food, cooking, recipes, nutrition, or ingredients? "${prompt}"`
-      }
+        content: `Is this about food, cooking, recipes, nutrition, or ingredients? "${prompt}"`,
+      },
     ],
     max_tokens: 1,
   });
@@ -30,7 +48,8 @@ export async function POST(req) {
   if (!isFoodRelated) {
     return NextResponse.json({
       role: "assistant",
-      content: "Sorry, I can only help with recipes, food, and cooking.",
+      content:
+        "I'm only equipped to help you with recipes, food, nutrition, and cooking questions. Try asking me something in those areas!",
     });
   }
 
@@ -47,9 +66,9 @@ export async function POST(req) {
           content: `You are FlavorBot — FlavorHUB254’s Smart Cooking Assistant.
 If the user asks for a recipe, respond ONLY with valid JSON that matches the FlavorHUB254 recipe schema:
 {"title":string,"ingredients":string[],"steps":string[]}
-Do not add extra text.`
+Do not add extra text.`,
         },
-        { role: "user", content: prompt }
+        { role: "user", content: prompt },
       ],
       max_tokens: 500,
     });
@@ -87,9 +106,9 @@ Do not add extra text.`
 You ONLY answer food-related questions: cooking methods, substitutions, nutrition, cultural food context, ingredients.
 Answer clearly and concisely (2–4 sentences).
 Expand with more detail only if the user asks for it.
-If the prompt is not food-related, politely refuse.`
+If the prompt is not food-related, politely refuse.`,
       },
-      { role: "user", content: prompt }
+      { role: "user", content: prompt },
     ],
     max_tokens: 300,
   });

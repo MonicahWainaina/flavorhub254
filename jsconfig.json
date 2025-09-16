@@ -1,10 +1,12 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     },
-    "checkJs": true,
-    "exclude": [
+    "checkJs": false
+  },
+  "exclude": [
     "node_modules",
     "dist",
     "build",
@@ -13,7 +15,4 @@
     "**/*.spec.js",
     "**/*.test.js"
   ]
-  }
 }
-
-

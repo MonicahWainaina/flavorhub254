@@ -4,7 +4,7 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import { useAuth } from "@/context/AuthContext";
 
-// Placeholder bot SVG icon (Heroicons)
+// Placeholder bot SVG icon (Heroicons) 
 function BotIcon({ className = "w-10 h-10" }) {
   return (
     <svg className={className} fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
@@ -118,7 +118,7 @@ export default function FlavorBotPage() {
             hasStarted ? "justify-end" : "justify-center"
           } px-2 sm:px-4`}
         >
-          <div className="flex flex-col w-full max-w-2xl flex-1 h-full justify-center">
+          <div className="flex flex-col w-full max-w-4xl flex-1 h-full justify-center">
             {/* Hero section */}
             {!hasStarted && (
               <div className="flex flex-col items-center w-full mb-4">
@@ -210,7 +210,7 @@ export default function FlavorBotPage() {
             {/* Input fixed at bottom after chat starts */}
             {hasStarted && (
               <form
-                className="flex items-center bg-white rounded-xl shadow-lg px-4 py-3 w-full fixed bottom-4 left-1/2 -translate-x-1/2 max-w-2xl z-20"
+                className="flex items-center bg-white rounded-xl shadow-lg px-4 py-3 w-full fixed bottom-4 left-1/2 -translate-x-1/2 max-w-4xl z-20"
                 onSubmit={handleSubmit}
                 style={{ position: "fixed" }}
               >
