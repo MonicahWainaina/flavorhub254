@@ -1,10 +1,26 @@
 "use client";
 import { useRef, useState, useEffect } from "react";
-import Link from "next/link";
 import Header from "@/components/Header";
 import { useAuth } from "@/context/AuthContext";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { db } from "@/lib/firebase";
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  query,
+  orderBy,
+  onSnapshot,
+  doc,
+  updateDoc,
+  getDoc,
+  getDocs,
+  deleteDoc,
+} from "firebase/firestore";
+import { FaComments } from "react-icons/fa"; // For chat history toggle icon
 
-// Placeholder bot SVG icon (Heroicons) 
+// Bot icon
 function BotIcon({ className = "w-10 h-10" }) {
   return (
     <svg className={className} fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
@@ -17,16 +33,23 @@ function BotIcon({ className = "w-10 h-10" }) {
   );
 }
 
+const MESSAGES_PAGE_SIZE = 20;
+
 export default function FlavorBotPage() {
   const inputRef = useRef(null);
-  const chatRef = useRef(null); // Add this ref for chat area
+  const chatRef = useRef(null);
   const { user, username } = useAuth();
 
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState([]); // {role: "user"|"bot", content: string}
+  const [sessions, setSessions] = useState([]);
+  const [currentSessionId, setCurrentSessionId] = useState(null);
+  const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [loadingSessions, setLoadingSessions] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
+  const [lastVisible, setLastVisible] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const examplePrompts = [
     "Suggest a quick dinner with chicken",
@@ -35,26 +58,123 @@ export default function FlavorBotPage() {
     "Give me a Kenyan street food recipe",
   ];
 
-  // Scroll to bottom when messages or loading changes
+  // Responsive detection
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  // Fetch chat sessions for logged-in users
+  useEffect(() => {
+    if (!user) {
+      setSessions([]);
+      setCurrentSessionId(null);
+      setMessages([]);
+      setHasStarted(false);
+      return;
+    }
+    setLoadingSessions(true);
+    const q = query(
+      collection(db, "users", user.uid, "sessions"),
+      orderBy("createdAt", "desc")
+    );
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const sess = [];
+      snapshot.forEach((doc) => {
+        const d = doc.data();
+        sess.push({
+          id: doc.id,
+          createdAt: d.createdAt?.toDate?.() || new Date(),
+          preview: d.messages?.[0]?.content?.slice(0, 30) || "New chat",
+        });
+      });
+      setSessions(sess);
+      setLoadingSessions(false);
+      // Auto-select the most recent session if none selected
+      if (!currentSessionId && sess.length > 0) {
+        setCurrentSessionId(sess[0].id);
+      }
+    });
+    return () => unsubscribe();
+    // eslint-disable-next-line
+  }, [user]);
+
+  // Fetch messages for the current session (paginated)
+  useEffect(() => {
+    if (!user || !currentSessionId) {
+      setMessages([]);
+      setHasStarted(false);
+      setLastVisible(null);
+      return;
+    }
+    setLoading(true);
+    const sessionRef = doc(db, "users", user.uid, "sessions", currentSessionId);
+    getDoc(sessionRef).then((docSnap) => {
+      if (docSnap.exists()) {
+        const allMsgs = docSnap.data().messages || [];
+        const startIdx = Math.max(0, allMsgs.length - MESSAGES_PAGE_SIZE);
+        setMessages(allMsgs.slice(startIdx));
+        setLastVisible(startIdx > 0 ? startIdx : null);
+        setHasStarted(true);
+      } else {
+        setMessages([]);
+        setLastVisible(null);
+        setHasStarted(false);
+      }
+      setLoading(false);
+    });
+    // eslint-disable-next-line
+  }, [user, currentSessionId]);
+
   useEffect(() => {
     if (chatRef.current) {
       chatRef.current.scrollTop = chatRef.current.scrollHeight;
     }
   }, [messages, loading]);
 
-  // Handle form submit
+  const handleLoadMore = async () => {
+    if (!user || !currentSessionId || lastVisible === null) return;
+    setLoadingMore(true);
+    const sessionRef = doc(db, "users", user.uid, "sessions", currentSessionId);
+    const docSnap = await getDoc(sessionRef);
+    if (docSnap.exists()) {
+      const allMsgs = docSnap.data().messages || [];
+      const newStart = Math.max(0, lastVisible - MESSAGES_PAGE_SIZE);
+      setMessages(allMsgs.slice(newStart));
+      setLastVisible(newStart > 0 ? newStart : null);
+    }
+    setLoadingMore(false);
+  };
+
+  const handleNewSession = async () => {
+    if (!user) return;
+    const sessionRef = await addDoc(collection(db, "users", user.uid, "sessions"), {
+      createdAt: serverTimestamp(),
+      messages: [],
+    });
+    setCurrentSessionId(sessionRef.id);
+    setMessages([]);
+    setHasStarted(false);
+    setLastVisible(null);
+    if (isMobile) setSidebarOpen(false);
+  };
+
+  // Only set hasStarted to true if not already true
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
     if (!input.trim()) {
-      setError("Please enter a prompt.");
+      toast.error("Please enter a prompt.");
       return;
     }
-    setHasStarted(true);
+    if (!hasStarted) setHasStarted(true);
     const userMsg = { role: "user", content: input };
     setMessages((msgs) => [...msgs, userMsg]);
     setLoading(true);
     setInput("");
+    let botMsg = null;
     try {
       const res = await fetch("/api/flavorbot", {
         method: "POST",
@@ -63,36 +183,156 @@ export default function FlavorBotPage() {
       });
       const data = await res.json();
       if (res.ok) {
-        // If it's a recipe (object), format it nicely
         if (data.title && data.ingredients && data.steps) {
           const recipeText = `🍽️ ${data.title}\n\nIngredients:\n- ${data.ingredients.join(
             "\n- "
           )}\n\nSteps:\n${data.steps.map((s, i) => `${i + 1}. ${s}`).join("\n")}`;
-          setMessages((msgs) => [
-            ...msgs,
-            { role: "bot", content: recipeText },
-          ]);
+          botMsg = { role: "bot", content: recipeText };
+          setMessages((msgs) => [...msgs, botMsg]);
         } else if (data.content || data.result) {
-          // Q&A or fallback
-          setMessages((msgs) => [
-            ...msgs,
-            { role: "bot", content: data.content || data.result },
-          ]);
+          botMsg = { role: "bot", content: data.content || data.result };
+          setMessages((msgs) => [...msgs, botMsg]);
+        }
+        if (user && botMsg) {
+          let sessionId = currentSessionId;
+          if (!sessionId) {
+            const sessionRef = await addDoc(collection(db, "users", user.uid, "sessions"), {
+              createdAt: serverTimestamp(),
+              messages: [],
+            });
+            sessionId = sessionRef.id;
+            setCurrentSessionId(sessionId);
+          }
+          const sessionRef = doc(db, "users", user.uid, "sessions", sessionId);
+          const docSnap = await getDoc(sessionRef);
+          let allMsgs = [];
+          if (docSnap.exists()) {
+            allMsgs = docSnap.data().messages || [];
+          }
+          allMsgs = [...allMsgs, userMsg, botMsg];
+          await updateDoc(sessionRef, {
+            messages: allMsgs,
+          });
         }
       } else {
-        setError(data.error || "Something went wrong.");
+        toast.error(data.error || "Something went wrong.");
       }
     } catch {
-      setError("Network error.");
+      toast.error("Network error.");
     }
     setLoading(false);
   };
 
+  // Clear chats handler
+  const handleClearChats = async () => {
+    if (!user || !currentSessionId) return;
+    const sessionRef = doc(db, "users", user.uid, "sessions", currentSessionId);
+    await updateDoc(sessionRef, { messages: [] });
+    setMessages([]);
+    setLastVisible(null);
+    toast.success("Chat cleared!");
+  };
+
+  // Clear all chat sessions handler
+  const handleClearAllChats = async () => {
+    if (!user) return;
+    const sessionsCol = collection(db, "users", user.uid, "sessions");
+    const q = query(sessionsCol);
+    const snapshot = await getDocs(q);
+    const batch = [];
+    snapshot.forEach((docSnap) => {
+      batch.push(deleteDoc(doc(db, "users", user.uid, "sessions", docSnap.id)));
+    });
+    await Promise.all(batch);
+    setSessions([]);
+    setCurrentSessionId(null);
+    setMessages([]);
+    setHasStarted(false);
+    toast.success("All chats cleared!");
+    if (isMobile) setSidebarOpen(false);
+  };
+
+  // Sidebar component
+  function Sidebar({ mobile = false, open = false, onClose }) {
+    return (
+      <aside
+        className={`flex flex-col bg-[#232323] shadow-lg ${
+          mobile
+            ? "fixed top-0 left-0 h-full w-72 z-[100] animate-slide-in-left"
+            : "fixed top-[5.5rem] left-0 h-[calc(100vh-5.5rem)] w-72 border-r border-gray-800 z-30"
+        }`}
+        style={mobile ? { minWidth: 260 } : {}}
+      >
+        {/* Sidebar Title with more padding */}
+        <div className="sticky top-0 z-10 bg-[#232323] px-4 py-6 border-b border-gray-700 flex items-center justify-between">
+          <span className="text-white font-bold text-lg">Chat History</span>
+          {mobile && (
+            <button
+              className="text-white text-2xl"
+              onClick={onClose}
+              title="Close menu"
+            >
+              &times;
+            </button>
+          )}
+        </div>
+        {/* Pinned New Chat as chat item */}
+        <div className="border-b border-gray-800">
+          <button
+            className="w-full flex items-center gap-2 px-4 py-3 bg-green-700 hover:bg-green-800 text-white font-semibold rounded-none transition"
+            onClick={handleNewSession}
+            title="Start new chat"
+          >
+            + New Chat
+          </button>
+        </div>
+        {/* Chat Sessions */}
+        <div className="flex-1 overflow-y-auto">
+          {loadingSessions ? (
+            <div className="text-white p-4">Loading...</div>
+          ) : sessions.length === 0 ? (
+            <div className="text-gray-400 p-4">No chats yet.</div>
+          ) : (
+            <ul>
+              {sessions.map((s) => (
+                <li
+                  key={s.id}
+                  className={`px-4 py-3 cursor-pointer border-b border-gray-800 hover:bg-green-900/30 ${
+                    s.id === currentSessionId ? "bg-green-900/50" : ""
+                  }`}
+                  onClick={() => {
+                    setCurrentSessionId(s.id);
+                    if (mobile) onClose();
+                  }}
+                >
+                  <div className="text-white truncate">{s.preview}</div>
+                  <div className="text-xs text-gray-400">
+                    {s.createdAt.toLocaleString()}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+        {/* Clear Chats Button at Bottom */}
+        <div className="p-4 border-t border-gray-700">
+          <button
+            className="w-full bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded transition"
+            onClick={handleClearAllChats}
+            disabled={sessions.length === 0}
+          >
+            Clear Chats
+          </button>
+        </div>
+      </aside>
+    );
+  }
+
   // Bubble styles
   const userBubble =
-    "self-end bg-white text-black border-2 border-pink-500 rounded-2xl px-4 py-2 mb-2 max-w-[80%] shadow";
+    "bg-green-600 text-white rounded-br-3xl rounded-tl-3xl rounded-tr-xl px-4 py-3 shadow max-w-full break-words";
   const botBubble =
-    "self-start bg-white text-black border-2 border-green-600 rounded-2xl px-4 py-2 mb-2 max-w-[80%] shadow";
+    "bg-white text-black border border-green-600 rounded-bl-3xl rounded-tr-3xl rounded-tl-xl px-4 py-3 shadow max-w-full break-words";
 
   return (
     <div className="relative min-h-screen flex flex-col bg-[#181818]">
@@ -113,129 +353,186 @@ export default function FlavorBotPage() {
             { href: "/browse", label: "Browse recipes" },
           ]}
         />
-        <main
-          className={`flex-1 flex flex-col items-center ${
-            hasStarted ? "justify-end" : "justify-center"
-          } px-2 sm:px-4`}
-        >
-          <div className="flex flex-col w-full max-w-4xl flex-1 h-full justify-center">
-            {/* Hero section */}
-            {!hasStarted && (
-              <div className="flex flex-col items-center w-full mb-4">
-                <div className="flex items-center gap-3 mb-2">
-                  <h1 className="text-3xl sm:text-4xl font-extrabold text-white text-center">
-                    {user ? `Welcome ${username || user.email}` : "Welcome to FlavorBot"}
-                  </h1>
-                  <span className="inline-block align-middle">
-                    <BotIcon className="w-10 h-10 text-green-400" />
-                  </span>
-                </div>
-                <p className="text-base sm:text-lg text-white mb-4 text-center">
-                  Ask me anything about food, cooking, or recipes
-                </p>
-                {/* Input form */}
-                <form
-                  className="flex items-center bg-white rounded-xl shadow-lg px-4 py-3 w-full"
-                  onSubmit={handleSubmit}
-                >
-                  <input
-                    ref={inputRef}
-                    type="text"
-                    placeholder="Type your message here..."
-                    className="flex-1 bg-transparent outline-none text-gray-800 text-lg"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    disabled={loading}
-                  />
-                  <button
-                    type="submit"
-                    className="ml-3 bg-green-600 hover:bg-green-700 text-white rounded-full p-3 transition"
-                    disabled={loading}
-                  >
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
-                  </button>
-                </form>
-                {/* Suggestions below the form */}
-                <div className="w-full max-w-lg flex flex-col items-center mt-4">
-                  <span className="text-white font-semibold mb-2">Try these example prompts:</span>
-                  <div className="flex flex-wrap gap-2 justify-center">
-                    {examplePrompts.map((prompt, idx) => (
-                      <button
-                        key={idx}
-                        type="button"
-                        className="bg-[#232323] hover:bg-green-700 text-white px-4 py-2 rounded-full text-sm transition"
-                        onClick={() => {
-                          setInput(prompt);
-                          inputRef.current?.focus();
-                        }}
-                      >
-                        {prompt}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                {/* Error */}
-                {error && (
-                  <div className="text-red-400 text-center mt-2">{error}</div>
-                )}
-              </div>
-            )}
-
-            {/* Chat area */}
-            {hasStarted && (
+        <main className="flex-1 flex flex-row items-stretch relative">
+          {/* Desktop Sidebar */}
+          {user && !isMobile && <Sidebar />}
+          {/* Mobile Sidebar Drawer */}
+          {user && isMobile && sidebarOpen && (
+            <>
               <div
-                ref={chatRef}
-                className="flex flex-col flex-1 overflow-y-auto mb-4 pb-32"
-                style={{ minHeight: "200px", maxHeight: "60vh" }}
-              >
-                {messages.map((msg, idx) => (
-                  <div
-                    key={idx}
-                    className={msg.role === "user" ? userBubble : botBubble}
-                    aria-label={msg.role === "user" ? "Your message" : "Bot response"}
-                  >
-                    {msg.content}
+                className="fixed inset-0 z-[90] bg-black bg-opacity-60"
+                onClick={() => setSidebarOpen(false)}
+              />
+              <Sidebar mobile open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+            </>
+          )}
+          {/* Mobile: Chat history toggle button */}
+          {user && isMobile && !sidebarOpen && (
+            <button
+              className="fixed top-20 left-4 z-[101] bg-green-700 text-white px-3 py-2 rounded-full shadow-lg flex items-center"
+              onClick={() => setSidebarOpen(true)}
+              aria-label="Open chat history"
+            >
+              <FaComments className="w-6 h-6" />
+            </button>
+          )}
+          {/* Main chat area */}
+          <section
+            className={`flex flex-col flex-1 items-center bg-transparent pt-20 ${ // pt-20 for header height
+              user && !isMobile ? "ml-72" : ""
+            }`}
+            style={{ height: "calc(100vh - 5rem)" }} // 5rem = 80px header
+          >
+            <div className="mt-9 relative w-full max-w-4xl mx-auto flex flex-col flex-1 h-full">
+              {/* Hero section */}
+              {!hasStarted && (
+                <div className="flex mt-15 flex-col items-center justify-center w-full py-12">
+                  <div className="flex items-center gap-3 mb-2">
+                    <h1 className="text-3xl sm:text-4xl font-extrabold text-white text-center">
+                      {user
+                        ? `Welcome, ${username || user.email}!`
+                        : "Welcome to FlavorBot"}
+                      <span className="inline-block align-middle ml-2">
+                        <BotIcon className="w-10 h-10 text-green-400" />
+                      </span>
+                    </h1>
                   </div>
-                ))}
-                {loading && (
-                  <div className={botBubble + " opacity-70"}>
-                    Thinking...
+                  <p className="text-base sm:text-lg text-white mb-4 text-center">
+                    Ask me anything about food, cooking, or recipes
+                  </p>
+                  {/* Input form (only when !hasStarted) */}
+                  {!hasStarted && (
+                    <form
+                      className="flex items-center bg-white rounded-xl shadow-lg px-4 py-3 w-full max-w-2xl mx-auto"
+                      onSubmit={handleSubmit}
+                    >
+                      <input
+                        ref={inputRef}
+                        type="text"
+                        placeholder="Type your message here..."
+                        className="flex-1 bg-transparent outline-none text-gray-800 text-lg"
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        disabled={loading}
+                      />
+                      <button
+                        type="submit"
+                        className="ml-3 bg-green-600 hover:bg-green-700 text-white rounded-full p-3 transition"
+                        disabled={loading}
+                      >
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                      </button>
+                    </form>
+                  )}
+                  {/* Suggestions below the form */}
+                  <div className="w-full max-w-lg flex flex-col items-center mt-4">
+                    <span className="text-white font-semibold mb-2">Try these example prompts:</span>
+                    <div className="flex flex-wrap gap-2 justify-center">
+                      {examplePrompts.map((prompt, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          className="bg-[#232323] hover:bg-green-700 text-white px-4 py-2 rounded-full text-sm transition"
+                          onClick={() => {
+                            setInput(prompt);
+                            inputRef.current?.focus();
+                          }}
+                        >
+                          {prompt}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                )}
-              </div>
-            )}
+                </div>
+              )}
 
-            {/* Input fixed at bottom after chat starts */}
-            {hasStarted && (
-              <form
-                className="flex items-center bg-white rounded-xl shadow-lg px-4 py-3 w-full fixed bottom-4 left-1/2 -translate-x-1/2 max-w-4xl z-20"
-                onSubmit={handleSubmit}
-                style={{ position: "fixed" }}
-              >
-                <input
-                  ref={inputRef}
-                  type="text"
-                  placeholder="Type your message here..."
-                  className="flex-1 bg-transparent outline-none text-gray-800 text-lg"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  disabled={loading}
-                />
-                <button
-                  type="submit"
-                  className="ml-3 bg-green-600 hover:bg-green-700 text-white rounded-full p-3 transition"
-                  disabled={loading}
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
-                </button>
-              </form>
-            )}
-          </div>
+              {/* Chat area and prompt (only when hasStarted) */}
+              {hasStarted && (
+                <>
+                  <div
+                    ref={chatRef}
+                    className="flex flex-col-reverse flex-1 overflow-y-auto w-full"
+                    style={{ minHeight: "200px", maxHeight: "100%" }}
+                  >
+                    {/* "Thinking..." bubble at the bottom */}
+                    {loading && input.trim() && (
+                      <div className="flex justify-start my-2">
+                        <div className={botBubble + " opacity-70"} style={{ width: "fit-content", maxWidth: "90%" }}>
+                          Thinking...
+                        </div>
+                      </div>
+                    )}
+                    {/* Messages (reversed for bottom-up) */}
+                    {[...messages].reverse().map((msg, idx) => (
+                      <div
+                        key={idx}
+                        className={`flex my-2 ${
+                          msg.role === "user" ? "justify-end" : "justify-start"
+                        }`}
+                      >
+                        <div
+                          className={msg.role === "user" ? userBubble : botBubble}
+                          style={{ width: "fit-content", maxWidth: "90%" }}
+                          aria-label={msg.role === "user" ? "Your message" : "Bot response"}
+                        >
+                          {msg.content}
+                        </div>
+                      </div>
+                    ))}
+                    {/* Load more button */}
+                    {lastVisible !== null && (
+                      <button
+                        className="mx-auto my-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-green-700"
+                        onClick={handleLoadMore}
+                        disabled={loadingMore}
+                      >
+                        {loadingMore ? "Loading..." : "Load more"}
+                      </button>
+                    )}
+                  </div>
+                  {/* Input at the bottom (only when hasStarted) */}
+                  {hasStarted && (
+                    <form
+                      className="flex items-center bg-white rounded-xl shadow-lg px-4 py-3 w-full z-20"
+                      onSubmit={handleSubmit}
+                    >
+                      <input
+                        ref={inputRef}
+                        type="text"
+                        placeholder="Type your message here..."
+                        className="flex-1 bg-transparent outline-none text-gray-800 text-lg"
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        disabled={loading}
+                      />
+                      <button
+                        type="submit"
+                        className="ml-3 bg-green-600 hover:bg-green-700 text-white rounded-full p-3 transition"
+                        disabled={loading}
+                      >
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                      </button>
+                    </form>
+                  )}
+                </>
+              )}
+            </div>
+          </section>
         </main>
+        {/* Animation for mobile sidebar */}
+        <style>{`
+          @keyframes slide-in-left {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+          }
+          .animate-slide-in-left {
+            animation: slide-in-left 0.3s cubic-bezier(0.4,0,0.2,1) both;
+          }
+        `}</style>
       </div>
     </div>
   );

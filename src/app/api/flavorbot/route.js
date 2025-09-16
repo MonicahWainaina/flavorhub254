@@ -3,9 +3,46 @@ import OpenAI from "openai";
 import sanitizeHtml from "sanitize-html";
 import { validateRecipeJSON } from "@/lib/validateRecipe";
 
+// --- Rate limiting setup ---
+const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour
+const GUEST_LIMIT = 10; // max 10 requests per hour per IP
+const rateLimitStore = {};
+
+function getClientIp(req) {
+  return (
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    req.headers.get("x-real-ip") ||
+    "unknown"
+  );
+}
+// --- End rate limiting setup ---
+
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export async function POST(req) {
+  // --- Rate limiting logic ---
+  const ip = getClientIp(req);
+  const now = Date.now();
+  if (!rateLimitStore[ip]) {
+    rateLimitStore[ip] = [];
+  }
+  // Remove old timestamps
+  rateLimitStore[ip] = rateLimitStore[ip].filter(
+    (ts) => now - ts < RATE_LIMIT_WINDOW
+  );
+  if (rateLimitStore[ip].length >= GUEST_LIMIT) {
+    return NextResponse.json(
+      {
+        error:
+          "You have reached the maximum number of free requests. Please try again later or log in for more access.",
+      },
+      { status: 429 }
+    );
+  }
+  // Record this request
+  rateLimitStore[ip].push(now);
+  // --- End rate limiting logic ---
+
   const { prompt } = await req.json();
 
   // Handle greetings/intros
