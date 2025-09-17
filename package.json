@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^2.2.7",
+    "@upstash/redis": "^1.35.3",
     "firebase": "^12.1.0",
     "firebase-admin": "^13.4.0",
     "openai": "^5.20.2",

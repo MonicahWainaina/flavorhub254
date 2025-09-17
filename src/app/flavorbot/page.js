@@ -180,10 +180,15 @@ export default function FlavorBotPage() {
 
     let botMsg = null;
     try {
+      // Send uid and isPremium to the API for rate limiting
       const res = await fetch("/api/flavorbot", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: userMsg.content }),
+        body: JSON.stringify({
+          prompt: userMsg.content,
+          uid: user?.uid || null,
+          isPremium: user?.isPremium || false, // Adjust if you add premium logic
+        }),
       });
       const data = await res.json();
 
@@ -225,7 +230,18 @@ export default function FlavorBotPage() {
           }
         }
       } else {
-        toast.error(data.error || "Something went wrong.");
+        // Fine-tuned toast messages for rate limits
+        if (data.error) {
+          if (data.error.includes("log in")) {
+            toast.error("You’ve hit the guest limit. Please log in or sign up for more access!");
+          } else if (data.error.includes("Upgrade")) {
+            toast.error("You’ve hit your free daily limit. Upgrade to Premium for unlimited access!");
+          } else {
+            toast.error(data.error);
+          }
+        } else {
+          toast.error("Something went wrong.");
+        }
         setShowThinking(false);
       }
     } catch (error) {

@@ -2,11 +2,20 @@ import { NextResponse } from "next/server";
 import OpenAI from "openai";
 import sanitizeHtml from "sanitize-html";
 import { validateRecipeJSON } from "@/lib/validateRecipe";
+import { Redis } from "@upstash/redis";
 
 // --- Rate limiting setup ---
-const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour
-const GUEST_LIMIT = 10; // max 10 requests per hour per IP
-const rateLimitStore = {};
+const LIMITS = {
+  guest: 5,
+  free: 20,
+  premium: 100,
+};
+const RATE_LIMIT_WINDOW = 24 * 60 * 60; // 24 hours
+
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+});
 
 function getClientIp(req) {
   return (
@@ -20,30 +29,39 @@ function getClientIp(req) {
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export async function POST(req) {
-  // --- Rate limiting logic ---
-  const ip = getClientIp(req);
-  const now = Date.now();
-  if (!rateLimitStore[ip]) {
-    rateLimitStore[ip] = [];
-  }
-  // Remove old timestamps
-  rateLimitStore[ip] = rateLimitStore[ip].filter(
-    (ts) => now - ts < RATE_LIMIT_WINDOW
-  );
-  if (rateLimitStore[ip].length >= GUEST_LIMIT) {
-    return NextResponse.json(
-      {
-        error:
-          "You have reached the maximum number of free requests. Please try again later or log in for more access.",
-      },
-      { status: 429 }
-    );
-  }
-  // Record this request
-  rateLimitStore[ip].push(now);
-  // --- End rate limiting logic ---
+  const { prompt, uid, isPremium } = await req.json();
 
-  const { prompt } = await req.json();
+  // Determine user type and rate limit key
+  let userType = "guest";
+  let key;
+  if (uid) {
+    userType = isPremium ? "premium" : "free";
+    key = `flavorbot:rate:${userType}:${uid}`;
+  } else {
+    const ip = getClientIp(req);
+    key = `flavorbot:rate:guest:${ip}`;
+  }
+  const limit = LIMITS[userType];
+
+  // Rate limiting logic
+  const current = await redis.incr(key);
+  if (current === 1) {
+    await redis.expire(key, RATE_LIMIT_WINDOW);
+  }
+  if (current > limit) {
+    let errorMsg;
+    if (userType === "guest") {
+      errorMsg =
+        "You’ve reached the daily limit for guests. Please log in or sign up for more access!";
+    } else if (userType === "free") {
+      errorMsg =
+        "You’ve reached your daily free limit. Upgrade to Premium for unlimited access!";
+    } else {
+      errorMsg =
+        "You’ve reached your daily premium limit. Please try again tomorrow!";
+    }
+    return NextResponse.json({ error: errorMsg }, { status: 429 });
+  }
 
   // Handle greetings/intros
   const greetings = [
