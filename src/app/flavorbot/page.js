@@ -18,7 +18,7 @@ import {
   getDocs,
   deleteDoc,
 } from "firebase/firestore";
-import { FaComments } from "react-icons/fa"; // For chat history toggle icon
+import { FaComments } from "react-icons/fa";
 
 // Bot icon
 function BotIcon({ className = "w-10 h-10" }) {
@@ -50,6 +50,7 @@ export default function FlavorBotPage() {
   const [hasStarted, setHasStarted] = useState(false);
   const [lastVisible, setLastVisible] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showThinking, setShowThinking] = useState(false);
 
   const examplePrompts = [
     "Suggest a quick dinner with chicken",
@@ -122,7 +123,7 @@ export default function FlavorBotPage() {
       } else {
         setMessages([]);
         setLastVisible(null);
-        setHasStarted(false);
+        // Do NOT setHasStarted(false) here!
       }
       setLoading(false);
     });
@@ -157,23 +158,26 @@ export default function FlavorBotPage() {
     });
     setCurrentSessionId(sessionRef.id);
     setMessages([]);
-    setHasStarted(false);
+    setHasStarted(true);
     setLastVisible(null);
     if (isMobile) setSidebarOpen(false);
   };
 
-  // Only set hasStarted to true if not already true
+  // --- Improved handleSubmit with instant UI update and robust session logic ---
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!input.trim()) {
       toast.error("Please enter a prompt.");
       return;
     }
-    if (!hasStarted) setHasStarted(true);
+
     const userMsg = { role: "user", content: input };
     setMessages((msgs) => [...msgs, userMsg]);
     setLoading(true);
+    setShowThinking(true); // Show thinking bubble
     setInput("");
+    if (!hasStarted) setHasStarted(true);
+
     let botMsg = null;
     try {
       const res = await fetch("/api/flavorbot", {
@@ -182,46 +186,56 @@ export default function FlavorBotPage() {
         body: JSON.stringify({ prompt: userMsg.content }),
       });
       const data = await res.json();
+
       if (res.ok) {
         if (data.title && data.ingredients && data.steps) {
           const recipeText = `🍽️ ${data.title}\n\nIngredients:\n- ${data.ingredients.join(
             "\n- "
           )}\n\nSteps:\n${data.steps.map((s, i) => `${i + 1}. ${s}`).join("\n")}`;
           botMsg = { role: "bot", content: recipeText };
-          setMessages((msgs) => [...msgs, botMsg]);
         } else if (data.content || data.result) {
           botMsg = { role: "bot", content: data.content || data.result };
-          setMessages((msgs) => [...msgs, botMsg]);
         }
+
+        if (botMsg) {
+          setMessages((msgs) => [...msgs, botMsg]);
+          setShowThinking(false); // Hide thinking bubble
+        }
+
+        // --- Robust session logic for logged-in users ---
         if (user && botMsg) {
           let sessionId = currentSessionId;
           if (!sessionId) {
+            // First message: create session with both messages
             const sessionRef = await addDoc(collection(db, "users", user.uid, "sessions"), {
               createdAt: serverTimestamp(),
-              messages: [],
+              messages: [userMsg, botMsg],
             });
             sessionId = sessionRef.id;
             setCurrentSessionId(sessionId);
+          } else {
+            // Session exists: append messages
+            const sessionRef = doc(db, "users", user.uid, "sessions", sessionId);
+            const docSnap = await getDoc(sessionRef);
+            let allMsgs = docSnap.exists() ? docSnap.data().messages || [] : [];
+            allMsgs = [...allMsgs, userMsg, botMsg];
+            await updateDoc(sessionRef, {
+              messages: allMsgs,
+            });
           }
-          const sessionRef = doc(db, "users", user.uid, "sessions", sessionId);
-          const docSnap = await getDoc(sessionRef);
-          let allMsgs = [];
-          if (docSnap.exists()) {
-            allMsgs = docSnap.data().messages || [];
-          }
-          allMsgs = [...allMsgs, userMsg, botMsg];
-          await updateDoc(sessionRef, {
-            messages: allMsgs,
-          });
         }
       } else {
         toast.error(data.error || "Something went wrong.");
+        setShowThinking(false);
       }
-    } catch {
+    } catch (error) {
       toast.error("Network error.");
+      setShowThinking(false);
+      console.error(error);
     }
     setLoading(false);
   };
+  // --- End improved handleSubmit ---
 
   // Clear chats handler
   const handleClearChats = async () => {
@@ -378,10 +392,10 @@ export default function FlavorBotPage() {
           )}
           {/* Main chat area */}
           <section
-            className={`flex flex-col flex-1 items-center bg-transparent pt-20 ${ // pt-20 for header height
+            className={`flex flex-col flex-1 items-center bg-transparent pt-20 ${
               user && !isMobile ? "ml-72" : ""
             }`}
-            style={{ height: "calc(100vh - 5rem)" }} // 5rem = 80px header
+            style={{ height: "calc(100vh - 5rem)" }}
           >
             <div className="mt-9 relative w-full max-w-4xl mx-auto flex flex-col flex-1 h-full">
               {/* Hero section */}
@@ -401,31 +415,29 @@ export default function FlavorBotPage() {
                     Ask me anything about food, cooking, or recipes
                   </p>
                   {/* Input form (only when !hasStarted) */}
-                  {!hasStarted && (
-                    <form
-                      className="flex items-center bg-white rounded-xl shadow-lg px-4 py-3 w-full max-w-2xl mx-auto"
-                      onSubmit={handleSubmit}
+                  <form
+                    className="flex items-center bg-white rounded-xl shadow-lg px-4 py-3 w-full max-w-2xl mx-auto"
+                    onSubmit={handleSubmit}
+                  >
+                    <input
+                      ref={inputRef}
+                      type="text"
+                      placeholder="Type your message here..."
+                      className="flex-1 bg-transparent outline-none text-gray-800 text-lg"
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      disabled={loading}
+                    />
+                    <button
+                      type="submit"
+                      className="ml-3 bg-green-600 hover:bg-green-700 text-white rounded-full p-3 transition"
+                      disabled={loading}
                     >
-                      <input
-                        ref={inputRef}
-                        type="text"
-                        placeholder="Type your message here..."
-                        className="flex-1 bg-transparent outline-none text-gray-800 text-lg"
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        disabled={loading}
-                      />
-                      <button
-                        type="submit"
-                        className="ml-3 bg-green-600 hover:bg-green-700 text-white rounded-full p-3 transition"
-                        disabled={loading}
-                      >
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M12 5l7 7-7 7" />
-                        </svg>
-                      </button>
-                    </form>
-                  )}
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M12 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  </form>
                   {/* Suggestions below the form */}
                   <div className="w-full max-w-lg flex flex-col items-center mt-4">
                     <span className="text-white font-semibold mb-2">Try these example prompts:</span>
@@ -457,10 +469,10 @@ export default function FlavorBotPage() {
                     style={{ minHeight: "200px", maxHeight: "100%" }}
                   >
                     {/* "Thinking..." bubble at the bottom */}
-                    {loading && input.trim() && (
+                    {showThinking && (
                       <div className="flex justify-start my-2">
                         <div className={botBubble + " opacity-70"} style={{ width: "fit-content", maxWidth: "90%" }}>
-                          Thinking...
+                          <span className="inline-block animate-pulse">Thinking<span className="animate-bounce">...</span></span>
                         </div>
                       </div>
                     )}
@@ -493,31 +505,29 @@ export default function FlavorBotPage() {
                     )}
                   </div>
                   {/* Input at the bottom (only when hasStarted) */}
-                  {hasStarted && (
-                    <form
-                      className="flex items-center bg-white rounded-xl shadow-lg px-4 py-3 w-full z-20"
-                      onSubmit={handleSubmit}
+                  <form
+                    className="flex items-center bg-white rounded-xl shadow-lg px-4 py-3 w-full z-20"
+                    onSubmit={handleSubmit}
+                  >
+                    <input
+                      ref={inputRef}
+                      type="text"
+                      placeholder="Type your message here..."
+                      className="flex-1 bg-transparent outline-none text-gray-800 text-lg"
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      disabled={loading}
+                    />
+                    <button
+                      type="submit"
+                      className="ml-3 bg-green-600 hover:bg-green-700 text-white rounded-full p-3 transition"
+                      disabled={loading}
                     >
-                      <input
-                        ref={inputRef}
-                        type="text"
-                        placeholder="Type your message here..."
-                        className="flex-1 bg-transparent outline-none text-gray-800 text-lg"
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        disabled={loading}
-                      />
-                      <button
-                        type="submit"
-                        className="ml-3 bg-green-600 hover:bg-green-700 text-white rounded-full p-3 transition"
-                        disabled={loading}
-                      >
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M12 5l7 7-7 7" />
-                        </svg>
-                      </button>
-                    </form>
-                  )}
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M12 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  </form>
                 </>
               )}
             </div>
