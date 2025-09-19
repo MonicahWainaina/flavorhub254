@@ -22,10 +22,15 @@ import {
   CarouselRecipeSkeleton,
   CategorySkeleton,
 } from '@/components/Loaders';
-import FavoriteButton from '@/components/FavoriteButton'; // <-- Import this
+import FavoriteButton from '@/components/FavoriteButton';
+import FlavorBotChatModal from "@/components/FlavorBotChatModal";
+
 
 export default function HomePage() {
   const { user, username, logOut, loading } = useAuth();
+
+  // --- Add chatOpen state for the chat modal ---
+  const [chatOpen, setChatOpen] = useState(false);
 
   // --- HERO FEATURED RECIPES ---
   const [heroRecipes, setHeroRecipes] = useState([]);
@@ -729,7 +734,8 @@ export default function HomePage() {
       {/* Ask Flavorbot Button */}
       <button
         className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 bg-green-700 hover:bg-green-800 text-white flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 rounded-xl shadow-lg z-[1000] animate-float-"
-        style={{ fontWeight: 600, fontSize: '1.1rem' }}
+        style={{ fontWeight: 600, fontSize: '1.1rem' }} 
+        onClick={() => setChatOpen(true)}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -753,6 +759,7 @@ export default function HomePage() {
         </svg>
         Ask Flavorbot
       </button>
+      <FlavorBotChatModal open={chatOpen} onClose={() => setChatOpen(false)} />
     </main>
   );
 }
