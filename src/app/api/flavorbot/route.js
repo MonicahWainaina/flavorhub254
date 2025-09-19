@@ -3,6 +3,33 @@ import OpenAI from "openai";
 import sanitizeHtml from "sanitize-html";
 import { validateRecipeJSON } from "@/lib/validateRecipe";
 import { Redis } from "@upstash/redis";
+import { db } from "@/lib/firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+
+// --- Analytics/logging helper ---
+async function logFlavorbotEvent({
+  userType,
+  uid,
+  promptType,
+  prompt,
+  blocked,
+  ip,
+}) {
+  try {
+    await addDoc(collection(db, "flavorbot_logs"), {
+      timestamp: serverTimestamp(),
+      userType,
+      uid: uid || null,
+      promptType,
+      prompt,
+      blocked,
+      ip: ip || null, // <-- Fix: never undefined
+    });
+  } catch (e) {
+    // Logging should never break the API
+    console.error("Failed to log flavorbot event:", e);
+  }
+}
 
 // --- Rate limiting setup ---
 const LIMITS = {
@@ -33,12 +60,12 @@ export async function POST(req) {
 
   // Determine user type and rate limit key
   let userType = "guest";
-  let key;
+  let key, ip;
   if (uid) {
     userType = isPremium ? "premium" : "free";
     key = `flavorbot:rate:${userType}:${uid}`;
   } else {
-    const ip = getClientIp(req);
+    ip = getClientIp(req);
     key = `flavorbot:rate:guest:${ip}`;
   }
   const limit = LIMITS[userType];
@@ -49,6 +76,14 @@ export async function POST(req) {
     await redis.expire(key, RATE_LIMIT_WINDOW);
   }
   if (current > limit) {
+    await logFlavorbotEvent({
+      userType,
+      uid,
+      promptType: "rate-limit",
+      prompt,
+      blocked: true,
+      ip: ip || null,
+    });
     let errorMsg;
     if (userType === "guest") {
       errorMsg =
@@ -74,6 +109,14 @@ export async function POST(req) {
     "about you",
   ];
   if (greetings.some((greet) => prompt.trim().toLowerCase() === greet)) {
+    await logFlavorbotEvent({
+      userType,
+      uid,
+      promptType: "greeting",
+      prompt,
+      blocked: false,
+      ip: ip || null,
+    });
     return NextResponse.json({
       role: "assistant",
       content:
@@ -101,6 +144,14 @@ export async function POST(req) {
     classification.choices[0].message.content.trim().toLowerCase() === "yes";
 
   if (!isFoodRelated) {
+    await logFlavorbotEvent({
+      userType,
+      uid,
+      promptType: "off-topic",
+      prompt,
+      blocked: true,
+      ip: ip || null,
+    });
     return NextResponse.json({
       role: "assistant",
       content:
@@ -133,6 +184,14 @@ Do not add extra text.`,
     // Try to extract JSON from the response
     const jsonMatch = recipeText.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
+      await logFlavorbotEvent({
+        userType,
+        uid,
+        promptType: "recipe",
+        prompt,
+        blocked: true,
+        ip: ip || null,
+      });
       return NextResponse.json({
         role: "assistant",
         content: "Oops, I couldn’t generate a proper recipe this time. Please try again.",
@@ -142,12 +201,28 @@ Do not add extra text.`,
 
     // Validate JSON before returning
     if (!validateRecipeJSON(recipeJSON)) {
+      await logFlavorbotEvent({
+        userType,
+        uid,
+        promptType: "recipe",
+        prompt,
+        blocked: true,
+        ip: ip || null,
+      });
       return NextResponse.json({
         role: "assistant",
         content: "Oops, I couldn’t generate a proper recipe this time. Please try again.",
       });
     }
 
+    await logFlavorbotEvent({
+      userType,
+      uid,
+      promptType: "recipe",
+      prompt,
+      blocked: false,
+      ip: ip || null,
+    });
     return NextResponse.json(JSON.parse(recipeJSON));
   }
 
@@ -172,6 +247,15 @@ If the prompt is not food-related, politely refuse.`,
   const clean = sanitizeHtml(response.choices[0].message.content, {
     allowedTags: [],
     allowedAttributes: {},
+  });
+
+  await logFlavorbotEvent({
+    userType,
+    uid,
+    promptType: "general",
+    prompt,
+    blocked: false,
+    ip: ip || null,
   });
 
   return NextResponse.json({
