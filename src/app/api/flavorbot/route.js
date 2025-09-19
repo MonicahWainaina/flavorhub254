@@ -5,6 +5,8 @@ import { validateRecipeJSON } from "@/lib/validateRecipe";
 import { Redis } from "@upstash/redis";
 import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { cookies } from "next/headers";
+import { randomUUID } from "crypto";
 
 // --- CORS setup ---
 const ALLOWED_ORIGINS = [
@@ -84,13 +86,23 @@ export async function POST(req) {
 
   // Determine user type and rate limit key
   let userType = "guest";
-  let key, ip;
+  let key, ip, guestToken;
+  let setCookieHeader = null;
+
   if (uid) {
     userType = isPremium ? "premium" : "free";
     key = `flavorbot:rate:${userType}:${uid}`;
   } else {
+    // --- Guest session token logic (async cookies) ---
+    const cookieStore = await cookies();
+    guestToken = cookieStore.get("flavorhub_guest")?.value;
+    if (!guestToken) {
+      guestToken = randomUUID();
+      setCookieHeader = `flavorhub_guest=${guestToken}; Path=/; HttpOnly; SameSite=Lax; Max-Age=31536000`;
+    }
     ip = getClientIp(req);
-    key = `flavorbot:rate:guest:${ip}`;
+    key = `flavorbot:rate:guest:${guestToken}:${ip}`; // Combine cookie + IP
+    // --- End guest session token logic ---
   }
   const limit = LIMITS[userType];
 
@@ -119,7 +131,9 @@ export async function POST(req) {
       errorMsg =
         "You’ve reached your daily premium limit. Please try again tomorrow!";
     }
-    return withCORS(NextResponse.json({ error: errorMsg }, { status: 429 }), origin);
+    const res = withCORS(NextResponse.json({ error: errorMsg }, { status: 429 }), origin);
+    if (setCookieHeader) res.headers.set("Set-Cookie", setCookieHeader);
+    return res;
   }
 
   // Handle greetings/intros
@@ -141,7 +155,7 @@ export async function POST(req) {
       blocked: false,
       ip: ip || null,
     });
-    return withCORS(
+    const res = withCORS(
       NextResponse.json({
         role: "assistant",
         content:
@@ -149,6 +163,8 @@ export async function POST(req) {
       }),
       origin
     );
+    if (setCookieHeader) res.headers.set("Set-Cookie", setCookieHeader);
+    return res;
   }
 
   // Step 1: Use OpenAI to classify if the prompt is food-related
@@ -179,7 +195,7 @@ export async function POST(req) {
       blocked: true,
       ip: ip || null,
     });
-    return withCORS(
+    const res = withCORS(
       NextResponse.json({
         role: "assistant",
         content:
@@ -187,6 +203,8 @@ export async function POST(req) {
       }),
       origin
     );
+    if (setCookieHeader) res.headers.set("Set-Cookie", setCookieHeader);
+    return res;
   }
 
   // Step 2: classify message for recipe mode
@@ -222,13 +240,15 @@ Do not add extra text.`,
         blocked: true,
         ip: ip || null,
       });
-      return withCORS(
+      const res = withCORS(
         NextResponse.json({
           role: "assistant",
           content: "Oops, I couldn’t generate a proper recipe this time. Please try again.",
         }),
         origin
       );
+      if (setCookieHeader) res.headers.set("Set-Cookie", setCookieHeader);
+      return res;
     }
     const recipeJSON = jsonMatch[0];
 
@@ -242,13 +262,15 @@ Do not add extra text.`,
         blocked: true,
         ip: ip || null,
       });
-      return withCORS(
+      const res = withCORS(
         NextResponse.json({
           role: "assistant",
           content: "Oops, I couldn’t generate a proper recipe this time. Please try again.",
         }),
         origin
       );
+      if (setCookieHeader) res.headers.set("Set-Cookie", setCookieHeader);
+      return res;
     }
 
     await logFlavorbotEvent({
@@ -259,7 +281,9 @@ Do not add extra text.`,
       blocked: false,
       ip: ip || null,
     });
-    return withCORS(NextResponse.json(JSON.parse(recipeJSON)), origin);
+    const res = withCORS(NextResponse.json(JSON.parse(recipeJSON)), origin);
+    if (setCookieHeader) res.headers.set("Set-Cookie", setCookieHeader);
+    return res;
   }
 
   // Step 4: Food Q&A Mode
@@ -294,11 +318,13 @@ If the prompt is not food-related, politely refuse.`,
     ip: ip || null,
   });
 
-  return withCORS(
+  const res = withCORS(
     NextResponse.json({
       role: "assistant",
       content: clean,
     }),
     origin
   );
+  if (setCookieHeader) res.headers.set("Set-Cookie", setCookieHeader);
+  return res;
 }
