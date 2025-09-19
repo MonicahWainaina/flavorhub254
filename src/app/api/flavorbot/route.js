@@ -6,6 +6,28 @@ import { Redis } from "@upstash/redis";
 import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
+// --- CORS setup ---
+const ALLOWED_ORIGINS = [
+  "http://localhost:3000",
+  "https://flavorhub254.vercel.app",
+  "https://flavorhub254-git-feature-homepage-monicahwainainas-projects.vercel.app",
+];
+
+function withCORS(response, origin) {
+  if (ALLOWED_ORIGINS.includes(origin)) {
+    response.headers.set("Access-Control-Allow-Origin", origin);
+  }
+  response.headers.set("Access-Control-Allow-Methods", "POST, OPTIONS");
+  response.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  return response;
+}
+
+export async function OPTIONS(req) {
+  const origin = req.headers.get("origin") || "";
+  return withCORS(new NextResponse(null, { status: 204 }), origin);
+}
+// --- End CORS setup ---
+
 // --- Analytics/logging helper ---
 async function logFlavorbotEvent({
   userType,
@@ -23,7 +45,7 @@ async function logFlavorbotEvent({
       promptType,
       prompt,
       blocked,
-      ip: ip || null, // <-- Fix: never undefined
+      ip: ip || null,
     });
   } catch (e) {
     // Logging should never break the API
@@ -56,6 +78,8 @@ function getClientIp(req) {
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export async function POST(req) {
+  const origin = req.headers.get("origin") || "";
+
   const { prompt, uid, isPremium } = await req.json();
 
   // Determine user type and rate limit key
@@ -95,7 +119,7 @@ export async function POST(req) {
       errorMsg =
         "You’ve reached your daily premium limit. Please try again tomorrow!";
     }
-    return NextResponse.json({ error: errorMsg }, { status: 429 });
+    return withCORS(NextResponse.json({ error: errorMsg }, { status: 429 }), origin);
   }
 
   // Handle greetings/intros
@@ -117,11 +141,14 @@ export async function POST(req) {
       blocked: false,
       ip: ip || null,
     });
-    return NextResponse.json({
-      role: "assistant",
-      content:
-        "Hi! I’m FlavorBot — your smart kitchen companion. I can help you find recipes, answer cooking questions, and share tips on ingredients and nutrition. What’s cooking in your mind today?",
-    });
+    return withCORS(
+      NextResponse.json({
+        role: "assistant",
+        content:
+          "Hi! I’m FlavorBot — your smart kitchen companion. I can help you find recipes, answer cooking questions, and share tips on ingredients and nutrition. What’s cooking in your mind today?",
+      }),
+      origin
+    );
   }
 
   // Step 1: Use OpenAI to classify if the prompt is food-related
@@ -152,11 +179,14 @@ export async function POST(req) {
       blocked: true,
       ip: ip || null,
     });
-    return NextResponse.json({
-      role: "assistant",
-      content:
-        "I'm only equipped to help you with recipes, food, nutrition, and cooking questions. Try asking me something in those areas!",
-    });
+    return withCORS(
+      NextResponse.json({
+        role: "assistant",
+        content:
+          "I'm only equipped to help you with recipes, food, nutrition, and cooking questions. Try asking me something in those areas!",
+      }),
+      origin
+    );
   }
 
   // Step 2: classify message for recipe mode
@@ -192,10 +222,13 @@ Do not add extra text.`,
         blocked: true,
         ip: ip || null,
       });
-      return NextResponse.json({
-        role: "assistant",
-        content: "Oops, I couldn’t generate a proper recipe this time. Please try again.",
-      });
+      return withCORS(
+        NextResponse.json({
+          role: "assistant",
+          content: "Oops, I couldn’t generate a proper recipe this time. Please try again.",
+        }),
+        origin
+      );
     }
     const recipeJSON = jsonMatch[0];
 
@@ -209,10 +242,13 @@ Do not add extra text.`,
         blocked: true,
         ip: ip || null,
       });
-      return NextResponse.json({
-        role: "assistant",
-        content: "Oops, I couldn’t generate a proper recipe this time. Please try again.",
-      });
+      return withCORS(
+        NextResponse.json({
+          role: "assistant",
+          content: "Oops, I couldn’t generate a proper recipe this time. Please try again.",
+        }),
+        origin
+      );
     }
 
     await logFlavorbotEvent({
@@ -223,7 +259,7 @@ Do not add extra text.`,
       blocked: false,
       ip: ip || null,
     });
-    return NextResponse.json(JSON.parse(recipeJSON));
+    return withCORS(NextResponse.json(JSON.parse(recipeJSON)), origin);
   }
 
   // Step 4: Food Q&A Mode
@@ -258,8 +294,11 @@ If the prompt is not food-related, politely refuse.`,
     ip: ip || null,
   });
 
-  return NextResponse.json({
-    role: "assistant",
-    content: clean,
-  });
+  return withCORS(
+    NextResponse.json({
+      role: "assistant",
+      content: clean,
+    }),
+    origin
+  );
 }
