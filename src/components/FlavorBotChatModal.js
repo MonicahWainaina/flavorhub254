@@ -231,6 +231,16 @@ export default function FlavorBotChatModal({ open, onClose }) {
             </>
           )}
         </div>
+        {/* Continue full chat link */}
+        <div className="flex justify-center mt-2 mb-1">
+          <a
+            href="/flavorbot"
+            className="text-green-400 hover:underline text-sm font-medium"
+            onClick={onClose}
+          >
+            Continue full chat &rarr;
+          </a>
+        </div>
       </div>
     </div>
   );
