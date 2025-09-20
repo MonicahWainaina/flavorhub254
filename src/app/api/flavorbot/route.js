@@ -68,8 +68,6 @@ const redis = new Redis({
   token: process.env.UPSTASH_REDIS_REST_TOKEN,
 });
 
-console.log("REDIS_URL:", process.env.UPSTASH_REDIS_REST_URL);
-console.log("REDIS_TOKEN:", process.env.UPSTASH_REDIS_REST_TOKEN);
 
 function getClientIp(req) {
   return (
