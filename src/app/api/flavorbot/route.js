@@ -82,7 +82,8 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 export async function POST(req) {
   const origin = req.headers.get("origin") || "";
 
-  const { prompt, uid, isPremium } = await req.json();
+  // Accept both { prompt, ... } and { messages, ... }
+  const { prompt, messages, uid, isPremium } = await req.json();
 
   // Determine user type and rate limit key
   let userType = "guest";
@@ -116,7 +117,7 @@ export async function POST(req) {
       userType,
       uid,
       promptType: "rate-limit",
-      prompt,
+      prompt: prompt || (messages && messages[messages.length - 1]?.content) || "",
       blocked: true,
       ip: ip || null,
     });
@@ -136,6 +137,9 @@ export async function POST(req) {
     return res;
   }
 
+  // Get the latest user prompt (for logging/classification)
+  const latestPrompt = prompt || (messages && messages[messages.length - 1]?.content) || "";
+
   // Handle greetings/intros
   const greetings = [
     "hi",
@@ -146,12 +150,12 @@ export async function POST(req) {
     "help",
     "about you",
   ];
-  if (greetings.some((greet) => prompt.trim().toLowerCase() === greet)) {
+  if (greetings.some((greet) => latestPrompt.trim().toLowerCase() === greet)) {
     await logFlavorbotEvent({
       userType,
       uid,
       promptType: "greeting",
-      prompt,
+      prompt: latestPrompt,
       blocked: false,
       ip: ip || null,
     });
@@ -178,7 +182,7 @@ export async function POST(req) {
       },
       {
         role: "user",
-        content: `Is this about food, cooking, recipes, nutrition, or ingredients? "${prompt}"`,
+        content: `Is this about food, cooking, recipes, nutrition, or ingredients? "${latestPrompt}"`,
       },
     ],
     max_tokens: 1,
@@ -191,7 +195,7 @@ export async function POST(req) {
       userType,
       uid,
       promptType: "off-topic",
-      prompt,
+      prompt: latestPrompt,
       blocked: true,
       ip: ip || null,
     });
@@ -208,22 +212,36 @@ export async function POST(req) {
   }
 
   // Step 2: classify message for recipe mode
-  const isRecipe = /recipe|cook|make|prepare|bake|ingredients/i.test(prompt);
+  const isRecipe = /recipe|cook|make|prepare|bake|ingredients/i.test(latestPrompt);
 
   // Step 3: Recipe Mode
   if (isRecipe) {
-    const response = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [
-        {
-          role: "system",
-          content: `You are FlavorBot — FlavorHUB254’s Smart Cooking Assistant.
+    // Build the message history for context, or just use the latest prompt if not provided
+    const recipeMessages = messages && messages.length
+      ? [
+          {
+            role: "system",
+            content: `You are FlavorBot — FlavorHUB254’s Smart Cooking Assistant.
 If the user asks for a recipe, respond ONLY with valid JSON that matches the FlavorHUB254 recipe schema:
 {"title":string,"ingredients":string[],"steps":string[]}
 Do not add extra text.`,
-        },
-        { role: "user", content: prompt },
-      ],
+          },
+          ...messages,
+        ]
+      : [
+          {
+            role: "system",
+            content: `You are FlavorBot — FlavorHUB254’s Smart Cooking Assistant.
+If the user asks for a recipe, respond ONLY with valid JSON that matches the FlavorHUB254 recipe schema:
+{"title":string,"ingredients":string[],"steps":string[]}
+Do not add extra text.`,
+          },
+          { role: "user", content: latestPrompt },
+        ];
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: recipeMessages,
       max_tokens: 500,
     });
 
@@ -236,7 +254,7 @@ Do not add extra text.`,
         userType,
         uid,
         promptType: "recipe",
-        prompt,
+        prompt: latestPrompt,
         blocked: true,
         ip: ip || null,
       });
@@ -258,7 +276,7 @@ Do not add extra text.`,
         userType,
         uid,
         promptType: "recipe",
-        prompt,
+        prompt: latestPrompt,
         blocked: true,
         ip: ip || null,
       });
@@ -277,7 +295,7 @@ Do not add extra text.`,
       userType,
       uid,
       promptType: "recipe",
-      prompt,
+      prompt: latestPrompt,
       blocked: false,
       ip: ip || null,
     });
@@ -287,19 +305,34 @@ Do not add extra text.`,
   }
 
   // Step 4: Food Q&A Mode
-  const response = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
-    messages: [
-      {
-        role: "system",
-        content: `You are FlavorBot — FlavorHUB254’s Smart Cooking Assistant.
+  // Build the message history for context, or just use the latest prompt if not provided
+  const qaMessages = messages && messages.length
+    ? [
+        {
+          role: "system",
+          content: `You are FlavorBot — FlavorHUB254’s Smart Cooking Assistant.
 You ONLY answer food-related questions: cooking methods, substitutions, nutrition, cultural food context, ingredients.
 Answer clearly and concisely (2–4 sentences).
 Expand with more detail only if the user asks for it.
 If the prompt is not food-related, politely refuse.`,
-      },
-      { role: "user", content: prompt },
-    ],
+        },
+        ...messages,
+      ]
+    : [
+        {
+          role: "system",
+          content: `You are FlavorBot — FlavorHUB254’s Smart Cooking Assistant.
+You ONLY answer food-related questions: cooking methods, substitutions, nutrition, cultural food context, ingredients.
+Answer clearly and concisely (2–4 sentences).
+Expand with more detail only if the user asks for it.
+If the prompt is not food-related, politely refuse.`,
+        },
+        { role: "user", content: latestPrompt },
+      ];
+
+  const response = await openai.chat.completions.create({
+    model: "gpt-3.5-turbo",
+    messages: qaMessages,
     max_tokens: 300,
   });
 
@@ -313,7 +346,7 @@ If the prompt is not food-related, politely refuse.`,
     userType,
     uid,
     promptType: "general",
-    prompt,
+    prompt: latestPrompt,
     blocked: false,
     ip: ip || null,
   });

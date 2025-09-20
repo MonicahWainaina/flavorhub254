@@ -163,7 +163,7 @@ export default function FlavorBotPage() {
     if (isMobile) setSidebarOpen(false);
   };
 
-  // --- Improved handleSubmit with instant UI update and robust session logic ---
+  // --- Updated handleSubmit: send full chat history for context ---
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!input.trim()) {
@@ -172,7 +172,8 @@ export default function FlavorBotPage() {
     }
 
     const userMsg = { role: "user", content: input };
-    setMessages((msgs) => [...msgs, userMsg]);
+    const updatedMessages = [...messages, userMsg];
+    setMessages(updatedMessages);
     setLoading(true);
     setShowThinking(true); // Show thinking bubble
     setInput("");
@@ -180,14 +181,18 @@ export default function FlavorBotPage() {
 
     let botMsg = null;
     try {
-      // Send uid and isPremium to the API for rate limiting
+      // Send full message history for context
       const res = await fetch("/api/flavorbot", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          prompt: userMsg.content,
+          messages: updatedMessages.map((msg) =>
+            msg.role === "bot"
+              ? { role: "assistant", content: msg.content }
+              : { role: msg.role, content: msg.content }
+          ),
           uid: user?.uid || null,
-          isPremium: user?.isPremium || false, // Adjust if you add premium logic
+          isPremium: user?.isPremium || false,
         }),
       });
       const data = await res.json();
@@ -251,7 +256,7 @@ export default function FlavorBotPage() {
     }
     setLoading(false);
   };
-  // --- End improved handleSubmit ---
+  // --- End updated handleSubmit ---
 
   // Clear chats handler
   const handleClearChats = async () => {
