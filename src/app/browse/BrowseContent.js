@@ -458,65 +458,80 @@ export default function BrowseContent() {
                         style={{ width: '100vw' }}
                       >
                         <div className="grid grid-cols-2 gap-3">
-{page.map((recipe, idx) => (
-  <Link
-    key={recipe.id || idx}
-    href={`/recipe/${recipe.slug}`}
-    className="bg-[#a94f4f] rounded-2xl shadow-lg overflow-hidden flex flex-col min-h-[180px] relative transition hover:scale-[1.02] active:scale-95"
-    style={{ textDecoration: 'none' }}
-  >
-    {/* Image */}
-    <div className="relative w-full h-[90px]">
-      <Image
-        src={recipe.image?.url || '/assets/placeholder.jpg'}
-        alt={recipe.image?.alt || recipe.title}
-        fill
-        className="object-cover rounded-t-2xl"
-      />
-    </div>
-    {/* Content */}
-    <div className="flex flex-col justify-between p-2 flex-1 relative">
-      <span className="font-bold text-white text-sm mb-1 truncate">
-        {recipe.title}
-      </span>
-      <div className="flex items-center gap-2 mb-1">
-        {/* Star SVG */}
-        <svg width="14" height="14" fill="#FFD700" viewBox="0 0 20 20">
-          <path d="M10 15l-5.878 3.09 1.122-6.545L.488 6.91l6.561-.955L10 0l2.951 5.955 6.561.955-4.756 4.635 1.122 6.545z" />
-        </svg>
-        <span className="text-yellow-300 font-bold text-xs">
-          ({recipe.rating?.toFixed(1) || 'N/A'})
-        </span>
-      </div>
-      <div className="flex items-center gap-2">
-        {/* Clock SVG */}
-        <svg width="12" height="12" fill="none" stroke="#fff" strokeWidth="2" viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="10" />
-          <path d="M12 6v6l4 2" />
-        </svg>
-        <span className="text-white text-xs">
-          {recipe.time || 'N/A'} mins
-        </span>
-      </div>
-      {/* Remove the View Recipe button on mobile */}
-      {/* Favorite Icon at bottom right */}
-      <div
-        className="absolute bottom-2 right-2 z-10"
-        onClick={e => {
-          e.preventDefault(); // Prevent Link navigation
-          e.stopPropagation();
-          handleToggleFavorite(recipe);
-        }}
-      >
-        <FavoriteButton
-          isFav={favoriteIds.includes(recipe.id)}
-          onClick={() => {}} // No-op, handled above
-          size={28}
-        />
-      </div>
-    </div>
-  </Link>
-))}
+                          {page.map((recipe, idx) => (
+                            <Link
+                              key={recipe.id || idx}
+                              href={`/recipe/${recipe.slug}`}
+                              className="bg-[#a94f4f] rounded-2xl shadow-lg overflow-hidden flex flex-col min-h-[180px] relative transition hover:scale-[1.02] active:scale-95"
+                              style={{ textDecoration: 'none' }}
+                            >
+                              {/* Image */}
+                              <div className="relative w-full h-[90px]">
+                                <Image
+                                  src={
+                                    recipe.image?.url ||
+                                    '/assets/placeholder.jpg'
+                                  }
+                                  alt={recipe.image?.alt || recipe.title}
+                                  fill
+                                  className="object-cover rounded-t-2xl"
+                                />
+                              </div>
+                              {/* Content */}
+                              <div className="flex flex-col justify-between p-2 flex-1 relative">
+                                <span className="font-bold text-white text-sm mb-1 truncate">
+                                  {recipe.title}
+                                </span>
+                                <div className="flex items-center gap-2 mb-1">
+                                  {/* Star SVG */}
+                                  <svg
+                                    width="14"
+                                    height="14"
+                                    fill="#FFD700"
+                                    viewBox="0 0 20 20"
+                                  >
+                                    <path d="M10 15l-5.878 3.09 1.122-6.545L.488 6.91l6.561-.955L10 0l2.951 5.955 6.561.955-4.756 4.635 1.122 6.545z" />
+                                  </svg>
+                                  <span className="text-yellow-300 font-bold text-xs">
+                                    ({recipe.rating?.toFixed(1) || 'N/A'})
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  {/* Clock SVG */}
+                                  <svg
+                                    width="12"
+                                    height="12"
+                                    fill="none"
+                                    stroke="#fff"
+                                    strokeWidth="2"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <circle cx="12" cy="12" r="10" />
+                                    <path d="M12 6v6l4 2" />
+                                  </svg>
+                                  <span className="text-white text-xs">
+                                    {recipe.time || 'N/A'} mins
+                                  </span>
+                                </div>
+                                {/* Remove the View Recipe button on mobile */}
+                                {/* Favorite Icon at bottom right */}
+                                <div
+                                  className="absolute bottom-2 right-2 z-10"
+                                  onClick={(e) => {
+                                    e.preventDefault(); // Prevent Link navigation
+                                    e.stopPropagation();
+                                    handleToggleFavorite(recipe);
+                                  }}
+                                >
+                                  <FavoriteButton
+                                    isFav={favoriteIds.includes(recipe.id)}
+                                    onClick={() => {}} // No-op, handled above
+                                    size={28}
+                                  />
+                                </div>
+                              </div>
+                            </Link>
+                          ))}
                         </div>
                       </div>
                     ))}
@@ -1458,67 +1473,6 @@ export default function BrowseContent() {
             </section>
           </>
         )}
-        {/* AI Recipe Generator Section */}
-        <section className="w-full mt-12 px-2 sm:px-8">
-          <div className="relative w-full rounded-2xl overflow-hidden h-[120px] sm:h-[180px] flex items-center justify-center mb-10">
-            {/* Background Image (bottom half) */}
-            <Image
-              src="/assets/herofood.png"
-              alt="Food background"
-              fill
-              className="object-cover object-bottom w-full h-full"
-              priority={false}
-            />
-            {/* Overlay */}
-            <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center">
-              <h3 className="text-white text-lg sm:text-2xl font-bold text-center mb-3">
-                Try Our AI Smart Generator for all your food and recipe queries
-              </h3>
-              <button className="bg-[#3CB371] text-white font-bold px-6 py-2 rounded-lg flex items-center gap-2 text-lg shadow hover:bg-[#237a4b] transition">
-                Ask FlavorBot
-                {/* Robot SVG icon */}
-                <span>
-                  <svg
-                    width="24"
-                    height="24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                  >
-                    <rect
-                      x="4"
-                      y="8"
-                      width="16"
-                      height="10"
-                      rx="4"
-                      fill="#fff"
-                      stroke="#181818"
-                    />
-                    <rect
-                      x="8"
-                      y="4"
-                      width="8"
-                      height="6"
-                      rx="2"
-                      fill="#fff"
-                      stroke="#181818"
-                    />
-                    <circle cx="9" cy="13" r="1" fill="#181818" />
-                    <circle cx="15" cy="13" r="1" fill="#181818" />
-                    <path d="M12 2v2" stroke="#181818" strokeLinecap="round" />
-                    <path d="M4 12H2" stroke="#181818" strokeLinecap="round" />
-                    <path
-                      d="M22 12h-2"
-                      stroke="#181818"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                </span>
-              </button>
-            </div>
-          </div>
-        </section>
         {/* --- FIGMA-STYLE FOOTER --- */}
         <Footer />
       </main>

@@ -3,6 +3,7 @@ import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import FloatingFlavorBotButton from "@/components/FloatingFlavorBotButton";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,10 +26,12 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <AuthProvider>{children}</AuthProvider>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <AuthProvider>
+          {children}
+          {/* Floating Ask Flavorbot button and modal must be INSIDE AuthProvider */}
+          <FloatingFlavorBotButton />
+        </AuthProvider>
         <ToastContainer
           position="top-center"
           autoClose={2500}
@@ -39,7 +42,7 @@ export default function RootLayout({ children }) {
           pauseOnFocusLoss
           draggable
           pauseOnHover
-          theme="dark" // Try "colored" or "light" if you prefer
+          theme="dark"
           style={{
             fontFamily: "inherit",
             borderRadius: "10px",
