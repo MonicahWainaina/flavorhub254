@@ -20,6 +20,10 @@ import { useAuth } from '@/context/AuthContext';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Loader, RecipeSkeleton } from '@/components/Loaders';
+import RecipePDF from '@/components/RecipePDF';
+import ReactDOMServer from 'react-dom/server';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 // Utility: convert decimals to kitchen fractions for tsp/tbsp
 function toFraction(decimal) {
@@ -32,11 +36,11 @@ function toFraction(decimal) {
 
 // Utility: smart rounding for ingredient amounts
 function smartRound(amount, unit) {
-const countables = [
-  'large', 'medium', 'small', 'cloves', 'clove', 'egg', 'eggs',
-  'onion', 'onions', 'banana', 'bananas', 'piece', 'pieces',
-  'fillet', 'fillets', 'drumstick', 'drumsticks', 'leg', 'legs'
-];
+  const countables = [
+    'large', 'medium', 'small', 'cloves', 'clove', 'egg', 'eggs',
+    'onion', 'onions', 'banana', 'bananas', 'piece', 'pieces',
+    'fillet', 'fillets', 'drumstick', 'drumsticks', 'leg', 'legs'
+  ];
   if (countables.some((u) => (unit || '').toLowerCase().includes(u))) {
     return Math.round(amount);
   }
@@ -46,13 +50,13 @@ const countables = [
     const frac = toFraction(decimal);
     return frac ? `${whole > 0 ? whole + ' ' : ''}${frac}` : `${whole}`;
   }
-if (['g', 'ml', 'kg'].some((u) => (unit || '').toLowerCase().includes(u))) {
-  // For kg, round to 0.05 (50g) or 0.1 (100g) for kitchen-friendliness
-  if ((unit || '').toLowerCase().includes('kg')) {
-    return Math.round(amount * 10) / 10; // 1 decimal place (e.g., 0.5 kg)
+  if (['g', 'ml', 'kg'].some((u) => (unit || '').toLowerCase().includes(u))) {
+    // For kg, round to 0.05 (50g) or 0.1 (100g) for kitchen-friendliness
+    if ((unit || '').toLowerCase().includes('kg')) {
+      return Math.round(amount * 10) / 10; // 1 decimal place (e.g., 0.5 kg)
+    }
+    return Math.round(amount / 5) * 5;
   }
-  return Math.round(amount / 5) * 5;
-}
   if (['cup', 'cups'].some((u) => (unit || '').toLowerCase().includes(u))) {
     // Round to nearest quarter cup
     const quarters = Math.round(amount * 4) / 4;
@@ -107,6 +111,23 @@ function convertUnit(amount, unit, toMetric) {
       return { amount: Math.round(amount * 240), unit: 'ml' };
   }
   return { amount, unit };
+}
+
+// Helper: Convert image URL to Base64 data URL
+async function toBase64(url) {
+  try {
+    const response = await fetch(url, { mode: 'cors' });
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  } catch (error) {
+    console.error('Failed to convert image to Base64:', error);
+    return null;
+  }
 }
 
 export default function RecipePage({ params }) {
@@ -174,27 +195,25 @@ export default function RecipePage({ params }) {
   };
 
   // Adjustment logic
-useEffect(() => {
-  if (!recipe) return;
-  let scaled = {
-    ingredients: recipe.ingredients,
-    servings: recipe.base_servings || 1,
-  };
+  useEffect(() => {
+    if (!recipe) return;
+    let scaled = {
+      ingredients: recipe.ingredients,
+      servings: recipe.base_servings || 1,
+    };
 
-  if (isAdjusting && recipe.editable_ingredients) {
-    // If adjusting and editable_ingredients, scale by flour
-    const flourObj = recipe.ingredients.find((i) => i.editable);
-    const flourVal = adjustedFlour ?? flourObj.amount;
-    scaled = scaleIngredients(recipe, { flour: flourVal });
-  } else if (recipe.adjustable_servings) {
-    // Always scale by servings if adjustable_servings is true
-    scaled = scaleIngredients(recipe, { servings });
-  }
+    if (isAdjusting && recipe.editable_ingredients) {
+      const flourObj = recipe.ingredients.find((i) => i.editable);
+      const flourVal = adjustedFlour ?? flourObj.amount;
+      scaled = scaleIngredients(recipe, { flour: flourVal });
+    } else if (recipe.adjustable_servings) {
+      scaled = scaleIngredients(recipe, { servings });
+    }
 
-  setAdjustedIngredients(scaled.ingredients);
-  setAdjustedServings(scaled.servings);
-}, [isAdjusting, adjustedFlour, servings, recipe]);
-  // Add this after fetching recipe:
+    setAdjustedIngredients(scaled.ingredients);
+    setAdjustedServings(scaled.servings);
+  }, [isAdjusting, adjustedFlour, servings, recipe]);
+
   useEffect(() => {
     if (recipe && recipe.adjustment_rules?.display_unit === 'us') {
       setMetric(false);
@@ -255,16 +274,80 @@ useEffect(() => {
     }
   };
 
-  // Metric dropdown handler
   const handleMetricChange = (e) => {
     setMetric(e.target.value === 'metric');
   };
 
-  // Close prompt handler
   const handleClosePrompt = () => {
     setShowAdjustMsg(false);
     setShowServingsPrompt(false);
   };
+
+  // PDF Download Handler with Base64 image embedding and fallback
+const handleDownloadPDF = async () => {
+  if (!recipe) return;
+
+  let imageDataUrl = null;
+  if (recipe.image?.url) {
+    imageDataUrl = await toBase64(recipe.image.url);
+    if (!imageDataUrl) {
+      imageDataUrl = '/assets/placeholder.jpg';
+    }
+  }
+
+  // Render to static HTML string
+  const htmlString = ReactDOMServer.renderToStaticMarkup(
+    <RecipePDF
+      recipe={{
+        ...recipe,
+        image: { ...recipe.image, url: imageDataUrl || recipe.image?.url },
+      }}
+    />
+  );
+
+  // Create temp div and set innerHTML
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = htmlString;
+  tempDiv.style.position = 'fixed';
+  tempDiv.style.left = '-9999px';
+  tempDiv.style.top = '0';
+  tempDiv.style.width = '800px';
+  tempDiv.style.background = '#FFF8E7';
+  document.body.appendChild(tempDiv);
+
+  // Wait for all images in tempDiv to load
+  const images = tempDiv.querySelectorAll('img');
+  await Promise.all(
+    Array.from(images).map(
+      (img) =>
+        img.complete
+          ? Promise.resolve()
+          : new Promise((resolve) => {
+              img.onload = resolve;
+              img.onerror = resolve;
+            })
+    )
+  );
+
+  // Wait a tick to ensure DOM is painted
+  await new Promise((r) => setTimeout(r, 100));
+
+  // Render to canvas
+  const canvas = await html2canvas(tempDiv, { useCORS: true, backgroundColor: '#FFF8E7' });
+  const imgData = canvas.toDataURL('image/png');
+
+  // Create PDF
+  const pdf = new jsPDF({
+    orientation: 'portrait',
+    unit: 'px',
+    format: [canvas.width, canvas.height],
+  });
+
+  pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+  pdf.save(`FlavorHUB254-${recipe.title.replace(/\s+/g, '_')}.pdf`);
+
+  document.body.removeChild(tempDiv);
+};
 
   if (loading)
     return (
@@ -599,7 +682,10 @@ useEffect(() => {
                     Start Cooking
                   </button>
                   {/* Download PDF */}
-                  <button className="flex-1 flex items-center justify-center gap-2 bg-green-700 hover:bg-green-800 text-white px-2 py-2 rounded-lg font-semibold text-sm transition">
+                  <button
+                    className="flex-1 flex items-center justify-center gap-2 bg-green-700 hover:bg-green-800 text-white px-2 py-2 rounded-lg font-semibold text-sm transition"
+                    onClick={handleDownloadPDF}
+                  >
                     <svg className="w-5 h-5" viewBox="0 0 512 512" fill="none">
                       <polygon
                         fill="#B12A27"
@@ -639,7 +725,7 @@ useEffect(() => {
                         fill="#673AB7"
                       />
                       <path
-                        d="M27.3,5.5c-0.4-0.4-1-0.5-1.4-0.1c-0.4,0.4-0.5,1-0.1,1.4c2.3,2.6,3.4,6,3.2,9.2c-0.2,3.4-1.7,6.7-4.4,9.1
+                        d="M27.3,5.5c-0.4-0.4-1-0.5-1.4-0.1c-0.4-0.4-0.5,1-0.1,1.4c2.3,2.6,3.4,6,3.2,9.2c-0.2,3.4-1.7,6.7-4.4,9.1
                         c-0.4,0.4-0.5,1-0.1,1.4c0.2,0.2,0.5,0.3,0.8,0.3c0.2,0,0.5-0.1,0.7-0.3C29.1,23.8,30.8,20,31,16C31.1,12.3,29.9,8.5,27.3,5.5z"
                         fill="#673AB7"
                       />
@@ -660,6 +746,13 @@ useEffect(() => {
           </main>
         </div>
       </div>
+
+      {/* Hidden printable PDF content */}
+      {recipe && (
+        <div id="pdf-content" style={{ display: 'none' }}>
+          <RecipePDF recipe={recipe} />
+        </div>
+      )}
     </>
   );
 }
