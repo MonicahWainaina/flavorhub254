@@ -23,8 +23,8 @@ export default function RecipePDF({ recipe }) {
         background: BRAND.bg,
         color: BRAND.text,
         fontFamily: "Inter, Arial, sans-serif",
-        width: 780,
-        minHeight: 1100,
+        width: 794, // A4 width at 96dpi
+        // minHeight: 1123, // A4 height at 96dpi
         boxSizing: "border-box",
         margin: "0 auto",
         padding: 0,
@@ -404,3 +404,83 @@ export default function RecipePDF({ recipe }) {
     </div>
   );
 }
+
+const handleDownloadPDF = async () => {
+  if (!recipe) return;
+
+  let imageDataUrl = null;
+  if (recipe.image?.url) {
+    imageDataUrl = await toBase64(recipe.image.url);
+    if (!imageDataUrl) {
+      imageDataUrl = '/assets/placeholder.jpg';
+    }
+  }
+
+  // Render to static HTML string
+  const htmlString = ReactDOMServer.renderToStaticMarkup(
+    <RecipePDF
+      recipe={{
+        ...recipe,
+        image: { ...recipe.image, url: imageDataUrl || recipe.image?.url },
+      }}
+    />
+  );
+
+  // Create temp div and set innerHTML
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = htmlString;
+  tempDiv.style.position = 'fixed';
+  tempDiv.style.left = '-9999px';
+  tempDiv.style.top = '0';
+  tempDiv.style.width = '794px'; // A4 width at 96dpi
+  tempDiv.style.background = '#FFF8E7';
+  document.body.appendChild(tempDiv);
+
+  // Wait for all images in tempDiv to load
+  const images = tempDiv.querySelectorAll('img');
+  await Promise.all(
+    Array.from(images).map(
+      (img) =>
+        img.complete
+          ? Promise.resolve()
+          : new Promise((resolve) => {
+              img.onload = resolve;
+              img.onerror = resolve;
+            })
+    )
+  );
+
+  // Wait a tick to ensure DOM is painted
+  await new Promise((r) => setTimeout(r, 100));
+
+  // Render to canvas at A4 width, auto height
+  const canvas = await html2canvas(tempDiv, {
+    useCORS: true,
+    backgroundColor: '#FFF8E7',
+    width: 794,
+    windowWidth: 794,
+  });
+  const imgData = canvas.toDataURL('image/png');
+
+  // --- PDF: Use A4 in mm, scale image to fit ---
+  const pdf = new jsPDF({
+    orientation: 'portrait',
+    unit: 'mm',
+    format: 'a4',
+  });
+  const pageWidth = pdf.internal.pageSize.getWidth(); // 210mm
+  const pageHeight = pdf.internal.pageSize.getHeight(); // 297mm
+
+  // Calculate image dimensions in mm
+  // 794px = 210mm, so pxToMm = 210 / 794
+  const pxToMm = pageWidth / canvas.width;
+  const imgWidth = pageWidth;
+  const imgHeight = canvas.height * pxToMm;
+
+  // Add image at (0, 0), full width, scaled height
+  pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+
+  pdf.save(`FlavorHUB254-${recipe.title.replace(/\s+/g, '_')}.pdf`);
+
+  document.body.removeChild(tempDiv);
+};

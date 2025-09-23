@@ -310,7 +310,7 @@ export default function RecipePage({ params }) {
     tempDiv.style.position = 'fixed';
     tempDiv.style.left = '-9999px';
     tempDiv.style.top = '0';
-    tempDiv.style.width = '800px';
+    tempDiv.style.width = '794px'; // A4 width at 96dpi
     tempDiv.style.background = '#FFF8E7';
     document.body.appendChild(tempDiv);
 
@@ -331,20 +331,62 @@ export default function RecipePage({ params }) {
     // Wait a tick to ensure DOM is painted
     await new Promise((r) => setTimeout(r, 100));
 
-    // Render to canvas
-    const canvas = await html2canvas(tempDiv, { useCORS: true, backgroundColor: '#FFF8E7' });
+    // Render to canvas at A4 width, auto height
+    const canvas = await html2canvas(tempDiv, {
+      useCORS: true,
+      backgroundColor: '#FFF8E7',
+      width: 794,
+      windowWidth: 794,
+    });
     const imgData = canvas.toDataURL('image/png');
 
-    // Create PDF
+    // --- PDF: Use A4 in mm, scale image to fit ---
     const pdf = new jsPDF({
       orientation: 'portrait',
-      unit: 'px',
-      format: [canvas.width, canvas.height],
+      unit: 'mm',
+      format: 'a4',
     });
+    const pageWidth = pdf.internal.pageSize.getWidth(); // 210mm
+    const pageHeight = pdf.internal.pageSize.getHeight(); // 297mm
 
-    pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+    const pxToMm = pageWidth / canvas.width;
+    const imgHeight = canvas.height * pxToMm;
+    let position = 0;
+
+    if (imgHeight <= pageHeight) {
+      // Fits on one page
+      pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, imgHeight);
+    } else {
+      // Multi-page
+      let remainingHeight = canvas.height;
+      let page = 0;
+      while (remainingHeight > 0) {
+        const sourceY = page * (pageHeight / pxToMm);
+        // Create a temp canvas for the current page slice
+        const pageCanvas = document.createElement('canvas');
+        pageCanvas.width = canvas.width;
+        pageCanvas.height = Math.min(canvas.height - sourceY, pageHeight / pxToMm);
+        const ctx = pageCanvas.getContext('2d');
+        ctx.drawImage(
+          canvas,
+          0,
+          sourceY,
+          canvas.width,
+          pageCanvas.height,
+          0,
+          0,
+          canvas.width,
+          pageCanvas.height
+        );
+        const pageImgData = pageCanvas.toDataURL('image/png');
+        if (page > 0) pdf.addPage();
+        pdf.addImage(pageImgData, 'PNG', 0, 0, pageWidth, Math.min(pageHeight, pageCanvas.height * pxToMm));
+        remainingHeight -= pageCanvas.height;
+        page++;
+      }
+    }
+
     pdf.save(`FlavorHUB254-${recipe.title.replace(/\s+/g, '_')}.pdf`);
-
     document.body.removeChild(tempDiv);
   };
 
