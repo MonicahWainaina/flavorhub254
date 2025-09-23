@@ -8,6 +8,8 @@ const BRAND = {
   text: "#232323",
   muted: "#666",
   footerBg: "#FAFAFA",
+  hubRed: "#D32F2F",
+  green254: "#2E7D32",
 };
 
 export default function RecipePDF({ recipe }) {
@@ -45,49 +47,65 @@ export default function RecipePDF({ recipe }) {
         `}
       </style>
 
-      {/* Header Bar */}
+      {/* --- TOP BAR: Logo and brand name, side by side, top left --- */}
       <div
         style={{
           background: "#fff",
           borderBottom: `2px solid ${BRAND.divider}`,
-          padding: "32px 48px 18px 48px",
+          padding: "10px 28px 0 28px",
           display: "flex",
-          alignItems: "center",
-          gap: 24,
+          justifyContent: "flex-start",
+          height: 52,
         }}
       >
         <img
           src={BRAND.logo}
           alt={BRAND.name}
-          width={48}
-          height={48}
-          style={{ borderRadius: 12, objectFit: "contain" }}
+          width={34}
+          height={34}
+          style={{
+            objectFit: "contain",
+            marginRight: 8,
+            display: "inline-block",
+            marginBottom: 6,
+          }}
         />
         <span
-          style={{
-            fontWeight: 900,
-            fontSize: 36,
-            color: BRAND.primary,
+        style={{
+            fontWeight: 800,
+            fontSize: 20,
             letterSpacing: 1,
-            marginRight: 16,
-            flexShrink: 0,
+            display: "flex",
+            gap: 0,
+            lineHeight: 1,
+            userSelect: "none"
           }}
         >
-          {BRAND.name}
+          <span style={{ color: "#232323" }}>flavor</span>
+          <span style={{ color: "#D32F2F" }}>HUB</span>
+          <span style={{ color: "#2E7D32" }}>254</span>
         </span>
+      </div>
+
+      {/* --- RECIPE TITLE --- */}
+      <div
+        style={{
+          width: "100%",
+          textAlign: "center",
+          marginTop: 18,
+          marginBottom: 0,
+          padding: "0 32px",
+        }}
+      >
         <span
           style={{
-            fontWeight: 700,
-            fontSize: 36,
+            fontWeight: 800,
+            fontSize: 38,
             color: BRAND.primary,
-            flex: 1,
-            marginLeft: 16,
-            textAlign: "left",
-            whiteSpace: "normal",
-            overflow: "visible",
-            textOverflow: "initial",
+            lineHeight: 1.15,
             wordBreak: "break-word",
-            lineHeight: 1.1,
+            display: "inline-block",
+            maxWidth: 650,
           }}
         >
           {recipe.title}
@@ -105,14 +123,13 @@ export default function RecipePDF({ recipe }) {
       >
         {/* Left: Ingredients */}
         <div style={{ flex: 1, minWidth: 0 }}>
-          {/* Category Badge */}
+          {/* --- CATEGORY BADGE --- */}
           <div
             style={{
               marginBottom: 18,
               display: "flex",
               alignItems: "center",
-              justifyContent: "center",
-              height: 40,
+              justifyContent: "flex-start",
             }}
           >
             <span
@@ -120,16 +137,15 @@ export default function RecipePDF({ recipe }) {
                 background: BRAND.primary,
                 color: "#fff",
                 fontWeight: 700,
-                fontSize: 16,
-                borderRadius: 8,
-                padding: "6px 22px",
+                fontSize: 18,
+                borderRadius: 9999,
+                padding: "4px 16px",
+                height: 40,
                 display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                height: 32,
-                minWidth: 120,
-                textAlign: "center",
                 letterSpacing: 0.5,
+                minWidth: 0,
+                boxSizing: "border-box",
+                boxShadow: "none",
               }}
             >
               {recipe.category || "Recipe"}
@@ -312,26 +328,51 @@ export default function RecipePDF({ recipe }) {
             border: `1px solid ${BRAND.divider}`,
           }}
         >
-          <ol
-            className={instructionListClass}
+          <ul
             style={{
               margin: 0,
-              paddingLeft: 20,
+              paddingLeft: 0,
               fontSize: 17,
               color: BRAND.text,
               lineHeight: 1.6,
+              listStyle: "none",
+              textAlign: "left",
             }}
           >
             {Array.isArray(recipe.instructions) && recipe.instructions.length > 0 ? (
               recipe.instructions.map((step, idx) => (
-                <li key={idx} style={{ marginBottom: 12 }}>
-                  {step.replace(/^\d+\.\s*/, "")}
+                <li
+                  key={idx}
+                  style={{
+                    margin: 0,
+                    marginBottom: 12,
+                    display: "flex",
+                    alignItems: "flex-start",
+                  }}
+                >
+                  <span
+                    style={{
+                      minWidth: 28,
+                      fontWeight: "bold",
+                      color: BRAND.accent,
+                      fontSize: "1.1em",
+                      display: "inline-block",
+                      textAlign: "right",
+                      marginRight: 8,
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    {idx + 1}.
+                  </span>
+                  <span style={{ flex: 1 }}>
+                    {step.replace(/^\d+\.\s*/, "")}
+                  </span>
                 </li>
               ))
             ) : (
               <li>No instructions listed.</li>
             )}
-          </ol>
+          </ul>
         </div>
       </div>
 
