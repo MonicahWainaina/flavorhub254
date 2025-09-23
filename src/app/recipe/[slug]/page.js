@@ -283,113 +283,194 @@ export default function RecipePage({ params }) {
     }
   }
 
-  const handleDownloadPDF = async () => {
-    if (!recipe) return;
 
-    let imageDataUrl = null;
-    if (recipe.image?.url) {
-      imageDataUrl = await toBase64(recipe.image.url);
-      if (!imageDataUrl) {
-        imageDataUrl = '/assets/placeholder.jpg';
-      }
+const handleDownloadPDF = async () => {
+  if (!recipe) return;
+
+  let imageDataUrl = null;
+  if (recipe.image?.url) {
+    imageDataUrl = await toBase64(recipe.image.url);
+    if (!imageDataUrl) {
+      imageDataUrl = '/assets/placeholder.jpg';
     }
+  }
 
-    // Render to static HTML string
-    const htmlString = ReactDOMServer.renderToStaticMarkup(
-      <RecipePDF
-        recipe={{
-          ...recipe,
-          image: { ...recipe.image, url: imageDataUrl || recipe.image?.url },
-        }}
-      />
+  // Render to static HTML string (header removed from RecipePDF.js)
+  const htmlString = ReactDOMServer.renderToStaticMarkup(
+    <RecipePDF
+      recipe={{
+        ...recipe,
+        image: { ...recipe.image, url: imageDataUrl || recipe.image?.url },
+      }}
+    />
+  );
+
+  // Create temp div and set innerHTML
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = htmlString;
+  tempDiv.style.position = 'fixed';
+  tempDiv.style.left = '-9999px';
+  tempDiv.style.top = '0';
+  tempDiv.style.width = '794px'; // A4 width at 96dpi
+  tempDiv.style.background = '#FFF8E7';
+  document.body.appendChild(tempDiv);
+
+  // Wait for all images in tempDiv to load
+  const images = tempDiv.querySelectorAll('img');
+  await Promise.all(
+    Array.from(images).map(
+      (img) =>
+        img.complete
+          ? Promise.resolve()
+          : new Promise((resolve) => {
+              img.onload = resolve;
+              img.onerror = resolve;
+            })
+    )
+  );
+
+  await new Promise((r) => setTimeout(r, 100));
+
+  // Render to canvas at A4 width, auto height
+  const canvas = await html2canvas(tempDiv, {
+    useCORS: true,
+    backgroundColor: '#FFF8E7',
+    width: 794,
+    windowWidth: 794,
+  });
+
+  // --- Multipage PDF logic with reserved header/footer area ---
+  const pdf = new jsPDF({
+    orientation: 'portrait',
+    unit: 'mm',
+    format: 'a4',
+  });
+  const pageWidth = pdf.internal.pageSize.getWidth(); // 210mm
+  const pageHeight = pdf.internal.pageSize.getHeight(); // 297mm
+
+  // Reserve space for header (brand/logo) and footer
+  const headerHeightMm = 18; // Slightly reduced for smaller header
+  const footerHeightMm = 16;
+  const pxToMm = pageWidth / canvas.width;
+  const usablePageHeight = pageHeight - headerHeightMm - footerHeightMm;
+  const usablePageHeightPx = usablePageHeight / pxToMm;
+
+  // --- Prepare logo image for header ---
+  const logoUrl = '/assets/flavorhubicon.png';
+  let logoBase64 = null;
+  try {
+    const resp = await fetch(logoUrl);
+    const blob = await resp.blob();
+    logoBase64 = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  } catch (e) {
+    logoBase64 = null;
+  }
+
+  let renderedHeight = 0;
+  let page = 0;
+  const totalPages = Math.ceil(canvas.height / usablePageHeightPx);
+
+  while (renderedHeight < canvas.height) {
+    const sliceHeight = Math.min(usablePageHeightPx, canvas.height - renderedHeight);
+    if (sliceHeight <= 0) break;
+
+    // Create a temp canvas for the current page slice
+    const pageCanvas = document.createElement('canvas');
+    pageCanvas.width = canvas.width;
+    pageCanvas.height = sliceHeight;
+    const ctx = pageCanvas.getContext('2d');
+    ctx.drawImage(
+      canvas,
+      0,
+      renderedHeight,
+      canvas.width,
+      sliceHeight,
+      0,
+      0,
+      canvas.width,
+      sliceHeight
     );
 
-    // Create temp div and set innerHTML
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = htmlString;
-    tempDiv.style.position = 'fixed';
-    tempDiv.style.left = '-9999px';
-    tempDiv.style.top = '0';
-    tempDiv.style.width = '794px'; // A4 width at 96dpi
-    tempDiv.style.background = '#FFF8E7';
-    document.body.appendChild(tempDiv);
+    if (page > 0) pdf.addPage();
 
-    // Wait for all images in tempDiv to load
-    const images = tempDiv.querySelectorAll('img');
-    await Promise.all(
-      Array.from(images).map(
-        (img) =>
-          img.complete
-            ? Promise.resolve()
-            : new Promise((resolve) => {
-                img.onload = resolve;
-                img.onerror = resolve;
-              })
-      )
-    );
+    // --- Draw header background ---
+    pdf.setFillColor(255, 248, 231); // #FFF8E7
+    pdf.rect(0, 0, pageWidth, headerHeightMm, 'F');
 
-    // Wait a tick to ensure DOM is painted
-    await new Promise((r) => setTimeout(r, 100));
-
-    // Render to canvas at A4 width, auto height
-    const canvas = await html2canvas(tempDiv, {
-      useCORS: true,
-      backgroundColor: '#FFF8E7',
-      width: 794,
-      windowWidth: 794,
-    });
-    const imgData = canvas.toDataURL('image/png');
-
-    // --- PDF: Use A4 in mm, scale image to fit ---
-    const pdf = new jsPDF({
-      orientation: 'portrait',
-      unit: 'mm',
-      format: 'a4',
-    });
-    const pageWidth = pdf.internal.pageSize.getWidth(); // 210mm
-    const pageHeight = pdf.internal.pageSize.getHeight(); // 297mm
-
-    const pxToMm = pageWidth / canvas.width;
-    const imgHeight = canvas.height * pxToMm;
-    let position = 0;
-
-    if (imgHeight <= pageHeight) {
-      // Fits on one page
-      pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, imgHeight);
-    } else {
-      // Multi-page
-      let remainingHeight = canvas.height;
-      let page = 0;
-      while (remainingHeight > 0) {
-        const sourceY = page * (pageHeight / pxToMm);
-        // Create a temp canvas for the current page slice
-        const pageCanvas = document.createElement('canvas');
-        pageCanvas.width = canvas.width;
-        pageCanvas.height = Math.min(canvas.height - sourceY, pageHeight / pxToMm);
-        const ctx = pageCanvas.getContext('2d');
-        ctx.drawImage(
-          canvas,
-          0,
-          sourceY,
-          canvas.width,
-          pageCanvas.height,
-          0,
-          0,
-          canvas.width,
-          pageCanvas.height
-        );
-        const pageImgData = pageCanvas.toDataURL('image/png');
-        if (page > 0) pdf.addPage();
-        pdf.addImage(pageImgData, 'PNG', 0, 0, pageWidth, Math.min(pageHeight, pageCanvas.height * pxToMm));
-        remainingHeight -= pageCanvas.height;
-        page++;
-      }
+    // --- Draw logo and brand name as a single "word", aligned and flush left ---
+    const logoSize = 7; // mm (reduced)
+    const logoY = 6; // mm (adjusted for smaller logo)
+    const logoX = 4; // Far left
+    if (logoBase64) {
+      pdf.addImage(logoBase64, 'PNG', logoX, logoY, logoSize, logoSize);
     }
 
-    pdf.save(`FlavorHUB254-${recipe.title.replace(/\s+/g, '_')}.pdf`);
-    document.body.removeChild(tempDiv);
-  };
+    // Brand name: "flavorHUB254" as one word, colored parts, aligned baseline
+    let textX = logoX + logoSize + 2; // Close gap between logo and text
+    const baseY = logoY + logoSize - 1; // baseline alignment with logo
 
+    pdf.setFontSize(14); // reduced font size
+    pdf.setFont('helvetica', 'bold');
+
+    // "flavor"
+    pdf.setTextColor('#232323');
+    pdf.text('flavor', textX, baseY, { baseline: 'bottom' });
+    const flavorWidth = pdf.getTextWidth('flavor');
+
+    // "HUB"
+    textX += flavorWidth;
+    pdf.setTextColor('#D32F2F');
+    pdf.text('HUB', textX, baseY, { baseline: 'bottom' });
+    const hubWidth = pdf.getTextWidth('HUB');
+
+    // "254"
+    textX += hubWidth;
+    pdf.setTextColor('#2E7D32');
+    pdf.text('254', textX, baseY, { baseline: 'bottom' });
+
+    // Reset color for rest of PDF
+    pdf.setTextColor('#232323');
+
+    // --- Draw the content image slice below the header ---
+    pdf.addImage(
+      pageCanvas.toDataURL('image/png'),
+      'PNG',
+      0,
+      headerHeightMm,
+      pageWidth,
+      sliceHeight * pxToMm
+    );
+
+    // --- Draw footer background ---
+    const footerTop = pageHeight - footerHeightMm;
+    pdf.setFillColor(240, 240, 240); // Light gray
+    pdf.rect(0, footerTop, pageWidth, footerHeightMm, 'F');
+
+    // --- Draw footer text ---
+    const footerY = footerTop + footerHeightMm / 2 + 2;
+    pdf.setFontSize(11);
+    pdf.setTextColor('#2E7D32');
+    pdf.setFont('helvetica', 'normal');
+    pdf.text('© 2025 flavorHUB254', 10, footerY);
+    pdf.setFont('helvetica', 'bold');
+    pdf.setTextColor('#232323');
+    pdf.text(recipe.title, pageWidth / 2, footerY, { align: 'center' });
+    pdf.setFont('helvetica', 'normal');
+    pdf.setTextColor('#D32F2F');
+    pdf.text(`Page ${page + 1} of ${totalPages}`, pageWidth - 10, footerY, { align: 'right' });
+
+    renderedHeight += sliceHeight;
+    page++;
+  }
+
+  pdf.save(`FlavorHUB254-${recipe.title.replace(/\s+/g, '_')}.pdf`);
+  document.body.removeChild(tempDiv);
+};
   if (loading)
     return (
       <div className="flex flex-col items-center pt-28 pb-12 px-2 sm:px-4 min-h-screen">

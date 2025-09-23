@@ -47,52 +47,12 @@ export default function RecipePDF({ recipe }) {
         `}
       </style>
 
-      {/* --- TOP BAR: Logo and brand name, side by side, top left --- */}
-      <div
-        style={{
-          background: "#fff",
-          borderBottom: `2px solid ${BRAND.divider}`,
-          padding: "10px 28px 0 28px",
-          display: "flex",
-          justifyContent: "flex-start",
-          height: 52,
-        }}
-      >
-        <img
-          src={BRAND.logo}
-          alt={BRAND.name}
-          width={34}
-          height={34}
-          style={{
-            objectFit: "contain",
-            marginRight: 8,
-            display: "inline-block",
-            marginBottom: 6,
-          }}
-        />
-        <span
-        style={{
-            fontWeight: 800,
-            fontSize: 20,
-            letterSpacing: 1,
-            display: "flex",
-            gap: 0,
-            lineHeight: 1,
-            userSelect: "none"
-          }}
-        >
-          <span style={{ color: "#232323" }}>flavor</span>
-          <span style={{ color: "#D32F2F" }}>HUB</span>
-          <span style={{ color: "#2E7D32" }}>254</span>
-        </span>
-      </div>
-
       {/* --- RECIPE TITLE --- */}
       <div
         style={{
           width: "100%",
           textAlign: "center",
-          marginTop: 18,
+          marginTop: 5,
           marginBottom: 0,
           padding: "0 32px",
         }}
@@ -141,7 +101,7 @@ export default function RecipePDF({ recipe }) {
                 borderRadius: 9999,
                 padding: "4px 16px",
                 height: 40,
-                display: "flex",
+                textAlign: "center",
                 letterSpacing: 0.5,
                 minWidth: 0,
                 boxSizing: "border-box",
@@ -309,7 +269,7 @@ export default function RecipePDF({ recipe }) {
             fontSize: 23,
             fontWeight: 700,
             color: BRAND.primary,
-            margin: "0 0 8px 0",
+            margin: "32px 0 8px 0",
             paddingBottom: 4,
             marginBottom: 8,
             borderBottom: `2px solid ${BRAND.accent}`,
@@ -375,112 +335,7 @@ export default function RecipePDF({ recipe }) {
           </ul>
         </div>
       </div>
-
-      {/* Footer Bar */}
-      <div
-        style={{
-          background: BRAND.footerBg,
-          borderTop: `1.5px solid ${BRAND.divider}`,
-          padding: "14px 36px",
-          fontSize: 14,
-          color: BRAND.muted,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          fontWeight: 500,
-          letterSpacing: 0.1,
-        }}
-      >
-        <span style={{ color: BRAND.primary, fontWeight: 700 }}>
-          © {new Date().getFullYear()} {BRAND.name}
-        </span>
-        <span style={{ color: BRAND.text, fontWeight: 600 }}>
-          {recipe.title || "Recipe"}
-        </span>
-        <span style={{ color: BRAND.accent, fontWeight: 700 }}>
-          Page 1 of 1
-        </span>
-      </div>
     </div>
   );
 }
 
-const handleDownloadPDF = async () => {
-  if (!recipe) return;
-
-  let imageDataUrl = null;
-  if (recipe.image?.url) {
-    imageDataUrl = await toBase64(recipe.image.url);
-    if (!imageDataUrl) {
-      imageDataUrl = '/assets/placeholder.jpg';
-    }
-  }
-
-  // Render to static HTML string
-  const htmlString = ReactDOMServer.renderToStaticMarkup(
-    <RecipePDF
-      recipe={{
-        ...recipe,
-        image: { ...recipe.image, url: imageDataUrl || recipe.image?.url },
-      }}
-    />
-  );
-
-  // Create temp div and set innerHTML
-  const tempDiv = document.createElement('div');
-  tempDiv.innerHTML = htmlString;
-  tempDiv.style.position = 'fixed';
-  tempDiv.style.left = '-9999px';
-  tempDiv.style.top = '0';
-  tempDiv.style.width = '794px'; // A4 width at 96dpi
-  tempDiv.style.background = '#FFF8E7';
-  document.body.appendChild(tempDiv);
-
-  // Wait for all images in tempDiv to load
-  const images = tempDiv.querySelectorAll('img');
-  await Promise.all(
-    Array.from(images).map(
-      (img) =>
-        img.complete
-          ? Promise.resolve()
-          : new Promise((resolve) => {
-              img.onload = resolve;
-              img.onerror = resolve;
-            })
-    )
-  );
-
-  // Wait a tick to ensure DOM is painted
-  await new Promise((r) => setTimeout(r, 100));
-
-  // Render to canvas at A4 width, auto height
-  const canvas = await html2canvas(tempDiv, {
-    useCORS: true,
-    backgroundColor: '#FFF8E7',
-    width: 794,
-    windowWidth: 794,
-  });
-  const imgData = canvas.toDataURL('image/png');
-
-  // --- PDF: Use A4 in mm, scale image to fit ---
-  const pdf = new jsPDF({
-    orientation: 'portrait',
-    unit: 'mm',
-    format: 'a4',
-  });
-  const pageWidth = pdf.internal.pageSize.getWidth(); // 210mm
-  const pageHeight = pdf.internal.pageSize.getHeight(); // 297mm
-
-  // Calculate image dimensions in mm
-  // 794px = 210mm, so pxToMm = 210 / 794
-  const pxToMm = pageWidth / canvas.width;
-  const imgWidth = pageWidth;
-  const imgHeight = canvas.height * pxToMm;
-
-  // Add image at (0, 0), full width, scaled height
-  pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-
-  pdf.save(`FlavorHUB254-${recipe.title.replace(/\s+/g, '_')}.pdf`);
-
-  document.body.removeChild(tempDiv);
-};
