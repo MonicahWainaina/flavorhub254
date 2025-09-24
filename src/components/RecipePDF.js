@@ -282,7 +282,7 @@ export default function RecipePDF({ recipe }) {
           style={{
             background: "#fff",
             borderRadius: 10,
-            padding: "18px 18px 14px 18px",
+            padding: "18px 18px 40px 18px", // increased bottom padding
             marginBottom: 0,
             boxShadow: "0 1px 4px #0001",
             border: `1px solid ${BRAND.divider}`,
@@ -294,7 +294,7 @@ export default function RecipePDF({ recipe }) {
               paddingLeft: 0,
               fontSize: 17,
               color: BRAND.text,
-              lineHeight: 1.6,
+              lineHeight:2.0, // slightly increased line height
               listStyle: "none",
               textAlign: "left",
             }}
@@ -305,7 +305,7 @@ export default function RecipePDF({ recipe }) {
                   key={idx}
                   style={{
                     margin: 0,
-                    marginBottom: 12,
+                    marginBottom: 24, // increased space between steps
                     display: "flex",
                     alignItems: "flex-start",
                   }}
