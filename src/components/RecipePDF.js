@@ -16,6 +16,8 @@ export default function RecipePDF({ recipe }) {
   if (!recipe) return null;
 
   const instructionListClass = "fh254-instructions-list";
+  const instructionStepClass = "fh254-instruction-step";
+  const instructionOuterClass = "fh254-instructions-outer";
 
   return (
     <div
@@ -24,7 +26,6 @@ export default function RecipePDF({ recipe }) {
         color: BRAND.text,
         fontFamily: "Inter, Arial, sans-serif",
         width: 794, // A4 width at 96dpi
-        // minHeight: 1123, // A4 height at 96dpi
         boxSizing: "border-box",
         margin: "0 auto",
         padding: 0,
@@ -279,8 +280,8 @@ export default function RecipePDF({ recipe }) {
           Instructions
         </h2>
         <div
+          className={instructionOuterClass}
           style={{
-            background: "#fff",
             borderRadius: 10,
             padding: "18px 18px 40px 18px", // increased bottom padding
             marginBottom: 0,
@@ -289,12 +290,13 @@ export default function RecipePDF({ recipe }) {
           }}
         >
           <ul
+            className={instructionListClass}
             style={{
               margin: 0,
               paddingLeft: 0,
               fontSize: 17,
               color: BRAND.text,
-              lineHeight:2.0, // slightly increased line height
+              lineHeight: 2.0,
               listStyle: "none",
               textAlign: "left",
             }}
@@ -303,11 +305,13 @@ export default function RecipePDF({ recipe }) {
               recipe.instructions.map((step, idx) => (
                 <li
                   key={idx}
+                  className={instructionStepClass}
                   style={{
                     margin: 0,
-                    marginBottom: 24, // increased space between steps
+                    marginBottom: 20,
                     display: "flex",
                     alignItems: "flex-start",
+                    paddingBottom: 6, 
                   }}
                 >
                   <span
@@ -319,7 +323,7 @@ export default function RecipePDF({ recipe }) {
                       display: "inline-block",
                       textAlign: "right",
                       marginRight: 8,
-                      lineHeight: 1.6,
+                      lineHeight: 2.0,
                     }}
                   >
                     {idx + 1}.
@@ -330,7 +334,7 @@ export default function RecipePDF({ recipe }) {
                 </li>
               ))
             ) : (
-              <li>No instructions listed.</li>
+              <li className={instructionStepClass}>No instructions listed.</li>
             )}
           </ul>
         </div>

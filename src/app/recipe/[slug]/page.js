@@ -283,10 +283,10 @@ export default function RecipePage({ params }) {
     }
   }
 
-
 const handleDownloadPDF = async () => {
   if (!recipe) return;
 
+  // Convert recipe image to base64 for CORS-safe rendering
   let imageDataUrl = null;
   if (recipe.image?.url) {
     imageDataUrl = await toBase64(recipe.image.url);
@@ -295,7 +295,7 @@ const handleDownloadPDF = async () => {
     }
   }
 
-  // Render to static HTML string (header removed from RecipePDF.js)
+  // Render RecipePDF to static HTML
   const htmlString = ReactDOMServer.renderToStaticMarkup(
     <RecipePDF
       recipe={{
@@ -328,18 +328,49 @@ const handleDownloadPDF = async () => {
             })
     )
   );
-
   await new Promise((r) => setTimeout(r, 100));
 
-  // Render to canvas at A4 width, auto height
-  const canvas = await html2canvas(tempDiv, {
+  // --- Find the instructions container and steps ---
+  // Try to find the instructions box and steps robustly
+   let instructionsBox = tempDiv.querySelector('.fh254-instructions-outer');
+  if (instructionsBox) instructionsBox = instructionsBox.closest('div');
+  const instructionSteps = tempDiv.querySelectorAll('.fh254-instruction-step, ol > li');
+
+  // --- Render the top section (everything above instructions) ---
+  let topSectionHeight = 0;
+  if (instructionsBox) {
+    topSectionHeight = instructionsBox.offsetTop;
+  }
+  // Fallback if not found or zero
+  if (!topSectionHeight || topSectionHeight < 10) {
+    // Try to find the instructions heading and use its offsetTop
+    const instructionsHeading = Array.from(tempDiv.querySelectorAll('h2')).find(
+      (h) => h.textContent?.toLowerCase().includes('instruction')
+    );
+    if (instructionsHeading) {
+      topSectionHeight = instructionsHeading.offsetTop;
+    } else {
+      // fallback: render almost all of tempDiv
+      topSectionHeight = tempDiv.offsetHeight - 1;
+    }
+  }
+
+  // If still zero, abort with a message
+  if (!topSectionHeight || topSectionHeight < 10) {
+    alert('Could not determine top section height for PDF export.');
+    document.body.removeChild(tempDiv);
+    return;
+  }
+
+  const topSectionCanvas = await html2canvas(tempDiv, {
     useCORS: true,
     backgroundColor: '#FFF8E7',
     width: 794,
+    height: topSectionHeight,
     windowWidth: 794,
   });
 
-  // --- Multipage PDF logic with reserved header/footer area ---
+  // --- Prepare PDF ---
   const pdf = new jsPDF({
     orientation: 'portrait',
     unit: 'mm',
@@ -347,15 +378,14 @@ const handleDownloadPDF = async () => {
   });
   const pageWidth = pdf.internal.pageSize.getWidth(); // 210mm
   const pageHeight = pdf.internal.pageSize.getHeight(); // 297mm
-
-  // Reserve space for header (brand/logo) and footer
-  const headerHeightMm = 18; // Slightly reduced for smaller header
+  // --- Fill first page with theme color ---
+  pdf.setFillColor(255, 248, 231); // #FFF8E7
+  pdf.rect(0, 0, pageWidth, pageHeight, 'F');
+  const headerHeightMm = 18;
   const footerHeightMm = 16;
-  const pxToMm = pageWidth / canvas.width;
-  const usablePageHeight = pageHeight - headerHeightMm - footerHeightMm;
-  const usablePageHeightPx = usablePageHeight / pxToMm;
+  const pxToMm = pageWidth / topSectionCanvas.width;
 
-  // --- Prepare logo image for header ---
+  // --- Prepare logo for header ---
   const logoUrl = '/assets/flavorhubicon.png';
   let logoBase64 = null;
   try {
@@ -371,87 +401,36 @@ const handleDownloadPDF = async () => {
     logoBase64 = null;
   }
 
-  let renderedHeight = 0;
-  let page = 0;
-  const totalPages = Math.ceil(canvas.height / usablePageHeightPx);
-
-  while (renderedHeight < canvas.height) {
-    const sliceHeight = Math.min(usablePageHeightPx, canvas.height - renderedHeight);
-    if (sliceHeight <= 0) break;
-
-    // Create a temp canvas for the current page slice
-    const pageCanvas = document.createElement('canvas');
-    pageCanvas.width = canvas.width;
-    pageCanvas.height = sliceHeight;
-    const ctx = pageCanvas.getContext('2d');
-    ctx.drawImage(
-      canvas,
-      0,
-      renderedHeight,
-      canvas.width,
-      sliceHeight,
-      0,
-      0,
-      canvas.width,
-      sliceHeight
-    );
-
-    if (page > 0) pdf.addPage();
-
-    // --- Draw header background ---
-    pdf.setFillColor(255, 248, 231); // #FFF8E7
+  // --- Helper: Draw header/footer ---
+  function drawHeaderFooter(pdf, pageNum, totalPages) {
+    // Header
+    pdf.setFillColor(255, 248, 231);
     pdf.rect(0, 0, pageWidth, headerHeightMm, 'F');
-
-    // --- Draw logo and brand name as a single "word", aligned and flush left ---
-    const logoSize = 7; // mm (reduced)
-    const logoY = 6; // mm (adjusted for smaller logo)
-    const logoX = 4; // Far left
+    const logoSize = 7;
+    const logoY = 6;
+    const logoX = 4;
     if (logoBase64) {
       pdf.addImage(logoBase64, 'PNG', logoX, logoY, logoSize, logoSize);
     }
-
-    // Brand name: "flavorHUB254" as one word, colored parts, aligned baseline
-    let textX = logoX + logoSize + 2; // Close gap between logo and text
-    const baseY = logoY + logoSize - 1; // baseline alignment with logo
-
-    pdf.setFontSize(14); // reduced font size
+    let textX = logoX + logoSize + 2;
+    const baseY = logoY + logoSize - 1;
+    pdf.setFontSize(14);
     pdf.setFont('helvetica', 'bold');
-
-    // "flavor"
     pdf.setTextColor('#232323');
     pdf.text('flavor', textX, baseY, { baseline: 'bottom' });
     const flavorWidth = pdf.getTextWidth('flavor');
-
-    // "HUB"
     textX += flavorWidth;
     pdf.setTextColor('#D32F2F');
     pdf.text('HUB', textX, baseY, { baseline: 'bottom' });
     const hubWidth = pdf.getTextWidth('HUB');
-
-    // "254"
     textX += hubWidth;
     pdf.setTextColor('#2E7D32');
     pdf.text('254', textX, baseY, { baseline: 'bottom' });
-
-    // Reset color for rest of PDF
     pdf.setTextColor('#232323');
-
-    // --- Draw the content image slice below the header ---
-    pdf.addImage(
-      pageCanvas.toDataURL('image/png'),
-      'PNG',
-      0,
-      headerHeightMm,
-      pageWidth,
-      sliceHeight * pxToMm
-    );
-
-    // --- Draw footer background ---
+    // Footer
     const footerTop = pageHeight - footerHeightMm;
-    pdf.setFillColor(240, 240, 240); // Light gray
+    pdf.setFillColor(240, 240, 240);
     pdf.rect(0, footerTop, pageWidth, footerHeightMm, 'F');
-
-    // --- Draw footer text ---
     const footerY = footerTop + footerHeightMm / 2 + 2;
     pdf.setFontSize(11);
     pdf.setTextColor('#2E7D32');
@@ -462,10 +441,77 @@ const handleDownloadPDF = async () => {
     pdf.text(recipe.title, pageWidth / 2, footerY, { align: 'center' });
     pdf.setFont('helvetica', 'normal');
     pdf.setTextColor('#D32F2F');
-    pdf.text(`Page ${page + 1} of ${totalPages}`, pageWidth - 10, footerY, { align: 'right' });
+    pdf.text(`Page ${pageNum} of ${totalPages}`, pageWidth - 10, footerY, { align: 'right' });
+    pdf.setTextColor('#232323');
+  }
 
-    renderedHeight += sliceHeight;
-    page++;
+  // --- Add top section to PDF ---
+  drawHeaderFooter(pdf, 1, 1); // We'll update totalPages later
+  let y = headerHeightMm;
+  const topSectionHeightMm = topSectionCanvas.height * pxToMm;
+  pdf.addImage(
+    topSectionCanvas.toDataURL('image/png'),
+    'PNG',
+    0,
+    y,
+    pageWidth,
+    topSectionHeightMm
+  );
+  y += topSectionHeightMm;
+
+  // --- Render and add each instruction step ---
+  let pageNum = 1;
+  let instructionImages = [];
+  for (let i = 0; i < instructionSteps.length; i++) {
+    const li = instructionSteps[i];
+    // Render this <li> to canvas
+    const liCanvas = await html2canvas(li, {
+      useCORS: true,
+      backgroundColor: '#fff',
+      width: li.offsetWidth,
+      height: li.offsetHeight,
+      windowWidth: li.offsetWidth,
+    });
+    const liHeightMm = liCanvas.height * pxToMm;
+    instructionImages.push({ img: liCanvas.toDataURL('image/png'), heightMm: liHeightMm, });
+  }
+    const instructionsCanvas = await html2canvas(instructionsBox, {
+      useCORS: true,
+      backgroundColor: '#FFF8E7', // Let the div's own background show
+      width: instructionsBox.offsetWidth,
+      height: instructionsBox.offsetHeight,
+      windowWidth: instructionsBox.offsetWidth,
+    });
+
+  // --- Add instructions to PDF, step by step ---
+for (let i = 0; i < instructionImages.length; i++) {
+  const { img, heightMm } = instructionImages[i];
+  // If not enough space, add new page
+  if (y + heightMm > pageHeight - footerHeightMm - 2) {
+    pdf.addPage();
+    pageNum++;
+    // --- Fill new page with theme color ---
+    pdf.setFillColor(255, 248, 231); // #FFF8E7
+    pdf.rect(0, 0, pageWidth, pageHeight, 'F');
+    drawHeaderFooter(pdf, pageNum, 1); // We'll update totalPages at the end
+    y = headerHeightMm;
+  }
+  pdf.addImage(
+    img,
+    'PNG',
+    18, // left margin to align with box
+    y,
+    pageWidth - 36, // right margin
+    heightMm
+  );
+  y += heightMm + 0.5; // add small gap between steps
+}
+
+  // --- Update total page numbers in footer ---
+  const totalPages = pdf.internal.getNumberOfPages();
+  for (let i = 1; i <= totalPages; i++) {
+    pdf.setPage(i);
+    drawHeaderFooter(pdf, i, totalPages);
   }
 
   pdf.save(`FlavorHUB254-${recipe.title.replace(/\s+/g, '_')}.pdf`);
