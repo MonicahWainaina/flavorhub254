@@ -17,6 +17,7 @@ import {
   getDoc,
   getDocs,
   deleteDoc,
+  where,
 } from "firebase/firestore";
 import { FaComments } from "react-icons/fa";
 
@@ -34,6 +35,12 @@ function BotIcon({ className = "w-10 h-10" }) {
 }
 
 const MESSAGES_PAGE_SIZE = 20;
+const GUEST_CHAT_LIMIT = 5;
+const USER_CHAT_LIMIT = 20;
+
+function getTodayString() {
+  return new Date().toISOString().slice(0, 10);
+}
 
 export default function FlavorBotPage() {
   const inputRef = useRef(null);
@@ -58,6 +65,9 @@ export default function FlavorBotPage() {
     "What’s a vegan breakfast idea?",
     "Give me a Kenyan street food recipe",
   ];
+
+  // --- Chat count state ---
+  const [chatsToday, setChatsToday] = useState(0);
 
   // Responsive detection
   const [isMobile, setIsMobile] = useState(false);
@@ -123,7 +133,6 @@ export default function FlavorBotPage() {
       } else {
         setMessages([]);
         setLastVisible(null);
-        // Do NOT setHasStarted(false) here!
       }
       setLoading(false);
     });
@@ -135,6 +144,40 @@ export default function FlavorBotPage() {
       chatRef.current.scrollTop = chatRef.current.scrollHeight;
     }
   }, [messages, loading]);
+
+  // --- Chat count logic for badge ---
+  useEffect(() => {
+    const today = getTodayString();
+    if (user) {
+      // Logged-in: count sessions created today
+      const fetchChatsToday = async () => {
+        const startOfDay = new Date(today + "T00:00:00Z");
+        const endOfDay = new Date(today + "T23:59:59Z");
+        const q = query(
+          collection(db, "users", user.uid, "sessions"),
+          where("createdAt", ">=", startOfDay),
+          where("createdAt", "<=", endOfDay)
+        );
+        const snapshot = await getDocs(q);
+        setChatsToday(snapshot.size);
+      };
+      fetchChatsToday();
+    } else {
+      // Guest: get from localStorage
+      const guestChats = Number(localStorage.getItem(`guestChats_${today}`) || 0);
+      setChatsToday(guestChats);
+    }
+  }, [user, sessions]);
+
+  // When a guest submits a chat, increment the count
+  const handleGuestChatIncrement = () => {
+    if (!user) {
+      const today = getTodayString();
+      const guestChats = Number(localStorage.getItem(`guestChats_${today}`) || 0) + 1;
+      localStorage.setItem(`guestChats_${today}`, guestChats);
+      setChatsToday(guestChats);
+    }
+  };
 
   const handleLoadMore = async () => {
     if (!user || !currentSessionId || lastVisible === null) return;
@@ -168,6 +211,18 @@ export default function FlavorBotPage() {
     e.preventDefault();
     if (!input.trim()) {
       toast.error("Please enter a prompt.");
+      return;
+    }
+
+    // --- Guest chat limit check ---
+    if (!user && chatsToday >= GUEST_CHAT_LIMIT) {
+      toast.error("You’ve hit the guest chat limit. Please log in or sign up for more access!");
+      return;
+    }
+
+    // --- User chat limit check ---
+    if (user && chatsToday >= USER_CHAT_LIMIT) {
+      toast.error("You’ve hit your free daily chat limit. Upgrade to Premium for unlimited access!");
       return;
     }
 
@@ -233,6 +288,11 @@ export default function FlavorBotPage() {
               messages: allMsgs,
             });
           }
+        }
+
+        // --- Increment guest chat count after successful chat ---
+        if (!user) {
+          handleGuestChatIncrement();
         }
       } else {
         // Fine-tuned toast messages for rate limits
@@ -371,6 +431,14 @@ export default function FlavorBotPage() {
 
   return (
     <div className="relative min-h-screen flex flex-col bg-[#181818]">
+      {/* Chat count badge (top right, below navbar) */}
+      <div className="fixed right-8 top-24 z-50">
+        <span className="bg-[#232323] text-white border-2 border-[#3CB371] rounded-xl px-4 py-2 font-semibold shadow-lg text-sm">
+          {user
+            ? `Chats started today: ${chatsToday} / ${USER_CHAT_LIMIT}`
+            : `Chats left today: ${Math.max(0, GUEST_CHAT_LIMIT - chatsToday)} / ${GUEST_CHAT_LIMIT}`}
+        </span>
+      </div>
       {/* Background image */}
       <div className="absolute inset-0 z-0">
         <img
