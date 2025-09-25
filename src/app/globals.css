@@ -81,3 +81,26 @@ main {
 .animate-slide-in-left {
   animation: slide-in-left 0.3s cubic-bezier(0.4,0,0.2,1) both;
 }
+
+.pdf-bg {
+  background: #FFF8E7 !important;
+  color: #232323;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+  padding: 32px;
+  border-radius: 16px;
+}
+.page-break {
+  page-break-before: always;
+}
+
+.pdf-hide {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  position: fixed !important;
+  left: 0 !important;
+  top: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: -9999 !important;
+}

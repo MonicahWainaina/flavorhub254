@@ -20,6 +20,10 @@ import { useAuth } from '@/context/AuthContext';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Loader, RecipeSkeleton } from '@/components/Loaders';
+import RecipePDF from '@/components/RecipePDF';
+import ReactDOMServer from 'react-dom/server';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 // Utility: convert decimals to kitchen fractions for tsp/tbsp
 function toFraction(decimal) {
@@ -32,11 +36,11 @@ function toFraction(decimal) {
 
 // Utility: smart rounding for ingredient amounts
 function smartRound(amount, unit) {
-const countables = [
-  'large', 'medium', 'small', 'cloves', 'clove', 'egg', 'eggs',
-  'onion', 'onions', 'banana', 'bananas', 'piece', 'pieces',
-  'fillet', 'fillets', 'drumstick', 'drumsticks', 'leg', 'legs'
-];
+  const countables = [
+    'large', 'medium', 'small', 'cloves', 'clove', 'egg', 'eggs',
+    'onion', 'onions', 'banana', 'bananas', 'piece', 'pieces',
+    'fillet', 'fillets', 'drumstick', 'drumsticks', 'leg', 'legs'
+  ];
   if (countables.some((u) => (unit || '').toLowerCase().includes(u))) {
     return Math.round(amount);
   }
@@ -46,13 +50,13 @@ const countables = [
     const frac = toFraction(decimal);
     return frac ? `${whole > 0 ? whole + ' ' : ''}${frac}` : `${whole}`;
   }
-if (['g', 'ml', 'kg'].some((u) => (unit || '').toLowerCase().includes(u))) {
-  // For kg, round to 0.05 (50g) or 0.1 (100g) for kitchen-friendliness
-  if ((unit || '').toLowerCase().includes('kg')) {
-    return Math.round(amount * 10) / 10; // 1 decimal place (e.g., 0.5 kg)
+  if (['g', 'ml', 'kg'].some((u) => (unit || '').toLowerCase().includes(u))) {
+    // For kg, round to 0.05 (50g) or 0.1 (100g) for kitchen-friendliness
+    if ((unit || '').toLowerCase().includes('kg')) {
+      return Math.round(amount * 10) / 10; // 1 decimal place (e.g., 0.5 kg)
+    }
+    return Math.round(amount / 5) * 5;
   }
-  return Math.round(amount / 5) * 5;
-}
   if (['cup', 'cups'].some((u) => (unit || '').toLowerCase().includes(u))) {
     // Round to nearest quarter cup
     const quarters = Math.round(amount * 4) / 4;
@@ -174,27 +178,25 @@ export default function RecipePage({ params }) {
   };
 
   // Adjustment logic
-useEffect(() => {
-  if (!recipe) return;
-  let scaled = {
-    ingredients: recipe.ingredients,
-    servings: recipe.base_servings || 1,
-  };
+  useEffect(() => {
+    if (!recipe) return;
+    let scaled = {
+      ingredients: recipe.ingredients,
+      servings: recipe.base_servings || 1,
+    };
 
-  if (isAdjusting && recipe.editable_ingredients) {
-    // If adjusting and editable_ingredients, scale by flour
-    const flourObj = recipe.ingredients.find((i) => i.editable);
-    const flourVal = adjustedFlour ?? flourObj.amount;
-    scaled = scaleIngredients(recipe, { flour: flourVal });
-  } else if (recipe.adjustable_servings) {
-    // Always scale by servings if adjustable_servings is true
-    scaled = scaleIngredients(recipe, { servings });
-  }
+    if (isAdjusting && recipe.editable_ingredients) {
+      const flourObj = recipe.ingredients.find((i) => i.editable);
+      const flourVal = adjustedFlour ?? flourObj.amount;
+      scaled = scaleIngredients(recipe, { flour: flourVal });
+    } else if (recipe.adjustable_servings) {
+      scaled = scaleIngredients(recipe, { servings });
+    }
 
-  setAdjustedIngredients(scaled.ingredients);
-  setAdjustedServings(scaled.servings);
-}, [isAdjusting, adjustedFlour, servings, recipe]);
-  // Add this after fetching recipe:
+    setAdjustedIngredients(scaled.ingredients);
+    setAdjustedServings(scaled.servings);
+  }, [isAdjusting, adjustedFlour, servings, recipe]);
+
   useEffect(() => {
     if (recipe && recipe.adjustment_rules?.display_unit === 'us') {
       setMetric(false);
@@ -255,17 +257,266 @@ useEffect(() => {
     }
   };
 
-  // Metric dropdown handler
   const handleMetricChange = (e) => {
     setMetric(e.target.value === 'metric');
   };
 
-  // Close prompt handler
   const handleClosePrompt = () => {
     setShowAdjustMsg(false);
     setShowServingsPrompt(false);
   };
 
+  // Helper: Convert image URL to Base64 data URL
+  async function toBase64(url) {
+    try {
+      const response = await fetch(url, { mode: 'cors' });
+      const blob = await response.blob();
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    } catch (error) {
+      console.error('Failed to convert image to Base64:', error);
+      return null;
+    }
+  }
+
+const handleDownloadPDF = async () => {
+  if (!recipe) return;
+
+  // Convert recipe image to base64 for CORS-safe rendering
+  let imageDataUrl = null;
+  if (recipe.image?.url) {
+    imageDataUrl = await toBase64(recipe.image.url);
+    if (!imageDataUrl) {
+      imageDataUrl = '/assets/placeholder.jpg';
+    }
+  }
+
+  // Render RecipePDF to static HTML
+  const htmlString = ReactDOMServer.renderToStaticMarkup(
+    <RecipePDF
+      recipe={{
+        ...recipe,
+        image: { ...recipe.image, url: imageDataUrl || recipe.image?.url },
+      }}
+    />
+  );
+
+  // Create temp div and set innerHTML
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = htmlString;
+  tempDiv.style.position = 'fixed';
+  tempDiv.style.left = '-9999px';
+  tempDiv.style.top = '0';
+  tempDiv.style.width = '794px'; // A4 width at 96dpi
+  tempDiv.style.background = '#FFF8E7';
+  document.body.appendChild(tempDiv);
+
+  // Wait for all images in tempDiv to load
+  const images = tempDiv.querySelectorAll('img');
+  await Promise.all(
+    Array.from(images).map(
+      (img) =>
+        img.complete
+          ? Promise.resolve()
+          : new Promise((resolve) => {
+              img.onload = resolve;
+              img.onerror = resolve;
+            })
+    )
+  );
+  await new Promise((r) => setTimeout(r, 100));
+
+  // --- Find the instructions container and steps ---
+  // Try to find the instructions box and steps robustly
+   let instructionsBox = tempDiv.querySelector('.fh254-instructions-outer');
+  if (instructionsBox) instructionsBox = instructionsBox.closest('div');
+  const instructionSteps = tempDiv.querySelectorAll('.fh254-instruction-step, ol > li');
+
+  // --- Render the top section (everything above instructions) ---
+  let topSectionHeight = 0;
+  if (instructionsBox) {
+    topSectionHeight = instructionsBox.offsetTop;
+  }
+  // Fallback if not found or zero
+  if (!topSectionHeight || topSectionHeight < 10) {
+    // Try to find the instructions heading and use its offsetTop
+    const instructionsHeading = Array.from(tempDiv.querySelectorAll('h2')).find(
+      (h) => h.textContent?.toLowerCase().includes('instruction')
+    );
+    if (instructionsHeading) {
+      topSectionHeight = instructionsHeading.offsetTop;
+    } else {
+      // fallback: render almost all of tempDiv
+      topSectionHeight = tempDiv.offsetHeight - 1;
+    }
+  }
+
+  // If still zero, abort with a message
+  if (!topSectionHeight || topSectionHeight < 10) {
+    alert('Could not determine top section height for PDF export.');
+    document.body.removeChild(tempDiv);
+    return;
+  }
+
+  const topSectionCanvas = await html2canvas(tempDiv, {
+    useCORS: true,
+    backgroundColor: '#FFF8E7',
+    width: 794,
+    height: topSectionHeight,
+    windowWidth: 794,
+  });
+
+  // --- Prepare PDF ---
+  const pdf = new jsPDF({
+    orientation: 'portrait',
+    unit: 'mm',
+    format: 'a4',
+  });
+  const pageWidth = pdf.internal.pageSize.getWidth(); // 210mm
+  const pageHeight = pdf.internal.pageSize.getHeight(); // 297mm
+  // --- Fill first page with theme color ---
+  pdf.setFillColor(255, 248, 231); // #FFF8E7
+  pdf.rect(0, 0, pageWidth, pageHeight, 'F');
+  const headerHeightMm = 18;
+  const footerHeightMm = 16;
+  const pxToMm = pageWidth / topSectionCanvas.width;
+
+  // --- Prepare logo for header ---
+  const logoUrl = '/assets/flavorhubicon.png';
+  let logoBase64 = null;
+  try {
+    const resp = await fetch(logoUrl);
+    const blob = await resp.blob();
+    logoBase64 = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  } catch (e) {
+    logoBase64 = null;
+  }
+
+  // --- Helper: Draw header/footer ---
+  function drawHeaderFooter(pdf, pageNum, totalPages) {
+    // Header
+    pdf.setFillColor(255, 248, 231);
+    pdf.rect(0, 0, pageWidth, headerHeightMm, 'F');
+    const logoSize = 7;
+    const logoY = 6;
+    const logoX = 4;
+    if (logoBase64) {
+      pdf.addImage(logoBase64, 'PNG', logoX, logoY, logoSize, logoSize);
+    }
+    let textX = logoX + logoSize + 2;
+    const baseY = logoY + logoSize - 1;
+    pdf.setFontSize(14);
+    pdf.setFont('helvetica', 'bold');
+    pdf.setTextColor('#232323');
+    pdf.text('flavor', textX, baseY, { baseline: 'bottom' });
+    const flavorWidth = pdf.getTextWidth('flavor');
+    textX += flavorWidth;
+    pdf.setTextColor('#D32F2F');
+    pdf.text('HUB', textX, baseY, { baseline: 'bottom' });
+    const hubWidth = pdf.getTextWidth('HUB');
+    textX += hubWidth;
+    pdf.setTextColor('#2E7D32');
+    pdf.text('254', textX, baseY, { baseline: 'bottom' });
+    pdf.setTextColor('#232323');
+    // Footer
+    const footerTop = pageHeight - footerHeightMm;
+    pdf.setFillColor(240, 240, 240);
+    pdf.rect(0, footerTop, pageWidth, footerHeightMm, 'F');
+    const footerY = footerTop + footerHeightMm / 2 + 2;
+    pdf.setFontSize(11);
+    pdf.setTextColor('#2E7D32');
+    pdf.setFont('helvetica', 'normal');
+    pdf.text('© 2025 flavorHUB254', 10, footerY);
+    pdf.setFont('helvetica', 'bold');
+    pdf.setTextColor('#232323');
+    pdf.text(recipe.title, pageWidth / 2, footerY, { align: 'center' });
+    pdf.setFont('helvetica', 'normal');
+    pdf.setTextColor('#D32F2F');
+    pdf.text(`Page ${pageNum} of ${totalPages}`, pageWidth - 10, footerY, { align: 'right' });
+    pdf.setTextColor('#232323');
+  }
+
+  // --- Add top section to PDF ---
+  drawHeaderFooter(pdf, 1, 1); // We'll update totalPages later
+  let y = headerHeightMm;
+  const topSectionHeightMm = topSectionCanvas.height * pxToMm;
+  pdf.addImage(
+    topSectionCanvas.toDataURL('image/png'),
+    'PNG',
+    0,
+    y,
+    pageWidth,
+    topSectionHeightMm
+  );
+  y += topSectionHeightMm;
+
+  // --- Render and add each instruction step ---
+  let pageNum = 1;
+  let instructionImages = [];
+  for (let i = 0; i < instructionSteps.length; i++) {
+    const li = instructionSteps[i];
+    // Render this <li> to canvas
+    const liCanvas = await html2canvas(li, {
+      useCORS: true,
+      backgroundColor: '#fff',
+      width: li.offsetWidth,
+      height: li.offsetHeight,
+      windowWidth: li.offsetWidth,
+    });
+    const liHeightMm = liCanvas.height * pxToMm;
+    instructionImages.push({ img: liCanvas.toDataURL('image/png'), heightMm: liHeightMm, });
+  }
+    const instructionsCanvas = await html2canvas(instructionsBox, {
+      useCORS: true,
+      backgroundColor: '#FFF8E7', // Let the div's own background show
+      width: instructionsBox.offsetWidth,
+      height: instructionsBox.offsetHeight,
+      windowWidth: instructionsBox.offsetWidth,
+    });
+
+  // --- Add instructions to PDF, step by step ---
+for (let i = 0; i < instructionImages.length; i++) {
+  const { img, heightMm } = instructionImages[i];
+  // If not enough space, add new page
+  if (y + heightMm > pageHeight - footerHeightMm - 2) {
+    pdf.addPage();
+    pageNum++;
+    // --- Fill new page with theme color ---
+    pdf.setFillColor(255, 248, 231); // #FFF8E7
+    pdf.rect(0, 0, pageWidth, pageHeight, 'F');
+    drawHeaderFooter(pdf, pageNum, 1); // We'll update totalPages at the end
+    y = headerHeightMm;
+  }
+  pdf.addImage(
+    img,
+    'PNG',
+    18, // left margin to align with box
+    y,
+    pageWidth - 36, // right margin
+    heightMm
+  );
+  y += heightMm + 0.5; // add small gap between steps
+}
+
+  // --- Update total page numbers in footer ---
+  const totalPages = pdf.internal.getNumberOfPages();
+  for (let i = 1; i <= totalPages; i++) {
+    pdf.setPage(i);
+    drawHeaderFooter(pdf, i, totalPages);
+  }
+
+  pdf.save(`FlavorHUB254-${recipe.title.replace(/\s+/g, '_')}.pdf`);
+  document.body.removeChild(tempDiv);
+};
   if (loading)
     return (
       <div className="flex flex-col items-center pt-28 pb-12 px-2 sm:px-4 min-h-screen">
@@ -312,9 +563,119 @@ useEffect(() => {
             bodyClassName={() => 'text-white text-base'}
           />
           <main className="flex-1 flex flex-col items-center pt-28 pb-12 px-2 sm:px-4">
-            <section className="w-full max-w-6xl flex flex-col-reverse md:flex-row gap-12 bg-[#a94f4f]/90 rounded-3xl shadow-2xl border border-white/20 p-4 sm:p-10 backdrop-blur-sm">
+            <section className="w-full max-w-6xl flex flex-col md:grid md:grid-cols-2 gap-12 bg-[#a94f4f]/90 rounded-3xl shadow-2xl border border-white/20 p-4 sm:p-10 backdrop-blur-sm">
+              {/* Right: Image & Actions */}
+              <div className="flex flex-col items-center min-w-0 order-1 md:order-2">
+                {/* Mobile: Category, Title, Favorite, Rating */}
+                <span className="inline-block md:hidden bg-green-700 text-white px-4 py-1 rounded-full mb-3 text-sm font-semibold">
+                  {recipe.category}
+                </span>
+                <div className="flex md:hidden items-center gap-2 mb-2">
+                  <h1 className="text-2xl font-bold text-white text-center">
+                    {recipe.title}
+                  </h1>
+                  <FavoriteButton
+                    isFav={isFav}
+                    onClick={handleToggleFavorite}
+                  />
+                </div>
+                <div className="flex md:hidden items-center gap-2 mb-2">
+                  <span className="text-yellow-400 text-xl">★</span>
+                  <span className="text-white font-semibold">
+                    ({recipe.rating?.toFixed(1) || 'N/A'})
+                  </span>
+                </div>
+                {/* Image */}
+                <Image
+                  src={recipe.image?.url || '/assets/placeholder.jpg'}
+                  alt={recipe.image?.alt || recipe.title}
+                  width={400}
+                  height={300}
+                  className="rounded-xl w-full max-w-lg mb-4 shadow-lg object-cover"
+                />
+                {/* CTAs */}
+                <div className="flex flex-row gap-3 mb-4">
+                  {/* Start Cooking (Flame) */}
+                  <button className="flex-1 flex items-center justify-center gap-2 bg-green-700 hover:bg-green-800 text-white px-2 py-2 rounded-lg font-semibold text-sm transition">
+                    <svg className="w-5 h-5" viewBox="0 0 64 64" fill="none">
+                      <circle cx="32" cy="32" r="32" fill="#C75C5C" />
+                      <path
+                        opacity="0.2"
+                        d="M28.1,58.1c0,0-16.1-2.4-16.1-16.1s21-15,16.4-32c0,0,15.7,4.9,11.9,20.2c0,0,2.1-1.3,3.7-3.9c0,0,8,6.2,8,15.5
+                        s-11,16.2-16.3,16.2c0,0,5.6-7.6,0.5-12.5c-7.3-7-4.2-11.4-4.2-11.4S14.2,42.8,28.1,58.1z"
+                        fill="#231F20"
+                      />
+                      <path
+                        d="M28.1,56.1c0,0-16.1-2.4-16.1-16.1s21-15,16.4-32c0,0,15.7,4.9,11.9,20.2c0,0,2.1-1.3,3.7-3.9c0,0,8,6.2,8,15.5
+                      s-11,16.2-16.3,16.2c0,0,5.6-7.6,0.5-12.5c-7.3-7-4.2-11.4-4.2-11.4S14.2,40.8,28.1,56.1z"
+                        fill="#F5CF87"
+                      />
+                    </svg>
+                    Start Cooking
+                  </button>
+                  {/* Download PDF */}
+                  <button
+                    className="flex-1 flex items-center justify-center gap-2 bg-green-700 hover:bg-green-800 text-white px-2 py-2 rounded-lg font-semibold text-sm transition"
+                    onClick={handleDownloadPDF}
+                  >
+                    <svg className="w-5 h-5" viewBox="0 0 512 512" fill="none">
+                      <polygon
+                        fill="#B12A27"
+                        points="475.435,117.825 475.435,512 47.791,512 47.791,0.002 357.613,0.002 412.491,54.881"
+                      />
+                      <rect
+                        x="36.565"
+                        y="34.295"
+                        width="205.097"
+                        height="91.768"
+                        fill="#F2F2F2"
+                      />
+                      <polygon
+                        opacity="0.08"
+                        fill="#040000"
+                        points="475.435,117.825 475.435,512 47.791,512 47.791,419.581 247.705,219.667 259.54,207.832 266.098,201.273 277.029,190.343 289.995,177.377 412.491,54.881"
+                      />
+                      <polygon
+                        fill="#771B1B"
+                        points="475.435,117.836 357.599,117.836 357.599,0"
+                      />
+                    </svg>
+                    Download PDF
+                  </button>
+                  {/* Download Audio */}
+                  <button className="flex-1 flex items-center justify-center gap-2 bg-green-700 hover:bg-green-800 text-white px-2 py-2 rounded-lg font-semibold text-sm transition">
+                    <svg className="w-5 h-5" viewBox="0 0 32 32" fill="none">
+                      <path
+                        d="M18.6,5.2C18.3,5,18,5,17.7,5L5.8,9H2c-0.5,0-1,0.5-1,1v6v6c0,0.5,0.5,1,1,1h3.8l11.8,4c0.1,0,0.2,0,0.3,0
+                        c0.2,0,0.4-0.1,0.6-0.2c0.3-0.2,0.4-0.5,0.4-0.8V16V6C19,5.7,18.8,5.4,18.6,5.2z"
+                        fill="#FFC10A"
+                      />
+                      <path
+                        d="M25.8,16c0.1-2.9-0.8-5.6-2.8-7.8c-0.4-0.4-1-0.5-1.4-0.1c-0.4,0.4-0.5,1-0.1,1.4c1.6,1.8,2.4,4.1,2.2,6.5
+                        c0,0,0,0.1,0,0.1c-0.2,2.4-1.3,4.7-3.1,6.3c-0.4,0.4-0.5,1-0.1,1.4c0.2,0.2,0.5,0.3,0.8,0.3c0.2,0,0.5-0.1,0.7-0.3
+                        c2.2-2,3.6-4.7,3.8-7.6C25.8,16.2,25.8,16.1,25.8,16z"
+                        fill="#673AB7"
+                      />
+                      <path
+                        d="M27.3,5.5c-0.4-0.4-1-0.5-1.4-0.1c-0.4,0.4-0.5,1-0.1,1.4c2.3,2.6,3.4,6,3.2,9.2c-0.2,3.4-1.7,6.7-4.4,9.1
+                        c-0.4,0.4-0.5,1-0.1,1.4c0.2,0.2,0.5,0.3,0.8,0.3c0.2,0,0.5-0.1,0.7-0.3C29.1,23.8,30.8,20,31,16C31.1,12.3,29.9,8.5,27.3,5.5z"
+                        fill="#673AB7"
+                      />
+                      <path
+                        d="M5,10c0-0.4,0.3-0.8,0.7-1l0.2,0H2c-0.5,0-1,0.5-1,1v6v6c0,0.5,0.5,1,1,1h3.8l-0.2,0C5.3,22.8,5,22.4,5,22
+                        v-6V10z"
+                        fill="#673AB7"
+                      />
+                    </svg>
+                    Download Audio
+                  </button>
+                </div>
+                <p className="mt-2 text-white text-center text-base">
+                  {recipe.description}
+                </p>
+              </div>
               {/* Left: Recipe Info */}
-              <div className="flex-1 min-w-0">
+              <div className="min-w-0 order-2 md:order-1">
                 {/* Desktop: Category, Title, Favorite, Rating */}
                 <span className="hidden md:inline-block bg-green-700 text-white px-4 py-1 rounded-full mb-3 text-sm font-semibold">
                   {recipe.category}
@@ -536,10 +897,13 @@ useEffect(() => {
                     </li>
                   )}
                 </ul>
-                <h2 className="text-xl font-bold text-white mt-6 mb-2">
+              </div>
+              {/* Instructions: Always last */}
+              <div className="order-3 md:order-3 md:col-span-2">
+                <h2 className="text-xl font-bold text-white mb-2 px-2 md:px-0">
                   INSTRUCTIONS
                 </h2>
-                <ol className="list-decimal list-inside space-y-2 text-white">
+                <ol className="list-decimal list-inside space-y-2 text-white text-lg leading-relaxed bg-[#d97d7d]/80 rounded-xl p-6">
                   {recipe.instructions && recipe.instructions.length > 0 ? (
                     recipe.instructions.map((step, idx) => (
                       <li key={idx}>{step}</li>
@@ -548,113 +912,6 @@ useEffect(() => {
                     <li>No instructions listed.</li>
                   )}
                 </ol>
-              </div>
-              {/* Right: Image & Actions */}
-              <div className="flex-1 flex flex-col items-center min-w-0">
-                {/* Mobile: Category, Title, Favorite, Rating */}
-                <span className="inline-block md:hidden bg-green-700 text-white px-4 py-1 rounded-full mb-3 text-sm font-semibold">
-                  {recipe.category}
-                </span>
-                <div className="flex md:hidden items-center gap-2 mb-2">
-                  <h1 className="text-2xl font-bold text-white text-center">
-                    {recipe.title}
-                  </h1>
-                  <FavoriteButton
-                    isFav={isFav}
-                    onClick={handleToggleFavorite}
-                  />
-                </div>
-                <div className="flex md:hidden items-center gap-2 mb-2">
-                  <span className="text-yellow-400 text-xl">★</span>
-                  <span className="text-white font-semibold">
-                    ({recipe.rating?.toFixed(1) || 'N/A'})
-                  </span>
-                </div>
-                {/* Image */}
-                <Image
-                  src={recipe.image?.url || '/assets/placeholder.jpg'}
-                  alt={recipe.image?.alt || recipe.title}
-                  width={400}
-                  height={300}
-                  className="rounded-xl w-full max-w-lg mb-4 shadow-lg object-cover"
-                />
-                {/* CTAs */}
-                <div className="flex flex-row gap-3 mb-4">
-                  {/* Start Cooking (Flame) */}
-                  <button className="flex-1 flex items-center justify-center gap-2 bg-green-700 hover:bg-green-800 text-white px-2 py-2 rounded-lg font-semibold text-sm transition">
-                    <svg className="w-5 h-5" viewBox="0 0 64 64" fill="none">
-                      <circle cx="32" cy="32" r="32" fill="#C75C5C" />
-                      <path
-                        opacity="0.2"
-                        d="M28.1,58.1c0,0-16.1-2.4-16.1-16.1s21-15,16.4-32c0,0,15.7,4.9,11.9,20.2c0,0,2.1-1.3,3.7-3.9c0,0,8,6.2,8,15.5
-                        s-11,16.2-16.3,16.2c0,0,5.6-7.6,0.5-12.5c-7.3-7-4.2-11.4-4.2-11.4S14.2,42.8,28.1,58.1z"
-                        fill="#231F20"
-                      />
-                      <path
-                        d="M28.1,56.1c0,0-16.1-2.4-16.1-16.1s21-15,16.4-32c0,0,15.7,4.9,11.9,20.2c0,0,2.1-1.3,3.7-3.9c0,0,8,6.2,8,15.5
-                      s-11,16.2-16.3,16.2c0,0,5.6-7.6,0.5-12.5c-7.3-7-4.2-11.4-4.2-11.4S14.2,40.8,28.1,56.1z"
-                        fill="#F5CF87"
-                      />
-                    </svg>
-                    Start Cooking
-                  </button>
-                  {/* Download PDF */}
-                  <button className="flex-1 flex items-center justify-center gap-2 bg-green-700 hover:bg-green-800 text-white px-2 py-2 rounded-lg font-semibold text-sm transition">
-                    <svg className="w-5 h-5" viewBox="0 0 512 512" fill="none">
-                      <polygon
-                        fill="#B12A27"
-                        points="475.435,117.825 475.435,512 47.791,512 47.791,0.002 357.613,0.002 412.491,54.881"
-                      />
-                      <rect
-                        x="36.565"
-                        y="34.295"
-                        width="205.097"
-                        height="91.768"
-                        fill="#F2F2F2"
-                      />
-                      <polygon
-                        opacity="0.08"
-                        fill="#040000"
-                        points="475.435,117.825 475.435,512 47.791,512 47.791,419.581 247.705,219.667 259.54,207.832 266.098,201.273 277.029,190.343 289.995,177.377 412.491,54.881"
-                      />
-                      <polygon
-                        fill="#771B1B"
-                        points="475.435,117.836 357.599,117.836 357.599,0"
-                      />
-                    </svg>
-                    Download PDF
-                  </button>
-                  {/* Download Audio */}
-                  <button className="flex-1 flex items-center justify-center gap-2 bg-green-700 hover:bg-green-800 text-white px-2 py-2 rounded-lg font-semibold text-sm transition">
-                    <svg className="w-5 h-5" viewBox="0 0 32 32" fill="none">
-                      <path
-                        d="M18.6,5.2C18.3,5,18,5,17.7,5L5.8,9H2c-0.5,0-1,0.5-1,1v6v6c0,0.5,0.5,1,1,1h3.8l11.8,4c0.1,0,0.2,0,0.3,0
-                        c0.2,0,0.4-0.1,0.6-0.2c0.3-0.2,0.4-0.5,0.4-0.8V16V6C19,5.7,18.8,5.4,18.6,5.2z"
-                        fill="#FFC10A"
-                      />
-                      <path
-                        d="M25.8,16c0.1-2.9-0.8-5.6-2.8-7.8c-0.4-0.4-1-0.5-1.4-0.1c-0.4,0.4-0.5,1-0.1,1.4c1.6,1.8,2.4,4.1,2.2,6.5
-                        c0,0,0,0.1,0,0.1c-0.2,2.4-1.3,4.7-3.1,6.3c-0.4,0.4-0.5,1-0.1,1.4c0.2,0.2,0.5,0.3,0.8,0.3c0.2,0,0.5-0.1,0.7-0.3
-                        c2.2-2,3.6-4.7,3.8-7.6C25.8,16.2,25.8,16.1,25.8,16z"
-                        fill="#673AB7"
-                      />
-                      <path
-                        d="M27.3,5.5c-0.4-0.4-1-0.5-1.4-0.1c-0.4,0.4-0.5,1-0.1,1.4c2.3,2.6,3.4,6,3.2,9.2c-0.2,3.4-1.7,6.7-4.4,9.1
-                        c-0.4,0.4-0.5,1-0.1,1.4c0.2,0.2,0.5,0.3,0.8,0.3c0.2,0,0.5-0.1,0.7-0.3C29.1,23.8,30.8,20,31,16C31.1,12.3,29.9,8.5,27.3,5.5z"
-                        fill="#673AB7"
-                      />
-                      <path
-                        d="M5,10c0-0.4,0.3-0.8,0.7-1l0.2,0H2c-0.5,0-1,0.5-1,1v6v6c0,0.5,0.5,1,1,1h3.8l-0.2,0C5.3,22.8,5,22.4,5,22
-                        v-6V10z"
-                        fill="#673AB7"
-                      />
-                    </svg>
-                    Download Audio
-                  </button>
-                </div>
-                <p className="mt-2 text-white text-center text-base">
-                  {recipe.description}
-                </p>
               </div>
             </section>
           </main>
