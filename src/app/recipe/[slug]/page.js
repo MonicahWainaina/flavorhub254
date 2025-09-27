@@ -312,7 +312,7 @@ export default function RecipePage({ params }) {
     }
 
     // --- Placeholder for premium logic ---
-    const isPremium = true; // Change to user.isPremium when you add premium
+    const isPremium = false; // Change to user.isPremium when you add premium
 
     // --- Download limit logic ---
     const today = new Date().toISOString().slice(0, 10);
@@ -690,7 +690,7 @@ export default function RecipePage({ params }) {
                           toast.info("Audio downloads are a premium feature. Please log in and upgrade to premium to access this.");
                           return;
                         }
-                        if (user.isPremium) {
+                        if (!user.isPremium) {
                           toast.info("Upgrade to premium to download audio files.");
                           return;
                         }
