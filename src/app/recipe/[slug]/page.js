@@ -312,7 +312,7 @@ export default function RecipePage({ params }) {
     }
 
     // --- Placeholder for premium logic ---
-    const isPremium = false; // Change to user.isPremium when you add premium
+    const isPremium = true; // Change to user.isPremium when you add premium
 
     // --- Download limit logic ---
     const today = new Date().toISOString().slice(0, 10);
