@@ -21,6 +21,8 @@ import { useAuth } from '@/context/AuthContext';
 import 'react-toastify/dist/ReactToastify.css';
 import { Loader, RecipeSkeleton } from '@/components/Loaders';
 import RecipePDF from '@/components/RecipePDF';
+import DownloadPDFButton from '@/components/DownloadPDFButton';
+import DownloadAudioButton from '@/components/DownloadAudioButton';
 import ReactDOMServer from 'react-dom/server';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -37,9 +39,25 @@ function toFraction(decimal) {
 // Utility: smart rounding for ingredient amounts
 function smartRound(amount, unit) {
   const countables = [
-    'large', 'medium', 'small', 'cloves', 'clove', 'egg', 'eggs',
-    'onion', 'onions', 'banana', 'bananas', 'piece', 'pieces',
-    'fillet', 'fillets', 'drumstick', 'drumsticks', 'leg', 'legs'
+    'large',
+    'medium',
+    'small',
+    'cloves',
+    'clove',
+    'egg',
+    'eggs',
+    'onion',
+    'onions',
+    'banana',
+    'bananas',
+    'piece',
+    'pieces',
+    'fillet',
+    'fillets',
+    'drumstick',
+    'drumsticks',
+    'leg',
+    'legs',
   ];
   if (countables.some((u) => (unit || '').toLowerCase().includes(u))) {
     return Math.round(amount);
@@ -141,7 +159,7 @@ export default function RecipePage({ params }) {
     }
     const fetchDownloadCount = async () => {
       const today = new Date().toISOString().slice(0, 10);
-      const statRef = doc(db, "users", user.uid, "downloadStats", today);
+      const statRef = doc(db, 'users', user.uid, 'downloadStats', today);
       const statSnap = await getDoc(statRef);
       setDownloadsToday(statSnap.exists() ? statSnap.data().count : 0);
     };
@@ -301,250 +319,6 @@ export default function RecipePage({ params }) {
     }
   }
 
-  // --- PDF Download Handler with Download Limit ---
-  const handleDownloadPDF = async () => {
-    if (!recipe) return;
-
-    // --- Restrict guests ---
-    if (!user) {
-      toast.error("Please log in to download PDFs.");
-      return;
-    }
-
-    // --- Placeholder for premium logic ---
-    const isPremium = false; // Change to user.isPremium when you add premium
-
-    // --- Download limit logic ---
-    const today = new Date().toISOString().slice(0, 10);
-    const statRef = doc(db, "users", user.uid, "downloadStats", today);
-    const statSnap = await getDoc(statRef);
-    const count = statSnap.exists() ? statSnap.data().count : 0;
-
-    if (!isPremium && count >= 3) {
-      toast.info("You have reached your daily download limit. Upgrade to premium for unlimited downloads!");
-      return;
-    }
-
-    // --- Increment count in Firestore ---
-    await setDoc(statRef, { count: count + 1 }, { merge: true });
-    setDownloadsToday((prev) => prev + 1);
-
-    // --- PDF generation logic (your existing code) ---
-    // Convert recipe image to base64 for CORS-safe rendering
-    let imageDataUrl = null;
-    if (recipe.image?.url) {
-      imageDataUrl = await toBase64(recipe.image.url);
-      if (!imageDataUrl) {
-        imageDataUrl = '/assets/placeholder.jpg';
-      }
-    }
-
-    // Render RecipePDF to static HTML
-    const htmlString = ReactDOMServer.renderToStaticMarkup(
-      <RecipePDF
-        recipe={{
-          ...recipe,
-          image: { ...recipe.image, url: imageDataUrl || recipe.image?.url },
-        }}
-      />
-    );
-
-    // Create temp div and set innerHTML
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = htmlString;
-    tempDiv.style.position = 'fixed';
-    tempDiv.style.left = '-9999px';
-    tempDiv.style.top = '0';
-    tempDiv.style.width = '794px'; // A4 width at 96dpi
-    tempDiv.style.background = '#FFF8E7';
-    document.body.appendChild(tempDiv);
-
-    // Wait for all images in tempDiv to load
-    const images = tempDiv.querySelectorAll('img');
-    await Promise.all(
-      Array.from(images).map(
-        (img) =>
-          img.complete
-            ? Promise.resolve()
-            : new Promise((resolve) => {
-                img.onload = resolve;
-                img.onerror = resolve;
-              })
-      )
-    );
-    await new Promise((r) => setTimeout(r, 100));
-
-    // --- Find the instructions container and steps ---
-    let instructionsBox = tempDiv.querySelector('.fh254-instructions-outer');
-    if (instructionsBox) instructionsBox = instructionsBox.closest('div');
-    const instructionSteps = tempDiv.querySelectorAll('.fh254-instruction-step, ol > li');
-
-    // --- Render the top section (everything above instructions) ---
-    let topSectionHeight = 0;
-    if (instructionsBox) {
-      topSectionHeight = instructionsBox.offsetTop;
-    }
-    if (!topSectionHeight || topSectionHeight < 10) {
-      const instructionsHeading = Array.from(tempDiv.querySelectorAll('h2')).find(
-        (h) => h.textContent?.toLowerCase().includes('instruction')
-      );
-      if (instructionsHeading) {
-        topSectionHeight = instructionsHeading.offsetTop;
-      } else {
-        topSectionHeight = tempDiv.offsetHeight - 1;
-      }
-    }
-    if (!topSectionHeight || topSectionHeight < 10) {
-      alert('Could not determine top section height for PDF export.');
-      document.body.removeChild(tempDiv);
-      return;
-    }
-
-    const topSectionCanvas = await html2canvas(tempDiv, {
-      useCORS: true,
-      backgroundColor: '#FFF8E7',
-      width: 794,
-      height: topSectionHeight,
-      windowWidth: 794,
-    });
-
-    // --- Prepare PDF ---
-    const pdf = new jsPDF({
-      orientation: 'portrait',
-      unit: 'mm',
-      format: 'a4',
-    });
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-    pdf.setFillColor(255, 248, 231); // #FFF8E7
-    pdf.rect(0, 0, pageWidth, pageHeight, 'F');
-    const headerHeightMm = 18;
-    const footerHeightMm = 16;
-    const pxToMm = pageWidth / topSectionCanvas.width;
-
-    // --- Prepare logo for header ---
-    const logoUrl = '/assets/flavorhubicon.png';
-    let logoBase64 = null;
-    try {
-      const resp = await fetch(logoUrl);
-      const blob = await resp.blob();
-      logoBase64 = await new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-      });
-    } catch (e) {
-      logoBase64 = null;
-    }
-
-    function drawHeaderFooter(pdf, pageNum, totalPages) {
-      pdf.setFillColor(255, 248, 231);
-      pdf.rect(0, 0, pageWidth, headerHeightMm, 'F');
-      const logoSize = 7;
-      const logoY = 6;
-      const logoX = 4;
-      if (logoBase64) {
-        pdf.addImage(logoBase64, 'PNG', logoX, logoY, logoSize, logoSize);
-      }
-      let textX = logoX + logoSize + 2;
-      const baseY = logoY + logoSize - 1;
-      pdf.setFontSize(14);
-      pdf.setFont('helvetica', 'bold');
-      pdf.setTextColor('#232323');
-      pdf.text('flavor', textX, baseY, { baseline: 'bottom' });
-      const flavorWidth = pdf.getTextWidth('flavor');
-      textX += flavorWidth;
-      pdf.setTextColor('#D32F2F');
-      pdf.text('HUB', textX, baseY, { baseline: 'bottom' });
-      const hubWidth = pdf.getTextWidth('HUB');
-      textX += hubWidth;
-      pdf.setTextColor('#2E7D32');
-      pdf.text('254', textX, baseY, { baseline: 'bottom' });
-      pdf.setTextColor('#232323');
-      const footerTop = pageHeight - footerHeightMm;
-      pdf.setFillColor(240, 240, 240);
-      pdf.rect(0, footerTop, pageWidth, footerHeightMm, 'F');
-      const footerY = footerTop + footerHeightMm / 2 + 2;
-      pdf.setFontSize(11);
-      pdf.setTextColor('#2E7D32');
-      pdf.setFont('helvetica', 'normal');
-      pdf.text('© 2025 flavorHUB254', 10, footerY);
-      pdf.setFont('helvetica', 'bold');
-      pdf.setTextColor('#232323');
-      pdf.text(recipe.title, pageWidth / 2, footerY, { align: 'center' });
-      pdf.setFont('helvetica', 'normal');
-      pdf.setTextColor('#D32F2F');
-      pdf.text(`Page ${pageNum} of ${totalPages}`, pageWidth - 10, footerY, { align: 'right' });
-      pdf.setTextColor('#232323');
-    }
-
-    drawHeaderFooter(pdf, 1, 1);
-    let y = headerHeightMm;
-    const topSectionHeightMm = topSectionCanvas.height * pxToMm;
-    pdf.addImage(
-      topSectionCanvas.toDataURL('image/png'),
-      'PNG',
-      0,
-      y,
-      pageWidth,
-      topSectionHeightMm
-    );
-    y += topSectionHeightMm;
-
-    let pageNum = 1;
-    let instructionImages = [];
-    for (let i = 0; i < instructionSteps.length; i++) {
-      const li = instructionSteps[i];
-      const liCanvas = await html2canvas(li, {
-        useCORS: true,
-        backgroundColor: '#fff',
-        width: li.offsetWidth,
-        height: li.offsetHeight,
-        windowWidth: li.offsetWidth,
-      });
-      const liHeightMm = liCanvas.height * pxToMm;
-      instructionImages.push({ img: liCanvas.toDataURL('image/png'), heightMm: liHeightMm });
-    }
-    const instructionsCanvas = await html2canvas(instructionsBox, {
-      useCORS: true,
-      backgroundColor: '#FFF8E7',
-      width: instructionsBox.offsetWidth,
-      height: instructionsBox.offsetHeight,
-      windowWidth: instructionsBox.offsetWidth,
-    });
-
-    for (let i = 0; i < instructionImages.length; i++) {
-      const { img, heightMm } = instructionImages[i];
-      if (y + heightMm > pageHeight - footerHeightMm - 2) {
-        pdf.addPage();
-        pageNum++;
-        pdf.setFillColor(255, 248, 231);
-        pdf.rect(0, 0, pageWidth, pageHeight, 'F');
-        drawHeaderFooter(pdf, pageNum, 1);
-        y = headerHeightMm;
-      }
-      pdf.addImage(
-        img,
-        'PNG',
-        18,
-        y,
-        pageWidth - 36,
-        heightMm
-      );
-      y += heightMm + 0.5;
-    }
-
-    const totalPages = pdf.internal.getNumberOfPages();
-    for (let i = 1; i <= totalPages; i++) {
-      pdf.setPage(i);
-      drawHeaderFooter(pdf, i, totalPages);
-    }
-
-    pdf.save(`FlavorHUB254-${recipe.title.replace(/\s+/g, '_')}.pdf`);
-    document.body.removeChild(tempDiv);
-  };
-
   if (loading)
     return (
       <div className="flex flex-col items-center pt-28 pb-12 px-2 sm:px-4 min-h-screen">
@@ -652,101 +426,14 @@ export default function RecipePage({ params }) {
                     Start Cooking
                   </button>
                   {/* Download PDF */}
-                  <button
-                    className="flex-1 flex items-center justify-center gap-2 bg-green-700 hover:bg-green-800 text-white px-2 py-2 rounded-lg font-semibold text-sm transition"
-                    onClick={handleDownloadPDF}
-                  >
-                    <svg className="w-5 h-5" viewBox="0 0 512 512" fill="none">
-                      <polygon
-                        fill="#B12A27"
-                        points="475.435,117.825 475.435,512 47.791,512 47.791,0.002 357.613,0.002 412.491,54.881"
-                      />
-                      <rect
-                        x="36.565"
-                        y="34.295"
-                        width="205.097"
-                        height="91.768"
-                        fill="#F2F2F2"
-                      />
-                      <polygon
-                        opacity="0.08"
-                        fill="#040000"
-                        points="475.435,117.825 475.435,512 47.791,512 47.791,419.581 247.705,219.667 259.54,207.832 266.098,201.273 277.029,190.343 289.995,177.377 412.491,54.881"
-                      />
-                      <polygon
-                        fill="#771B1B"
-                        points="475.435,117.836 357.599,117.836 357.599,0"
-                      />
-                    </svg>
-                    Download PDF
-                  </button>
+                  <DownloadPDFButton
+                    recipe={recipe}
+                    user={user}
+                    downloadsToday={downloadsToday}
+                    setDownloadsToday={setDownloadsToday}
+                  />
                   {/* Download Audio */}
-                  {recipe.audio?.mp3_url ? (
-                    <button
-                      className="flex-1 flex items-center justify-center gap-2 bg-green-700 hover:bg-green-800 text-white px-2 py-2 rounded-lg font-semibold text-sm transition"
-                      style={{ textAlign: 'center' }}
-                      onClick={async () => {
-                        if (!user) {
-                          toast.info("Audio downloads are a premium feature. Please log in and upgrade to premium to access this.");
-                          return;
-                        }
-                        if (!user.isPremium) {
-                          toast.info("Upgrade to premium to download audio files.");
-                          return;
-                        }
-                        try {
-                          const response = await fetch(recipe.audio.mp3_url);
-                          const blob = await response.blob();
-                          const url = window.URL.createObjectURL(blob);
-                          const a = document.createElement('a');
-                          a.href = url;
-                          a.download = `FlavorHUB254-${recipe.title.replace(/\s+/g, '_')}.mp3`;
-                          document.body.appendChild(a);
-                          a.click();
-                          a.remove();
-                          window.URL.revokeObjectURL(url);
-                        } catch (e) {
-                          toast.error('Failed to download audio.');
-                        }
-                      }}
-                    >
-                      <svg className="w-5 h-5" viewBox="0 0 32 32" fill="none">
-                        <path
-                          d="M18.6,5.2C18.3,5,18,5,17.7,5L5.8,9H2c-0.5,0-1,0.5-1,1v6v6c0,0.5,0.5,1,1,1h3.8l11.8,4c0.1,0,0.2,0,0.3,0
-                          c0.2,0,0.4-0.1,0.6-0.2c0.3-0.2,0.4-0.5,0.4-0.8V16V6C19,5.7,18.8,5.4,18.6,5.2z"
-                          fill="#FFC10A"
-                        />
-                        <path
-                          d="M25.8,16c0.1-2.9-0.8-5.6-2.8-7.8c-0.4-0.4-1-0.5-1.4-0.1c-0.4,0.4-0.5,1-0.1,1.4c1.6,1.8,2.4,4.1,2.2,6.5
-                          c0,0,0,0.1,0,0.1c-0.2,2.4-1.3,4.7-3.1,6.3c-0.4,0.4-0.5,1-0.1,1.4c0.2,0.2,0.5,0.3,0.8,0.3c0.2,0,0.5-0.1,0.7-0.3
-                          c2.2-2,3.6-4.7,3.8-7.6C25.8,16.2,25.8,16.1,25.8,16z"
-                          fill="#673AB7"
-                        />
-                        <path
-                          d="M27.3,5.5c-0.4-0.4-1-0.5-1.4-0.1c-0.4,0.4-0.5,1-0.1,1.4c2.3,2.6,3.4,6,3.2,9.2c-0.2,3.4-1.7,6.7-4.4,9.1
-                          c-0.4,0.4-0.5,1-0.1,1.4c0.2,0.2,0.5,0.3,0.8,0.3c0.2,0,0.5-0.1,0.7-0.3C29.1,23.8,30.8,20,31,16C31.1,12.3,29.9,8.5,27.3,5.5z"
-                          fill="#673AB7"
-                        />
-                        <path
-                          d="M5,10c0-0.4,0.3-0.8,0.7-1l0.2,0H2c-0.5,0-1,0.5-1,1v6v6c0,0.5,0.5,1,1,1h3.8l-0.2,0C5.3,22.8,5,22.4,5,22
-                          v-6V10z"
-                          fill="#673AB7"
-                        />
-                      </svg>
-                      Download Audio
-                    </button>
-                  ) : (
-                    <button
-                      className="flex-1 flex items-center justify-center gap-2 bg-gray-400 text-white px-2 py-2 rounded-lg font-semibold text-sm transition"
-                      disabled
-                      style={{ textAlign: 'center' }}
-                    >
-                      <svg className="w-5 h-5" viewBox="0 0 32 32" fill="none">
-                        {/* ...icon SVG... */}
-                      </svg>
-                      Download Audio
-                    </button>
-                  )}
+                  <DownloadAudioButton recipe={recipe} user={user} />
                 </div>
                 <p className="mt-2 text-white text-center text-base">
                   {recipe.description}
