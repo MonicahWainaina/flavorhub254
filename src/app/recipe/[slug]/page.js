@@ -18,6 +18,7 @@ import Image from 'next/image';
 import { ToastContainer, toast } from 'react-toastify';
 import { use } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
 import 'react-toastify/dist/ReactToastify.css';
 import { Loader, RecipeSkeleton } from '@/components/Loaders';
 import RecipePDF from '@/components/RecipePDF';
@@ -134,6 +135,7 @@ function convertUnit(amount, unit, toMetric) {
 export default function RecipePage({ params }) {
   const { slug } = use(params);
   const { user } = useAuth();
+  const router = useRouter();
   const [servings, setServings] = useState(1);
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -408,18 +410,34 @@ export default function RecipePage({ params }) {
                 {/* CTAs */}
                 <div className="flex flex-row gap-3 mb-4">
                   {/* Start Cooking (Flame) */}
-                  <button className="flex-1 flex items-center justify-center gap-2 bg-green-700 hover:bg-green-800 text-white px-2 py-2 rounded-lg font-semibold text-sm transition">
+                  <button
+                    className="flex-1 flex items-center justify-center gap-2 bg-green-700 hover:bg-green-800 text-white px-2 py-2 rounded-lg font-semibold text-sm transition"
+                    onClick={() => {
+                      if (!user) {
+                        toast.info('Smart Cooking is a premium feature. Please log in and upgrade to premium to access this.');
+                        return;
+                      }
+                      if (!user.isPremium) {
+                        toast.info(
+                          ' Upgrade to premium to unlock smart cooking mode!'
+                        );
+                        return;
+                      }
+                      // Navigate to cooking mode
+                      router.push(`/recipe/${recipe.slug}/cook`);
+                    }}
+                  >
                     <svg className="w-5 h-5" viewBox="0 0 64 64" fill="none">
                       <circle cx="32" cy="32" r="32" fill="#C75C5C" />
                       <path
                         opacity="0.2"
                         d="M28.1,58.1c0,0-16.1-2.4-16.1-16.1s21-15,16.4-32c0,0,15.7,4.9,11.9,20.2c0,0,2.1-1.3,3.7-3.9c0,0,8,6.2,8,15.5
-                        s-11,16.2-16.3,16.2c0,0,5.6-7.6,0.5-12.5c-7.3-7-4.2-11.4-4.2-11.4S14.2,42.8,28.1,58.1z"
+        s-11,16.2-16.3,16.2c0,0,5.6-7.6,0.5-12.5c-7.3-7-4.2-11.4-4.2-11.4S14.2,42.8,28.1,58.1z"
                         fill="#231F20"
                       />
                       <path
                         d="M28.1,56.1c0,0-16.1-2.4-16.1-16.1s21-15,16.4-32c0,0,15.7,4.9,11.9,20.2c0,0,2.1-1.3,3.7-3.9c0,0,8,6.2,8,15.5
-                      s-11,16.2-16.3,16.2c0,0,5.6-7.6,0.5-12.5c-7.3-7-4.2-11.4-4.2-11.4S14.2,40.8,28.1,56.1z"
+      s-11,16.2-16.3,16.2c0,0,5.6-7.6,0.5-12.5c-7.3-7-4.2-11.4-4.2-11.4S14.2,40.8,28.1,56.1z"
                         fill="#F5CF87"
                       />
                     </svg>
