@@ -1,8 +1,10 @@
 import { useCookingSettings } from "@/context/CookingSettingsContext";
+import { useTTS } from "@/components/useTTS";
 import { useState, useEffect } from "react";
 
-export default function CookingPreferencesModal({ open, onStart, onClose }) {
+export default function CookingPreferencesModal({ open, onStart, onClose, isCooking }) {
   const { settings, setSettings } = useCookingSettings();
+  const { stop } = useTTS();
   const [localSettings, setLocalSettings] = useState(settings);
 
   useEffect(() => {
@@ -24,7 +26,9 @@ export default function CookingPreferencesModal({ open, onStart, onClose }) {
             &times;
           </button>
         )}
-        <h2 className="text-2xl font-bold mb-4 text-center text-white">How would you like to cook?</h2>
+        <h2 className="text-2xl font-bold mb-4 text-center text-white">
+          How would you like to cook?
+        </h2>
         <div className="space-y-4">
           <label className="flex items-center gap-3 text-white">
             <input
@@ -55,10 +59,11 @@ export default function CookingPreferencesModal({ open, onStart, onClose }) {
           className="mt-6 w-full bg-green-700 hover:bg-green-800 text-white py-2 rounded-lg font-semibold text-lg"
           onClick={() => {
             setSettings(localSettings);
+            if (!localSettings.audio) stop();
             onStart();
           }}
         >
-          Start Cooking
+          {isCooking ? "Apply Changes" : "Start Cooking"}
         </button>
       </div>
     </div>

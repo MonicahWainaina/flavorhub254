@@ -7,6 +7,7 @@ export function CookingSettingsProvider({ children }) {
     audio: true,
     autoAdvance: false,
     remember: false,
+    aiVoice: false, // <-- add this
   });
 
   return (

@@ -8,12 +8,13 @@ import StepScreen from "@/components/StepScreen";
 import FinishedScreen from "@/components/FinishedScreen";
 import { db } from '@/lib/firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
+import { spokenSteps as stepSpokenSteps } from "@/components/StepScreen";
+import { spokenSteps as prepSpokenSteps } from "@/components/PrepScreen";
 
 export default function CookingPage({ params }) {
   const { slug } = use(params); // Unwrap params for Next.js 15+
   const router = useRouter();
   const [showModal, setShowModal] = useState(true);
-  const [showSettings, setShowSettings] = useState(false);
   const [showPrep, setShowPrep] = useState(false);
   const [showStep, setShowStep] = useState(false);
   const [showFinished, setShowFinished] = useState(false);
@@ -56,6 +57,16 @@ export default function CookingPage({ params }) {
     setShowFinished(true);
   };
 
+  // Handler to restart cooking from the beginning
+  function handleRestart() {
+    setStepIndex(0);
+    setShowFinished(false);
+    setShowPrep(false);   // Skip prep screen
+    setShowStep(true);    // Go straight to first step
+    stepSpokenSteps.clear();
+    prepSpokenSteps.clear();
+  }
+
   return (
     <CookingSettingsProvider>
       {/* Background image and overlay */}
@@ -79,13 +90,9 @@ export default function CookingPage({ params }) {
               router.push(`/recipe/${slug}`);
             }
           }}
+          isCooking={false}
         />
-        {/* Settings modal: just close */}
-        <CookingPreferencesModal
-          open={showSettings}
-          onStart={() => setShowSettings(false)}
-          onClose={() => setShowSettings(false)}
-        />
+        {/* Only PrepScreen and StepScreen handle their own settings modals */}
         {!showModal && showPrep && recipe && !showStep && !showFinished && (
           <PrepScreen
             recipe={recipe}
@@ -93,7 +100,7 @@ export default function CookingPage({ params }) {
               setShowPrep(false);
               setShowStep(true);
             }}
-            onShowSettings={() => setShowSettings(true)}
+            onShowSettings={() => {/* PrepScreen manages its own modal */}}
           />
         )}
         {!showModal && showStep && recipe && !showFinished && (
@@ -103,11 +110,14 @@ export default function CookingPage({ params }) {
             onPrev={handlePrevStep}
             onNext={handleNextStep}
             onFinish={handleFinish}
-            onShowSettings={() => setShowSettings(true)}
+            onShowSettings={() => {/* StepScreen manages its own modal */}}
           />
         )}
         {showFinished && recipe && (
-          <FinishedScreen recipe={recipe} />
+          <FinishedScreen
+            recipe={recipe}
+            onRestart={handleRestart}
+          />
         )}
       </div>
     </CookingSettingsProvider>
