@@ -12,7 +12,7 @@ import { spokenSteps as stepSpokenSteps } from "@/components/StepScreen";
 import { spokenSteps as prepSpokenSteps } from "@/components/PrepScreen";
 
 export default function CookingPage({ params }) {
-  const { slug } = use(params); // Unwrap params for Next.js 15+
+  const { slug } = params; // Unwrap params for Next.js 15+
   const router = useRouter();
   const [showModal, setShowModal] = useState(true);
   const [showPrep, setShowPrep] = useState(false);
