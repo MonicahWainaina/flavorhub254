@@ -9,7 +9,8 @@ const customJestConfig = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   moduleNameMapper: {
     '^@/lib/(.*)$': '<rootDir>/src/lib/$1',
-    '^@/context/(.*)$': '<rootDir>/src/context/$1', // <-- Add this line
+    '^@/context/(.*)$': '<rootDir>/src/context/$1',
+    '^@/components/(.*)$': '<rootDir>/src/components/$1',
     '^@/(.*)$': '<rootDir>/src/app/$1',
   },
 };
