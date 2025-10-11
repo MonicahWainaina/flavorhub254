@@ -5,12 +5,15 @@ import { initializeApp, cert } from 'firebase-admin/app';
 
 if (!global._firebaseAdminInitialized) {
   let serviceAccount;
-
   const serviceAccountJson = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
 
   if (serviceAccountJson) {
     try {
-      serviceAccount = JSON.parse(serviceAccountJson);
+      // Replace all \\n with actual newlines
+      const cleanString = serviceAccountJson.replace(/\\n/g, '\n');
+      serviceAccount = JSON.parse(cleanString);
+      // Remove any carriage returns in the private key
+      serviceAccount.private_key = serviceAccount.private_key.replace(/\r/g, '');
     } catch (e) {
       throw new Error(`Failed to parse FIREBASE_SERVICE_ACCOUNT_JSON: ${e.message}`);
     }
