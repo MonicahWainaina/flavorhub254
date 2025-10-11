@@ -4,6 +4,26 @@ import admin from 'firebase-admin';
 import { initializeApp, cert } from 'firebase-admin/app';
 
 if (!global._firebaseAdminInitialized) {
+  // Fallback checks for required environment variables
+  const requiredVars = [
+    'GOOGLE_PROJECT_ID',
+    'GOOGLE_PRIVATE_KEY_ID',
+    'GOOGLE_PRIVATE_KEY',
+    'GOOGLE_CLIENT_EMAIL',
+    'GOOGLE_CLIENT_ID',
+    'GOOGLE_AUTH_URI',
+    'GOOGLE_TOKEN_URI',
+    'GOOGLE_AUTH_PROVIDER_X509_CERT_URL',
+    'GOOGLE_CLIENT_X509_CERT_URL',
+    'GOOGLE_UNIVERSE_DOMAIN',
+  ];
+  for (const key of requiredVars) {
+    if (!process.env[key]) {
+      throw new Error(`Missing required environment variable: ${key}`);
+    }
+  }
+
+  // Build service account object
   const serviceAccount = {
     type: "service_account",
     project_id: process.env.GOOGLE_PROJECT_ID,
@@ -17,6 +37,7 @@ if (!global._firebaseAdminInitialized) {
     client_x509_cert_url: process.env.GOOGLE_CLIENT_X509_CERT_URL,
     universe_domain: process.env.GOOGLE_UNIVERSE_DOMAIN,
   };
+
   initializeApp({ credential: cert(serviceAccount), projectId: serviceAccount.project_id });
   global._firebaseAdminInitialized = true;
 }
