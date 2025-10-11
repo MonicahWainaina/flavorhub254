@@ -52,7 +52,17 @@ function generateAccountRef() {
 }
 
 export async function POST(req) {
-  const { phone, amount = 1, uid, email } = await req.json();
+  let body;
+  try {
+    body = await req.json();
+  } catch (e) {
+    return NextResponse.json(
+      { success: false, message: 'Invalid or empty JSON body.' },
+      { status: 400 }
+    );
+  }
+
+  const { phone, amount = 1, uid, email } = body;
 
   // Check if user is already premium
   const db = getFirestore();
