@@ -8,13 +8,20 @@ if (!global._firebaseAdminInitialized) {
 
   if (serviceAccountJson) {
     try {
-      // Replace all \\n with actual newlines
-      const cleanString = serviceAccountJson.replace(/\\n/g, '\n');
-      serviceAccount = JSON.parse(cleanString);
-      // Remove any carriage returns in the private key
-      serviceAccount.private_key = serviceAccount.private_key.replace(/\r/g, '');
+      // Try direct parse first
+      serviceAccount = JSON.parse(serviceAccountJson);
     } catch (e) {
-      throw new Error(`Failed to parse FIREBASE_SERVICE_ACCOUNT_JSON: ${e.message}`);
+      // If direct parse fails, try replacing double-escaped newlines
+      try {
+        const cleanString = serviceAccountJson.replace(/\\n/g, '\n');
+        serviceAccount = JSON.parse(cleanString);
+      } catch (e2) {
+        throw new Error(`Failed to parse FIREBASE_SERVICE_ACCOUNT_JSON: ${e.message}`);
+      }
+    }
+    // Final cleanup for PEM format
+    if (serviceAccount && serviceAccount.private_key) {
+      serviceAccount.private_key = serviceAccount.private_key.replace(/\r/g, '').trim();
     }
   } else {
     throw new Error("Missing FIREBASE_SERVICE_ACCOUNT_JSON environment variable.");
