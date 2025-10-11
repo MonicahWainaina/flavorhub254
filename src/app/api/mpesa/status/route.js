@@ -8,6 +8,7 @@ if (!global._firebaseAdminInitialized) {
     : undefined;
   initializeApp({
     credential: serviceAccount ? cert(serviceAccount) : applicationDefault(),
+    projectId: serviceAccount?.project_id, // <-- Explicitly set projectId
   });
   global._firebaseAdminInitialized = true;
 }
