@@ -1,23 +1,23 @@
 import { NextResponse } from 'next/server';
 import { getFirestore } from 'firebase-admin/firestore';
 import admin from 'firebase-admin';
-import { initializeApp, applicationDefault, cert } from 'firebase-admin/app';
+import { initializeApp, cert } from 'firebase-admin/app';
 
 if (!global._firebaseAdminInitialized) {
-  let serviceAccount;
-  try {
-    serviceAccount = process.env.GOOGLE_SERVICE_ACCOUNT_JSON
-      ? JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON)
-      : undefined;
-      console.log('GOOGLE_SERVICE_ACCOUNT_JSON:', process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
-  } catch (e) {
-    console.error('Failed to parse GOOGLE_SERVICE_ACCOUNT_JSON:', e);
-    serviceAccount = undefined;
-  }
-  initializeApp({
-    credential: serviceAccount ? cert(serviceAccount) : applicationDefault(),
-    projectId: serviceAccount?.project_id,
-  });
+  const serviceAccount = {
+    type: "service_account",
+    project_id: process.env.GOOGLE_PROJECT_ID,
+    private_key_id: process.env.GOOGLE_PRIVATE_KEY_ID,
+    private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+    client_email: process.env.GOOGLE_CLIENT_EMAIL,
+    client_id: process.env.GOOGLE_CLIENT_ID,
+    auth_uri: process.env.GOOGLE_AUTH_URI,
+    token_uri: process.env.GOOGLE_TOKEN_URI,
+    auth_provider_x509_cert_url: process.env.GOOGLE_AUTH_PROVIDER_X509_CERT_URL,
+    client_x509_cert_url: process.env.GOOGLE_CLIENT_X509_CERT_URL,
+    universe_domain: process.env.GOOGLE_UNIVERSE_DOMAIN,
+  };
+  initializeApp({ credential: cert(serviceAccount), projectId: serviceAccount.project_id });
   global._firebaseAdminInitialized = true;
 }
 
