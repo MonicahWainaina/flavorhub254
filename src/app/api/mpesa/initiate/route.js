@@ -4,13 +4,18 @@ import admin from 'firebase-admin';
 import { initializeApp, applicationDefault, cert } from 'firebase-admin/app';
 
 if (!global._firebaseAdminInitialized) {
-  const serviceAccount = process.env.GOOGLE_SERVICE_ACCOUNT_JSON
-    ? JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON)
-    : undefined;
-    console.log('Service Account Project ID:', serviceAccount?.project_id); // Add this line
+  let serviceAccount;
+  try {
+    serviceAccount = process.env.GOOGLE_SERVICE_ACCOUNT_JSON
+      ? JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON)
+      : undefined;
+  } catch (e) {
+    console.error('Failed to parse GOOGLE_SERVICE_ACCOUNT_JSON:', e);
+    serviceAccount = undefined;
+  }
   initializeApp({
     credential: serviceAccount ? cert(serviceAccount) : applicationDefault(),
-    projectId: serviceAccount?.project_id, // <-- Explicitly set projectId
+    projectId: serviceAccount?.project_id,
   });
   global._firebaseAdminInitialized = true;
 }
@@ -55,7 +60,7 @@ export async function POST(req) {
 
   // Prepare STK Push payload
   const BusinessShortCode = '174379'; // Sandbox paybill
-  const Passkey = process.env.MPESA_PASSKEY || 'bfb279f9aa9bdbcf158e97dd71a467cd2c2c49c5b1b7b7b7b7b7b7b7b7b7';
+  const Passkey = process.env.MPESA_PASSKEY || 'bfb279f9aa9bdbcf158e97dd71a467cd2c2c49c5b1b7b7b7b7b7b7b7b7';
   const TimestampStr = new Date()
     .toISOString()
     .replace(/[-T:\.Z]/g, '')

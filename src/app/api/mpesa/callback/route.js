@@ -5,9 +5,15 @@ import admin from 'firebase-admin';
 import { initializeApp, applicationDefault, cert } from 'firebase-admin/app';
 
 if (!global._firebaseAdminInitialized) {
-  const serviceAccount = process.env.GOOGLE_SERVICE_ACCOUNT_JSON
-    ? JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON)
-    : undefined;
+  let serviceAccount;
+  try {
+    serviceAccount = process.env.GOOGLE_SERVICE_ACCOUNT_JSON
+      ? JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON)
+      : undefined;
+  } catch (e) {
+    console.error('Failed to parse GOOGLE_SERVICE_ACCOUNT_JSON:', e);
+    serviceAccount = undefined;
+  }
   initializeApp({
     credential: serviceAccount ? cert(serviceAccount) : applicationDefault(),
     projectId: serviceAccount?.project_id, // <-- Explicitly set projectId
