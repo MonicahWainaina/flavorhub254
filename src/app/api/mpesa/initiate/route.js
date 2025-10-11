@@ -9,6 +9,7 @@ if (!global._firebaseAdminInitialized) {
     serviceAccount = process.env.GOOGLE_SERVICE_ACCOUNT_JSON
       ? JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON)
       : undefined;
+      
   } catch (e) {
     console.error('Failed to parse GOOGLE_SERVICE_ACCOUNT_JSON:', e);
     serviceAccount = undefined;
