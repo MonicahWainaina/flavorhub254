@@ -7,7 +7,6 @@ if (!global._firebaseAdminInitialized) {
   const serviceAccount = process.env.GOOGLE_SERVICE_ACCOUNT_JSON
     ? JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON)
     : undefined;
-  console.log('Service Account Project ID:', serviceAccount?.project_id); // Add this line
   initializeApp({
     credential: serviceAccount ? cert(serviceAccount) : applicationDefault(),
     projectId: serviceAccount?.project_id, // <-- Explicitly set projectId
