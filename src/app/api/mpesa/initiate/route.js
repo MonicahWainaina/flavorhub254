@@ -81,7 +81,7 @@ export async function POST(req) {
     return NextResponse.json(
       {
         success: false,
-        message: 'You are already a premium user. No need to pay again.',
+        message: 'You are already a premium user',
       },
       { status: 400 }
     );
