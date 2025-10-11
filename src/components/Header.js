@@ -20,11 +20,12 @@ export default function Header({
   const { user, username, logOut, loading } = useAuth();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
-  // Add "Favourite Recipes" if logged in
+  // Build links: always show Premium last
   const links = [...navLinks];
   if (user) {
     links.push({ href: '/favourites', label: 'Favourite Recipes' });
   }
+  links.push({ href: '/premium', label: 'Premium' }); // Always last
 
   // Filter out the current page
   const pathname = usePathname();
@@ -75,25 +76,26 @@ export default function Header({
     <header className="w-full shadow-md bg-white/90 dark:bg-[#181818]/95 backdrop-blur-md fixed top-0 left-0 z-50 transition-colors">
       <div className="max-w-8xl mx-auto flex items-center px-2 py-2 sm:px-4 sm:py-3 justify-between">
         {/* Logo and Title */}
-        <Link
-          href="/"
-          className="flex items-center space-x-1 cursor-pointer"
-          style={{ userSelect: 'none' }}
-        >
-          <img
-            src="/assets/flavorhubicon.png"
-            alt="FlavorHUB254 Logo"
-            className="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 object-contain"
-          />
-          <span className="text-2xl sm:text-3xl font-bold leading-none text-gray-900 dark:text-white">
-            flavor
-            <span style={{ color: '#D32F2F' }}>HUB</span>
-            <span style={{ color: '#2E7D32' }}>254</span>
-          </span>
-        </Link>
+        <div className="flex flex-col items-start space-y-1">
+          <Link
+            href="/"
+            className="flex items-center space-x-1 cursor-pointer"
+            style={{ userSelect: 'none' }}
+          >
+            <img
+              src="/assets/flavorhubicon.png"
+              alt="FlavorHUB254 Logo"
+              className="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 object-contain"
+            />
+            <span className="text-2xl sm:text-3xl font-bold leading-none text-gray-900 dark:text-white">
+              flavor
+              <span style={{ color: '#D32F2F' }}>HUB</span>
+              <span style={{ color: '#2E7D32' }}>254</span>
+            </span>
+          </Link>
+        </div>
+        {/* Desktop Nav */}
         <div className="hidden lg:flex flex-1 items-center justify-end gap-x-4 lg:gap-x-8 ml-4 lg:ml-8">
-          {/* Navigation, search, login/logout */}
-          {/* Navigation */}
           <nav className="flex flex-wrap gap-x-3 md:gap-x-4 lg:gap-x-6 items-center">
             {filteredLinks.map((link) => (
               <Link
@@ -177,13 +179,27 @@ export default function Header({
               </form>
             )}
           </nav>
-          {/* Login/Signup/Logout */}
+          {/* Login/Signup/Logout and Premium Badge */}
           <div className="flex items-center gap-x-3">
             {loading ? null : user ? (
               <div className="flex items-center gap-2">
                 <span className="text-white font-semibold">
                   {username ? `Hi, ${username}` : user.email}
                 </span>
+                {/* Premium badge next to greeting */}
+                {user.isPremium && (
+                  <span className="flex items-center px-2 py-1 bg-yellow-300 text-black rounded-full font-bold text-xs ml-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 mr-1"
+                      fill="black"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z" />
+                    </svg>
+                    Premium
+                  </span>
+                )}
                 <button
                   onClick={logOut}
                   className="px-4 py-2 rounded-lg bg-red-700 text-white hover:bg-red-800 transition text-base font-semibold lowercase"
@@ -192,39 +208,39 @@ export default function Header({
                 </button>
               </div>
             ) : (
-   pathname !== "/login" && (
-    <Link href="/login">
-      <button className="px-4 py-2 rounded-lg bg-green-700 text-white hover:bg-green-800 transition text-base font-semibold lowercase">
-        Login/Signup
-      </button>
-    </Link>
-  )
+              pathname !== "/login" && (
+                <Link href="/login">
+                  <button className="px-4 py-2 rounded-lg bg-green-700 text-white hover:bg-green-800 transition text-base font-semibold lowercase">
+                    Login/Signup
+                  </button>
+                </Link>
+              )
             )}
           </div>
         </div>
-        {/* Mobile/Tablet Nav */}
-<div className="flex items-center gap-2 lg:hidden">
-  <button
-    className="p-2 bg-white rounded-lg"
-    onClick={() => setMobileNavOpen(true)}
-    aria-label="Open menu"
-  >
-    {/* Kenyan Flag Hamburger Icon */}
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="h-6 w-6"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      {/* Top: Black */}
-      <line x1="4" y1="6" x2="20" y2="6" stroke="black" strokeWidth="2.5" strokeLinecap="round" />
-      {/* Middle: White-Red-White */}
-      <line x1="4" y1="12" x2="20" y2="12" stroke="#D32F2F" strokeWidth="2.5" strokeLinecap="round" />
-      {/* Bottom: Green */}
-      <line x1="4" y1="18" x2="20" y2="18" stroke="#2E7D32" strokeWidth="2.5" strokeLinecap="round" />
-    </svg>
-  </button>
-</div>
+        {/* Mobile Nav Button */}
+        <div className="flex items-center gap-2 lg:hidden">
+          <button
+            className="p-2 bg-white rounded-lg"
+            onClick={() => setMobileNavOpen(true)}
+            aria-label="Open menu"
+          >
+            {/* Kenyan Flag Hamburger Icon */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              {/* Top: Black */}
+              <line x1="4" y1="6" x2="20" y2="6" stroke="black" strokeWidth="2.5" strokeLinecap="round" />
+              {/* Middle: White-Red-White */}
+              <line x1="4" y1="12" x2="20" y2="12" stroke="#D32F2F" strokeWidth="2.5" strokeLinecap="round" />
+              {/* Bottom: Green */}
+              <line x1="4" y1="18" x2="20" y2="18" stroke="#2E7D32" strokeWidth="2.5" strokeLinecap="round" />
+            </svg>
+          </button>
+        </div>
       </div>
       {/* Mobile Nav Overlay */}
       {mobileNavOpen && (
@@ -322,26 +338,45 @@ export default function Header({
                 )}
               </form>
             )}
+            {/* Mobile Premium badge next to greeting */}
             {loading ? null : user ? (
-              <button
-                onClick={() => {
-                  logOut();
-                  setMobileNavOpen(false);
-                }}
-                className="text-xl text-white font-semibold bg-red-700 hover:bg-red-800 rounded-lg px-4 py-2 mt-2"
-              >
-                Logout
-              </button>
+              <div className="flex flex-col items-center gap-2 mt-2">
+                <span className="text-white font-semibold">
+                  {username ? `Hi, ${username}` : user.email}
+                </span>
+                {user.isPremium && (
+                  <span className="flex items-center px-2 py-1 bg-yellow-300 text-black rounded-full font-bold text-xs mt-1">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 mr-1"
+                      fill="black"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z" />
+                    </svg>
+                    Premium
+                  </span>
+                )}
+                <button
+                  onClick={() => {
+                    logOut();
+                    setMobileNavOpen(false);
+                  }}
+                  className="text-xl text-white font-semibold bg-red-700 hover:bg-red-800 rounded-lg px-4 py-2 mt-2"
+                >
+                  Logout
+                </button>
+              </div>
             ) : (
-     pathname !== "/login" && (
-    <Link
-      href="/login"
-      className="text-xl text-white font-semibold"
-      onClick={() => setMobileNavOpen(false)}
-    >
-      Login/Signup
-    </Link>
-  )
+              pathname !== "/login" && (
+                <Link
+                  href="/login"
+                  className="text-xl text-white font-semibold"
+                  onClick={() => setMobileNavOpen(false)}
+                >
+                  Login/Signup
+                </Link>
+              )
             )}
           </nav>
         </div>

@@ -1,36 +1,118 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Header from '@/components/Header';
 import { useRouter } from 'next/navigation';
 
 export default function CheckoutPage() {
-  const { user } = useAuth();
+  const { user, loading, refreshUser } = useAuth();
   const router = useRouter();
-  const [method, setMethod] = useState('mpesa'); // 'mpesa' or 'card'
+  const [method, setMethod] = useState('mpesa');
   const [phone, setPhone] = useState('');
   const [card, setCard] = useState('');
-  const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState('');
+  const [accountRef, setAccountRef] = useState(null);
 
-  // Dummy handlers for now
+  // Redirect guests to login page
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/login');
+    }
+    // Block premium users from accessing checkout
+    if (!loading && user?.isPremium) {
+      router.push('/premium');
+    }
+  }, [user, loading, router]);
+
+  function normalizePhone(input) {
+    let phone = input.trim();
+    // Accept 07xxxxxxxx or 01xxxxxxxx
+    if (/^(07|01)\d{8}$/.test(phone)) {
+      phone = '254' + phone.slice(1);
+    }
+    // Accept 2547xxxxxxxx or 2541xxxxxxxx
+    if (/^254[17]\d{8}$/.test(phone)) {
+      return phone;
+    }
+    return null; // Invalid format
+  }
+
   const handleMpesaPay = async () => {
-    setLoading(true);
+    const normalizedPhone = normalizePhone(phone);
+    if (!normalizedPhone) {
+      setStatus('Please enter a valid phone number');
+      return;
+    }
+    if (!user?.uid || !user?.email) {
+      setStatus('Please ensure you are logged in.');
+      return;
+    }
     setStatus('Processing M-Pesa payment...');
-    setTimeout(() => {
-      setLoading(false);
-      setStatus('Payment successful! You are now premium.');
-    }, 2000);
+    try {
+      const res = await fetch('/api/mpesa/initiate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          phone: normalizedPhone,
+          amount: 1,
+          uid: user.uid,
+          email: user.email,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setStatus('Check your phone and complete the payment...');
+        setAccountRef(data.accountRef); // Save for polling
+        pollPaymentStatus(data.accountRef);
+      } else {
+        setStatus(data.message || 'Payment initiation failed.');
+      }
+    } catch (err) {
+      setStatus('Error initiating payment.');
+    }
   };
 
-  const handleCardPay = async () => {
-    setLoading(true);
-    setStatus('Processing card payment...');
-    setTimeout(() => {
-      setLoading(false);
-      setStatus('Payment successful! You are now premium.');
-    }, 2000);
+  const pollPaymentStatus = async (accountRef) => {
+    let attempts = 0;
+    const maxAttempts = 10;
+    while (attempts < maxAttempts) {
+      const res = await fetch(`/api/mpesa/status?accountRef=${accountRef}`);
+      const data = await res.json();
+      if (data.resultCode === 0) {
+        setStatus('Payment successful! You are now premium.');
+        setPhone('');
+        if (refreshUser) await refreshUser(); // Refresh user data
+        router.push('/premium'); // Redirect to premium page
+        return;
+      }
+      // Show specific error messages for known result codes
+      if (data.resultCode === 1032) {
+        setStatus('Payment cancelled.');
+        return;
+      }
+      if (data.resultCode === 1037) {
+        setStatus('Payment timed out..');
+        return;
+      }
+      if (data.resultCode && data.resultDesc) {
+        setStatus(`Payment failed: ${data.resultDesc}`);
+        return;
+      }
+      await new Promise((resolve) => setTimeout(resolve, 3000)); // wait 3 seconds
+      attempts++;
+    }
+    setStatus('Payment not completed. Please try again.');
   };
+
+
+  if (loading || !user) {
+    // Show nothing or a spinner while loading or redirecting
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-black">
+        <span className="text-white text-lg">Loading...</span>
+      </div>
+    );
+  }
 
   return (
     <div className="relative min-h-screen w-full overflow-x-hidden">
@@ -118,7 +200,7 @@ export default function CheckoutPage() {
                 <button
                   className="bg-[#43b02a] hover:bg-[#388e1c] text-white px-5 py-2 rounded-lg font-bold text-base mt-2 transition flex items-center justify-center gap-2"
                   onClick={handleMpesaPay}
-                  disabled={loading || !phone}
+                  disabled={loading}
                 >
                   {loading ? (
                     'Processing...'
