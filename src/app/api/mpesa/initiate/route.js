@@ -9,20 +9,18 @@ if (!global._firebaseAdminInitialized) {
 
   if (serviceAccountJson) {
     try {
-      // Try direct parse first
-      serviceAccount = JSON.parse(serviceAccountJson);
-    } catch (e) {
-      // If direct parse fails, try replacing double-escaped newlines
-      try {
-        const cleanString = serviceAccountJson.replace(/\\n/g, '\n');
-        serviceAccount = JSON.parse(cleanString);
-      } catch (e2) {
-        throw new Error(`Failed to parse FIREBASE_SERVICE_ACCOUNT_JSON: ${e.message}`);
+      // Replace double-escaped newlines with real newlines
+      const cleanString = serviceAccountJson.replace(/\\n/g, '\n');
+      serviceAccount = JSON.parse(cleanString);
+
+      // Aggressive PEM cleanup
+      if (serviceAccount && serviceAccount.private_key) {
+        serviceAccount.private_key = serviceAccount.private_key
+          .replace(/\r/g, '') // Remove carriage returns
+          .trim(); // Remove leading/trailing whitespace/newlines
       }
-    }
-    // Final cleanup for PEM format
-    if (serviceAccount && serviceAccount.private_key) {
-      serviceAccount.private_key = serviceAccount.private_key.replace(/\r/g, '').trim();
+    } catch (e) {
+      throw new Error(`Failed to parse FIREBASE_SERVICE_ACCOUNT_JSON: ${e.message}. CHECK VERCEL ESCAPING.`);
     }
   } else {
     throw new Error("Missing FIREBASE_SERVICE_ACCOUNT_JSON environment variable.");
