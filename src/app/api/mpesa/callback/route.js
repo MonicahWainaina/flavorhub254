@@ -2,18 +2,22 @@ import { NextResponse } from 'next/server';
 import { setPaymentStatus } from '../paymentStatus';
 import { getFirestore } from 'firebase-admin/firestore';
 import admin from 'firebase-admin';
-import { initializeApp, applicationDefault } from 'firebase-admin/app';
+import { initializeApp, applicationDefault, cert } from 'firebase-admin/app';
 
 if (!global._firebaseAdminInitialized) {
-  initializeApp({ credential: applicationDefault() });
+  const serviceAccount = process.env.GOOGLE_SERVICE_ACCOUNT_JSON
+    ? JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON)
+    : undefined;
+  initializeApp({
+    credential: serviceAccount ? cert(serviceAccount) : applicationDefault(),
+  });
   global._firebaseAdminInitialized = true;
 }
 
 export async function POST(req) {
   const body = await req.json();
   const callback = body.Body?.stkCallback;
-  console.log('Raw callback body:', JSON.stringify(body, null, 2));
-  console.log('CallbackMetadata:', JSON.stringify(callback?.CallbackMetadata, null, 2));
+
 
   // Flexible extraction for AccountReference and other metadata
   let accountRef, amount, receipt, phone;
@@ -55,28 +59,20 @@ export async function POST(req) {
 
   // Guard for missing accountRef (after fallback)
   if (!accountRef) {
-    console.error('Missing AccountReference in callback (even after fallback)');
     return NextResponse.json({ success: false, error: 'Missing AccountReference' }, { status: 400 });
   }
 
-  console.log('Extracted accountRef:', accountRef);
-  console.log('Extracted checkoutRequestID:', callback?.CheckoutRequestID);
-  console.log('Extracted ResultCode:', callback?.ResultCode);
+ 
 
   const db = getFirestore();
   const paymentDoc = db.collection('mpesa_payments').doc(accountRef);
   const paymentSnap = await paymentDoc.get();
 
-  console.log('Payment doc exists:', paymentSnap.exists);
-  if (paymentSnap.exists) {
-    console.log('Payment doc data:', paymentSnap.data());
-  }
 
   if (paymentSnap.exists) {
     const paymentData = paymentSnap.data();
     // Idempotency: Only process if not already marked complete
     if (callback?.ResultCode === 0 && paymentData.status !== 'completed') {
-      console.log('Updating payment and user for successful payment...');
       await paymentDoc.update({
         status: 'completed',
         completedAt: admin.firestore.Timestamp.now(),
@@ -86,7 +82,6 @@ export async function POST(req) {
       });
 
       if (paymentData.uid) {
-        console.log('Updating user premium status for uid:', paymentData.uid);
         await db.collection('users').doc(paymentData.uid).set(
           {
             isPremium: true,
@@ -98,7 +93,6 @@ export async function POST(req) {
         );
       }
     } else if (paymentData.status !== 'failed') {
-      console.log('Marking payment as failed/canceled.');
       await paymentDoc.update({
         status: 'failed',
         resultCode: callback?.ResultCode,
@@ -107,19 +101,6 @@ export async function POST(req) {
       });
     }
   }
-
-  // Log for debugging
-  console.log('M-Pesa Callback:', {
-    resultCode: callback?.ResultCode,
-    resultDesc: callback?.ResultDesc,
-    merchantRequestID: callback?.MerchantRequestID,
-    checkoutRequestID: callback?.CheckoutRequestID,
-    amount,
-    receipt,
-    phone,
-    accountRef,
-    raw: body,
-  });
 
   return NextResponse.json({ success: true });
 }

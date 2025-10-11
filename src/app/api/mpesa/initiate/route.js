@@ -1,10 +1,15 @@
 import { NextResponse } from 'next/server';
 import { getFirestore } from 'firebase-admin/firestore';
 import admin from 'firebase-admin';
-import { initializeApp, applicationDefault } from 'firebase-admin/app';
+import { initializeApp, applicationDefault, cert } from 'firebase-admin/app';
 
 if (!global._firebaseAdminInitialized) {
-  initializeApp({ credential: applicationDefault() });
+  const serviceAccount = process.env.GOOGLE_SERVICE_ACCOUNT_JSON
+    ? JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON)
+    : undefined;
+  initializeApp({
+    credential: serviceAccount ? cert(serviceAccount) : applicationDefault(),
+  });
   global._firebaseAdminInitialized = true;
 }
 
