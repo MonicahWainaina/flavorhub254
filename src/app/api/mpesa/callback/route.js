@@ -4,30 +4,15 @@ import { getFirestore } from 'firebase-admin/firestore';
 import admin from 'firebase-admin';
 import { initializeApp, cert } from 'firebase-admin/app';
 
+
 if (!global._firebaseAdminInitialized) {
-  let serviceAccount;
-  const serviceAccountJson = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
+  const serviceAccount = {
+    project_id: process.env.FIREBASE_PROJECT_ID,
+    client_email: process.env.FIREBASE_CLIENT_EMAIL,
+    private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+  };
 
-  if (serviceAccountJson) {
-    try {
-      // Replace double-escaped newlines with real newlines
-      const cleanString = serviceAccountJson.replace(/\\n/g, '\n');
-      serviceAccount = JSON.parse(cleanString);
-
-      // Aggressive PEM cleanup
-      if (serviceAccount && serviceAccount.private_key) {
-        serviceAccount.private_key = serviceAccount.private_key
-          .replace(/\r/g, '') // Remove carriage returns
-          .trim(); // Remove leading/trailing whitespace/newlines
-      }
-    } catch (e) {
-      throw new Error(`Failed to parse FIREBASE_SERVICE_ACCOUNT_JSON: ${e.message}. CHECK VERCEL ESCAPING.`);
-    }
-  } else {
-    throw new Error("Missing FIREBASE_SERVICE_ACCOUNT_JSON environment variable.");
-  }
-
-  initializeApp({ credential: cert(serviceAccount), projectId: serviceAccount.project_id });
+  initializeApp({ credential: cert(serviceAccount) });
   global._firebaseAdminInitialized = true;
 }
 
