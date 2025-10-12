@@ -15,7 +15,20 @@ if (!global._firebaseAdminInitialized) {
 }
 
 export async function POST(req) {
-  const { uid } = await req.json();
+  const raw = await req.text();
+  console.log("RAW BODY:", raw);
+  if (!raw) {
+    return NextResponse.json({ success: false, message: "Empty body" }, { status: 400 });
+  }
+
+  let body;
+  try {
+    body = JSON.parse(raw);
+  } catch (e) {
+    return NextResponse.json({ success: false, message: "Malformed JSON body" }, { status: 400 });
+  }
+
+  const { uid } = body;
   if (!uid) {
     return NextResponse.json({ success: false, message: 'Missing user ID.' }, { status: 400 });
   }

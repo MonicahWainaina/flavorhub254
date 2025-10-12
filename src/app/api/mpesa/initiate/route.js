@@ -26,14 +26,17 @@ function generateAccountRef() {
 }
 
 export async function POST(req) {
+  const raw = await req.text();
+  console.log("RAW BODY:", raw);
+  if (!raw) {
+    return NextResponse.json({ success: false, message: "Empty body" }, { status: 400 });
+  }
+
   let body;
   try {
-    body = await req.json();
+    body = JSON.parse(raw);
   } catch (e) {
-    return NextResponse.json(
-      { success: false, message: 'Invalid or empty JSON body.' },
-      { status: 400 }
-    );
+    return NextResponse.json({ success: false, message: "Malformed JSON body" }, { status: 400 });
   }
 
   const { phone, amount = 1, uid, email } = body;
