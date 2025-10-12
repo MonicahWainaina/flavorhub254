@@ -65,7 +65,21 @@ export async function POST(req) {
       headers: { Authorization: `Basic ${auth}` },
     }
   );
-  const { access_token } = await tokenRes.json();
+
+  // Defensive: Check if tokenRes is ok and has a body
+  if (!tokenRes.ok) {
+    return NextResponse.json({ success: false, message: "Failed to get Mpesa access token" }, { status: 500 });
+  }
+  const tokenText = await tokenRes.text();
+  if (!tokenText) {
+    return NextResponse.json({ success: false, message: "Mpesa token response was empty" }, { status: 500 });
+  }
+  let access_token;
+  try {
+    access_token = JSON.parse(tokenText).access_token;
+  } catch (e) {
+    return NextResponse.json({ success: false, message: "Malformed Mpesa token response" }, { status: 500 });
+  }
 
   // Prepare STK Push payload
   const BusinessShortCode = '174379'; // Sandbox paybill
@@ -108,7 +122,20 @@ export async function POST(req) {
     }
   );
 
-  const stkData = await stkRes.json();
+  // Defensive: Check if stkRes is ok and has a body
+  if (!stkRes.ok) {
+    return NextResponse.json({ success: false, message: "Failed to initiate STK Push" }, { status: 500 });
+  }
+  const stkText = await stkRes.text();
+  if (!stkText) {
+    return NextResponse.json({ success: false, message: "STK Push response was empty" }, { status: 500 });
+  }
+  let stkData;
+  try {
+    stkData = JSON.parse(stkText);
+  } catch (e) {
+    return NextResponse.json({ success: false, message: "Malformed STK Push response" }, { status: 500 });
+  }
 
   // Save mapping in Firestore (include checkoutRequestID for fallback)
   await db.collection('mpesa_payments').doc(AccountReference).set({
