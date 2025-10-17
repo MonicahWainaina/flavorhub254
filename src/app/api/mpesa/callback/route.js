@@ -17,9 +17,31 @@ if (!global._firebaseAdminInitialized) {
 }
 
 export async function POST(req) {
+  // --- Safaricom IP Whitelist ---
+  const allowedIps = [
+    "196.201.214.200",
+    "196.201.214.206",
+    "196.201.213.114",
+    "196.201.214.207",
+    "196.201.214.208",
+    "196.201.213.44",
+    "196.201.212.127",
+    "196.201.212.138",
+    "196.201.212.129",
+    "196.201.212.136",
+    "196.201.212.74",
+    "196.201.212.69"
+  ];
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+  if (!allowedIps.includes(ip)) {
+    console.warn(`[SECURITY] Blocked callback from IP: ${ip} at ${new Date().toISOString()}`);
+    return NextResponse.json({ success: false, error: "Unauthorized source IP" }, { status: 403 });
+  }
+
+  // --- Parse and validate body ---
   const raw = await req.text();
-  console.log("RAW BODY:", raw);
   if (!raw) {
+    console.warn(`[SECURITY] Empty callback body from IP: ${ip} at ${new Date().toISOString()}`);
     return NextResponse.json({ success: false, message: "Empty body" }, { status: 400 });
   }
 
@@ -27,11 +49,21 @@ export async function POST(req) {
   try {
     body = JSON.parse(raw);
   } catch (e) {
+    console.warn(`[SECURITY] Malformed JSON body from IP: ${ip} at ${new Date().toISOString()}`);
     return NextResponse.json({ success: false, message: "Malformed JSON body" }, { status: 400 });
   }
 
   const callback = body.Body?.stkCallback;
 
+  // --- Validate required callback fields ---
+  if (
+    typeof callback?.ResultCode !== "number" ||
+    !callback?.CheckoutRequestID ||
+    !callback?.CallbackMetadata
+  ) {
+    console.warn(`[SECURITY] Malformed callback payload from IP: ${ip} at ${new Date().toISOString()}`);
+    return NextResponse.json({ success: false, error: "Malformed callback payload" }, { status: 400 });
+  }
 
   // Flexible extraction for AccountReference and other metadata
   let accountRef, amount, receipt, phone;
@@ -73,10 +105,9 @@ export async function POST(req) {
 
   // Guard for missing accountRef (after fallback)
   if (!accountRef) {
+    console.warn(`[SECURITY] Missing AccountReference for callback from IP: ${ip} at ${new Date().toISOString()}`);
     return NextResponse.json({ success: false, error: 'Missing AccountReference' }, { status: 400 });
   }
-
- 
 
   const db = getFirestore();
   const paymentDoc = db.collection('mpesa_payments').doc(accountRef);

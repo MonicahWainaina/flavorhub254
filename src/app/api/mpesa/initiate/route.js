@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getFirestore } from 'firebase-admin/firestore';
 import admin from 'firebase-admin';
 import { initializeApp, cert } from 'firebase-admin/app';
+import { Redis } from '@upstash/redis';
 
 
 if (!global._firebaseAdminInitialized) {
@@ -15,6 +16,21 @@ if (!global._firebaseAdminInitialized) {
   global._firebaseAdminInitialized = true;
 }
 
+// --- Upstash Redis rate limiting setup ---
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+});
+const LIMIT = 3; // 3 requests per hour per user/IP
+const RATE_LIMIT_WINDOW = 60 * 60; // 1 hour in seconds
+
+function getClientIp(req) {
+  return (
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    req.headers.get("x-real-ip") ||
+    "unknown"
+  );
+}
 
 function generateAccountRef() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -40,6 +56,20 @@ export async function POST(req) {
   }
 
   const { phone, amount = 1, uid, email } = body;
+
+  // --- Rate limiting ---
+  const ip = getClientIp(req);
+  const key = uid ? `mpesa:initiate:${uid}` : `mpesa:initiate:guest:${ip}`;
+  const current = await redis.incr(key);
+  if (current === 1) {
+    await redis.expire(key, RATE_LIMIT_WINDOW);
+  }
+  if (current > LIMIT) {
+    return NextResponse.json(
+      { success: false, message: "Rate limit exceeded. Please wait before trying again." },
+      { status: 429 }
+    );
+  }
 
   // Check if user is already premium
   const db = getFirestore();
