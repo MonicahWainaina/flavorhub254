@@ -1,18 +1,17 @@
 import { NextResponse } from 'next/server';
-import { getFirestore } from 'firebase-admin/firestore';
-import { initializeApp, cert } from 'firebase-admin/app';
 import admin from 'firebase-admin';
 
-if (!global._firebaseAdminInitialized) {
-  const serviceAccount = {
-    project_id: process.env.FIREBASE_PROJECT_ID,
-    client_email: process.env.FIREBASE_CLIENT_EMAIL,
-    private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-  };
-
-  initializeApp({ credential: cert(serviceAccount) });
-  global._firebaseAdminInitialized = true;
+// Initialize Admin SDK only once
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert({
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+    }),
+  });
 }
+const db = admin.firestore();
 
 export async function POST(req) {
   const raw = await req.text();
@@ -32,7 +31,6 @@ export async function POST(req) {
   if (!uid) {
     return NextResponse.json({ success: false, message: 'Missing user ID.' }, { status: 400 });
   }
-  const db = getFirestore();
   try {
     await db.collection('users').doc(uid).update({
       isPremium: false,
