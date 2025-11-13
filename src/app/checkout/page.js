@@ -55,6 +55,8 @@ export default function CheckoutPage() {
     handler.openIframe();
   };
 
+  const isLive = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY?.startsWith('pk_live_');
+
   if (loading || !user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black">
@@ -93,18 +95,23 @@ export default function CheckoutPage() {
               <div className="flex justify-center gap-4 mb-6 w-full max-w-md mx-auto">
                 {/* M-Pesa Button */}
                 <button
-                  className="flex items-center justify-center w-full min-w-0 px-2 py-2 rounded-lg font-bold border-2 transition bg-gray-200 text-gray-400 border-gray-300 cursor-not-allowed"
+                  className={`flex items-center justify-center w-full min-w-0 px-2 py-2 rounded-lg font-bold border-2 transition ${
+                    isLive
+                      ? 'bg-[#e6ffe6] text-green-700 border-green-700 hover:bg-[#b3ffb3]'
+                      : 'bg-gray-200 text-gray-400 border-gray-300 cursor-not-allowed'
+                  }`}
                   style={{ fontSize: '1rem', letterSpacing: '0.03em', maxWidth: '200px' }}
-                  disabled
+                  disabled={!isLive || loading || !paystackReady}
+                  onClick={isLive ? () => handlePaystackPay('mpesa') : undefined}
                   aria-label="Pay with M-Pesa"
-                  title="M-Pesa available in live mode only"
+                  title={isLive ? "Pay with M-Pesa" : "M-Pesa available in live mode only"}
                 >
                   <span className="flex items-center whitespace-nowrap text-center">
                     <span className="font-bold" style={{ marginRight: '-8px' }}>M</span>
                     <img src="/assets/mpesa-icon.png" alt="M-Pesa" className="w-8 h-8" style={{ marginLeft: '-1px', marginRight: '-1px' }} />
                     <span className="font-bold" style={{ marginLeft: '-8px' }}>PESA</span>
                   </span>
-                  <span className="ml-2 text-xs">(Live mode only)</span>
+                  {!isLive && <span className="ml-2 text-xs">(Live mode only)</span>}
                 </button>
                 {/* Card Button */}
                 <button
