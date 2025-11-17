@@ -22,6 +22,7 @@ jest.mock('firebase-admin', () => ({
   credential: { cert: jest.fn() },
   firestore: firestoreMock,
 }));
+jest.mock('../serviceAccountKey.json', () => ({}), { virtual: true });
 
 // Prevent process.exit from killing Jest
 beforeAll(() => {
