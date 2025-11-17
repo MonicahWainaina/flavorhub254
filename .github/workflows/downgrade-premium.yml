@@ -1,0 +1,24 @@
+name: Downgrade Expired Premiums
+
+on:
+  schedule:
+    - cron: '0 2 * * *' # Runs every day at 2am UTC
+  workflow_dispatch:
+
+jobs:
+  downgrade:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: npm ci
+      - name: Run downgrade script
+        env:
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_CLIENT_EMAIL: ${{ secrets.FIREBASE_CLIENT_EMAIL }}
+          FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
+        run: node src/scripts/downgradeExpiredPremiums.js

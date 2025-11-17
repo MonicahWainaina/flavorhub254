@@ -34,7 +34,7 @@ export default function CheckoutPage() {
     const handler = window.PaystackPop.setup({
       key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY,
       email: user.email,
-      amount: 10 * 100,
+      amount: 250 * 100,
       currency: 'KES',
       channels: method === 'mpesa' ? ['mobile_money'] : ['card'],
       callback: function(response) {
