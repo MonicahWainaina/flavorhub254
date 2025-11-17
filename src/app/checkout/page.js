@@ -36,7 +36,7 @@ export default function CheckoutPage() {
       email: user.email,
       amount: 10 * 100,
       currency: 'KES',
-      channels: method === 'mpesa' ? ['mpesa'] : ['card'],
+      channels: method === 'mpesa' ? ['mobile_money'] : ['card'],
       callback: function(response) {
         setStatus('Payment successful! Upgrading...');
         fetch('/api/paystack/verify', {
