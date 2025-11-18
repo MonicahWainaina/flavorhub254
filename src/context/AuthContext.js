@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 import { auth } from '@/lib/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
 const AuthContext = createContext();
@@ -36,6 +36,10 @@ export function AuthProvider({ children }) {
       setLoading(true);
       if (firebaseUser) {
         await fetchUserProfile(firebaseUser.uid);
+        // Update last login timestamp
+        await updateDoc(doc(db, 'users', firebaseUser.uid), {
+          lastLogin: serverTimestamp(),
+        });
       } else {
         setUser(null);
         setUsername('');
