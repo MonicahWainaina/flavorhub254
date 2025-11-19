@@ -72,6 +72,13 @@ export default function Header({
     }
   };
 
+  // Helper for greeting: prefer username, then displayName, then email
+  const greeting =
+    username ||
+    user?.displayName ||
+    (user && user.email) ||
+    '';
+
   return (
     <header className="w-full shadow-md bg-white/90 dark:bg-[#181818]/95 backdrop-blur-md fixed top-0 left-0 z-50 transition-colors">
       <div className="max-w-8xl mx-auto flex items-center px-2 py-2 sm:px-4 sm:py-3 justify-between">
@@ -184,7 +191,7 @@ export default function Header({
             {loading ? null : user ? (
               <div className="flex items-center gap-2">
                 <span className="text-white font-semibold">
-                  {username ? `Hi, ${username}` : user.email}
+                  {greeting ? `Hi, ${greeting}` : ''}
                 </span>
                 {/* Premium badge next to greeting */}
                 {user.isPremium && (
@@ -342,7 +349,7 @@ export default function Header({
             {loading ? null : user ? (
               <div className="flex flex-col items-center gap-2 mt-2">
                 <span className="text-white font-semibold">
-                  {username ? `Hi, ${username}` : user.email}
+                  {greeting ? `Hi, ${greeting}` : ''}
                 </span>
                 {user.isPremium && (
                   <span className="flex items-center px-2 py-1 bg-yellow-300 text-black rounded-full font-bold text-xs mt-1">

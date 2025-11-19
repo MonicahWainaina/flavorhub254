@@ -132,7 +132,7 @@ function convertUnit(amount, unit, toMetric) {
   return { amount, unit };
 }
 
-export default function RecipePage({ params }) {
+export default function CookingPage({ params }) {
   const { slug } = use(params);
   const { user } = useAuth();
   const router = useRouter();
