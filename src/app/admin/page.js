@@ -32,7 +32,7 @@ export default function AdminDashboard() {
       const thirtyDaysAgo = Timestamp.fromDate(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000));
       const paymentsQuery = query(
         collection(db, "payments"),
-        where("createdAt", ">=", thirtyDaysAgo)
+        where("paid_at", ">=", thirtyDaysAgo) // Use the correct field!
       );
       const paymentsSnap = await getDocs(paymentsQuery);
       let totalPayments = 0;
