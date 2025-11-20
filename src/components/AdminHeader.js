@@ -2,9 +2,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 export default function AdminHeader() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const pathname = usePathname();
 
   const navLinks = [
     { href: "/admin", label: "Dashboard" },
@@ -38,15 +40,20 @@ export default function AdminHeader() {
         </div>
         {/* Desktop Nav */}
         <nav className="hidden lg:flex gap-6">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="capitalize hover:text-green-500 transition text-base text-gray-900 dark:text-white"
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`capitalize hover:text-green-500 transition text-base text-gray-900 dark:text-white ${
+                  isActive ? "font-bold underline text-green-600 dark:text-green-400" : ""
+                }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </nav>
         {/* Mobile Nav Button */}
         <div className="flex items-center gap-2 lg:hidden">
@@ -83,16 +90,21 @@ export default function AdminHeader() {
             &times;
           </button>
           <nav className="flex flex-col gap-6 text-center mt-4 w-full">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-xl text-white font-semibold"
-                onClick={() => setMobileNavOpen(false)}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`text-xl font-semibold ${
+                    isActive ? "text-green-400 underline" : "text-white"
+                  }`}
+                  onClick={() => setMobileNavOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
           </nav>
         </div>
       )}
