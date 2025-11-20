@@ -8,6 +8,7 @@ import {
   doc,
   setDoc,
   deleteDoc,
+  orderBy,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import Image from 'next/image';
@@ -78,65 +79,18 @@ export default function HomePage() {
   const categoryRef = useRef(null);
   const [categoryIndex, setCategoryIndex] = useState(0);
 
-  const CATEGORY_IMAGES = {
-    'Kenyan Classics': {
-      url: 'https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777091/recipe/kenyan_classics_u7hww0.png',
-      alt: 'Kenyan classics',
-    },
-    'Airfyer Recipes': {
-      url: 'https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777002/recipe/Airfryer_hgt5vl.png',
-      alt: 'Airfryer recipes',
-    },
-    Breakfast: {
-      url: 'https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777103/recipe/breakfast_qah5se.png',
-      alt: 'Breakfast recipes',
-    },
-    Vegetarian: {
-      url: 'https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777246/recipe/vegeterian_rrldtz.png',
-      alt: 'Vegetarian recipes',
-    },
-    'Fried Foods': {
-      url: 'https://res.cloudinary.com/djlcnpdtn/image/upload/v1755778571/recipe/friedfoods_vzurws.png',
-      alt: 'Fried foods',
-    },
-    'Guilty Pleasures': {
-      url: 'https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777085/recipe/guilty_pleasures_tz38ie.png',
-      alt: 'Guilty pleasures',
-    },
-    'One Pot Meals': {
-      url: 'https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777171/recipe/onepot_meals_tuyv38.png',
-      alt: 'One pot meals',
-    },
-    'Stew & Curries': {
-      url: 'https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777070/recipe/stews_curries_jksa9a.jpg',
-      alt: 'Stew and curries',
-    },
-    'Sweet Treats': {
-      url: 'https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777167/recipe/sweet_treats_mojait.png',
-      alt: 'Sweet treats',
-    },
-  };
-
-  const FALLBACK_IMAGE = {
-    url: '/assets/placeholder.jpg',
-    alt: 'Recipe image',
-  };
-
   useEffect(() => {
     async function fetchCategories() {
-      const querySnapshot = await getDocs(collection(db, 'recipes'));
-      const allCategories = querySnapshot.docs.map(
-        (doc) => doc.data().category
-      );
-      const unique = Array.from(new Set(allCategories)).map((cat) => ({
-        title: cat,
-        img: CATEGORY_IMAGES[cat]?.url || FALLBACK_IMAGE.url,
-        alt: CATEGORY_IMAGES[cat]?.alt || cat,
+      const q = query(collection(db, 'categories'), orderBy('order'));
+      const querySnapshot = await getDocs(q);
+      const cats = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
       }));
-      setCategories(unique);
+      setCategories(cats);
     }
     fetchCategories();
-  }, [db, CATEGORY_IMAGES, FALLBACK_IMAGE.url]); // <-- Added db, CATEGORY_IMAGES, FALLBACK_IMAGE.url
+  }, []);
 
   // --- Fetch user's favorites from Firestore ---
   useEffect(() => {
@@ -151,7 +105,7 @@ export default function HomePage() {
       setFavoriteIds(favsSnap.docs.map((doc) => doc.id));
     }
     fetchFavorites();
-  }, [user, db]); // <-- Added db as dependency
+  }, [user, db]);
 
   // --- Toggle favorite in Firestore ---
   const handleToggleFavorite = async (recipe) => {
@@ -674,16 +628,17 @@ export default function HomePage() {
               ) : (
                 categories.map((cat, i) => (
                   <Link
-                    key={cat.title}
+                    key={cat.id}
                     href={`/browse?category=${encodeURIComponent(cat.title)}`}
                     className="bg-[#232323] rounded-xl overflow-hidden shadow hover:shadow-lg transition flex-shrink-0 w-[180px] sm:w-auto snap-start"
                   >
-                    <Image
-                      src={cat.img}
-                      alt={cat.alt}
+                    <img
+                      src={cat.imageUrl}
+                      alt={cat.title}
                       width={180}
                       height={200}
                       className="w-full h-[200px] object-cover"
+                      loading="lazy"
                     />
                     <div className="p-4 text-center text-white font-semibold capitalize">
                       {cat.title}

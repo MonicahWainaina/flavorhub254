@@ -132,7 +132,7 @@ function convertUnit(amount, unit, toMetric) {
   return { amount, unit };
 }
 
-export default function RecipePage({ params }) {
+export default function CookingPage({ params }) {
   const { slug } = use(params);
   const { user } = useAuth();
   const router = useRouter();
@@ -337,7 +337,7 @@ export default function RecipePage({ params }) {
     <>
       <div className="relative min-h-screen w-full overflow-x-hidden">
         {/* Download count badge (top right, below header) */}
-        {user && (
+        {user && !user.isPremium && (
           <div className="absolute right-0.5 md:top-21 top-19 z-20">
             <span className="bg-[#232323] text-white border-2 border-[#3CB371] rounded-xl px-1 py-2 font-semibold shadow-lg text-sm">
               PDF downloads left today: {Math.max(0, 3 - downloadsToday)} / 3

@@ -2,10 +2,24 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 import { auth } from '@/lib/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
 const AuthContext = createContext();
+
+// Helper: filter out premium fields from any update
+function filterOutPremiumFields(data) {
+  const {
+    isPremium,
+    premiumSince,
+    premiumExpires,
+    lastPaymentRef,
+    stripeSubscriptionActive,
+    subscriptionType,
+    ...safeFields
+  } = data;
+  return safeFields;
+}
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -14,19 +28,30 @@ export function AuthProvider({ children }) {
 
   // Fetch user profile from Firestore
   async function fetchUserProfile(uid) {
-    const userDoc = await getDoc(doc(db, 'users', uid));
-    if (userDoc.exists()) {
-      const data = userDoc.data();
-      setUser({
-        uid,
-        email: auth.currentUser?.email,
-        isPremium: !!data.isPremium,
-        premiumExpires: data.premiumExpires || null,
-        subscriptionType: data.subscriptionType || 'mpesa',
-        stripeSubscriptionActive: !!data.stripeSubscriptionActive,
-        ...data,
-      });
-      setUsername(data.username || '');
+    try {
+      console.log('Fetching user profile for UID:', uid);
+      const userDoc = await getDoc(doc(db, 'users', uid));
+      if (userDoc.exists()) {
+        const data = userDoc.data();
+        setUser({
+          uid,
+          email: auth.currentUser?.email,
+          isPremium: !!data.isPremium,
+          premiumExpires: data.premiumExpires || null,
+          subscriptionType: data.subscriptionType || 'mpesa',
+          stripeSubscriptionActive: !!data.stripeSubscriptionActive,
+          ...data,
+        });
+        setUsername(data.username || auth.currentUser?.displayName || '');
+      } else {
+        setUser(null);
+        setUsername('');
+        console.warn('User document does not exist for UID:', uid);
+      }
+    } catch (err) {
+      console.error('Failed to fetch user profile:', err);
+      setUser(null);
+      setUsername('');
     }
   }
 
@@ -36,6 +61,15 @@ export function AuthProvider({ children }) {
       setLoading(true);
       if (firebaseUser) {
         await fetchUserProfile(firebaseUser.uid);
+        // Only update lastLogin, never send premium fields
+        try {
+          await updateDoc(doc(db, 'users', firebaseUser.uid), {
+            lastLogin: serverTimestamp(),
+          });
+        } catch (err) {
+          // Ignore permission errors for lastLogin
+          console.warn('Could not update lastLogin:', err?.message || err);
+        }
       } else {
         setUser(null);
         setUsername('');
@@ -61,6 +95,14 @@ export function AuthProvider({ children }) {
     setUsername('');
   }
 
+  // Example safe profile update function (for use in profile editing UI)
+  async function updateProfileSafe(updateData) {
+    if (!user?.uid) return;
+    const safeFields = filterOutPremiumFields(updateData);
+    await updateDoc(doc(db, 'users', user.uid), safeFields);
+    await fetchUserProfile(user.uid);
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -69,6 +111,7 @@ export function AuthProvider({ children }) {
         loading,
         logOut,
         refreshUser,
+        updateProfileSafe, // expose safe update function
       }}
     >
       {children}

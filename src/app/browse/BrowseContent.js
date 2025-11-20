@@ -1,5 +1,4 @@
 'use client';
-import Image from 'next/image';
 import { useRef, useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import FavoriteButton from '@/components/FavoriteButton';
@@ -13,51 +12,13 @@ import {
   deleteDoc,
   getDocs,
   collection,
+  query,
+  orderBy,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { toast } from 'react-toastify';
 import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-
-// Category images lookup
-const CATEGORY_IMAGES = {
-  'Kenyan Classics': {
-    url: 'https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777091/recipe/kenyan_classics_u7hww0.png',
-    alt: 'Kenyan classics',
-  },
-  'Airfyer Recipes': {
-    url: 'https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777002/recipe/Airfryer_hgt5vl.png',
-    alt: 'Airfryer recipes',
-  },
-  Breakfast: {
-    url: 'https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777103/recipe/breakfast_qah5se.png',
-    alt: 'Breakfast recipes',
-  },
-  Vegetarian: {
-    url: 'https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777246/recipe/vegeterian_rrldtz.png',
-    alt: 'Vegetarian recipes',
-  },
-  'Fried Foods': {
-    url: 'https://res.cloudinary.com/djlcnpdtn/image/upload/v1755778571/recipe/friedfoods_vzurws.png',
-    alt: 'Fried foods',
-  },
-  'Guilty Pleasures': {
-    url: 'https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777085/recipe/guilty_pleasures_tz38ie.png',
-    alt: 'Guilty pleasures',
-  },
-  'One Pot Meals': {
-    url: 'https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777171/recipe/onepot_meals_tuyv38.png',
-    alt: 'One pot meals',
-  },
-  'Stew & Curries': {
-    url: 'https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777070/recipe/stews_curries_jksa9a.jpg',
-    alt: 'Stew and curries',
-  },
-  'Sweet Treats': {
-    url: 'https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777167/recipe/sweet_treats_mojait.png',
-    alt: 'Sweet treats',
-  },
-};
 
 const FALLBACK_IMAGE = { url: '/assets/placeholder.jpg', alt: 'Recipe image' };
 
@@ -99,6 +60,25 @@ export default function BrowseContent() {
   const { user } = useAuth();
   const [favoriteIds, setFavoriteIds] = useState([]);
 
+  // --- Fetch categories from Firestore ---
+  const [categories, setCategories] = useState([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchCategories() {
+      setCategoriesLoading(true);
+      const q = query(collection(db, 'categories'), orderBy('order'));
+      const querySnapshot = await getDocs(q);
+      const cats = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setCategories(cats);
+      setCategoriesLoading(false);
+    }
+    fetchCategories();
+  }, []);
+
   // Search/autocomplete state
   const [searchTerm, setSearchTerm] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -137,13 +117,11 @@ export default function BrowseContent() {
     fetchRecipes();
   }, []);
 
-  // Get unique categories from recipes
-  const uniqueCategories = Array.from(
-    new Set(recipes.map((r) => r.category))
-  ).map((cat) => ({
-    title: cat,
-    img: CATEGORY_IMAGES[cat]?.url || FALLBACK_IMAGE.url,
-    alt: CATEGORY_IMAGES[cat]?.alt || cat,
+  // Get unique categories from categories collection (not from recipes)
+  const uniqueCategories = categories.map((cat) => ({
+    title: cat.title,
+    img: cat.imageUrl || FALLBACK_IMAGE.url,
+    alt: cat.title,
   }));
 
   const searchParams = useSearchParams();
@@ -266,12 +244,11 @@ export default function BrowseContent() {
         <section className="w-full rounded-none shadow-lg relative">
           {/* Hero Image */}
           <div className="relative w-full h-[320px] sm:h-[440px]">
-            <Image
+            <img
               src="/assets/herofood.png"
               alt="Food"
-              fill
-              className="object-cover object-top"
-              priority
+              className="object-cover object-top w-full h-full"
+              loading="eager"
             />
             {/* Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/40 to-black/80">
@@ -326,7 +303,7 @@ export default function BrowseContent() {
                             className="flex items-center gap-3 px-4 py-2 hover:bg-[#3CB371] hover:text-white text-white transition"
                           >
                             {/* Recipe image */}
-                            <Image
+                            <img
                               src={r.image?.url || '/assets/placeholder.jpg'}
                               alt={r.image?.alt || r.title}
                               width={40}
@@ -467,14 +444,14 @@ export default function BrowseContent() {
                             >
                               {/* Image */}
                               <div className="relative w-full h-[90px]">
-                                <Image
+                                <img
                                   src={
                                     recipe.image?.url ||
                                     '/assets/placeholder.jpg'
                                   }
                                   alt={recipe.image?.alt || recipe.title}
-                                  fill
-                                  className="object-cover rounded-t-2xl"
+                                  className="object-cover rounded-t-2xl w-full h-full"
+                                  loading="lazy"
                                 />
                               </div>
                               {/* Content */}
@@ -953,12 +930,12 @@ export default function BrowseContent() {
                       >
                         {/* Image */}
                         <div className="relative w-full h-[120px] lg:w-[48%] lg:h-full flex-shrink-0">
-                          <Image
+                          <img
                             src={recipe.image?.url || '/assets/placeholder.jpg'}
                             alt={recipe.image?.alt || recipe.title}
-                            fill
                             className="object-cover w-full h-full lg:rounded-r-[2.5rem] lg:rounded-l-[2.5rem] rounded-t-[2.5rem] lg:rounded-t-none"
                             style={{ minHeight: 0, maxHeight: '100%' }}
+                            loading="lazy"
                           />
                         </div>
                         {/* Content */}
@@ -1082,7 +1059,7 @@ export default function BrowseContent() {
                   className="flex gap-6 overflow-x-auto scrollbar-hide py-2 w-full snap-x snap-mandatory"
                   style={{ scrollBehavior: 'smooth' }}
                 >
-                  {loading ? (
+                  {categoriesLoading ? (
                     <>
                       <CategorySkeleton />
                       <CategorySkeleton />
@@ -1109,7 +1086,7 @@ export default function BrowseContent() {
                             {cat.title}
                           </span>
                         </div>
-                        <Image
+                        <img
                           src={cat.img}
                           alt={cat.alt}
                           width={300}
@@ -1119,6 +1096,7 @@ export default function BrowseContent() {
                             borderTopLeftRadius: 12,
                             borderTopRightRadius: 12,
                           }}
+                          loading="lazy"
                         />
                       </button>
                     ))
@@ -1196,10 +1174,6 @@ export default function BrowseContent() {
                                       ...selectedIngredients,
                                       ingredient,
                                     ]);
-                                  } else {
-                                    toast.info(
-                                      'You can only select up to 2 ingredients.'
-                                    );
                                   }
                                 } else {
                                   setSelectedIngredients(
@@ -1209,6 +1183,10 @@ export default function BrowseContent() {
                                   );
                                 }
                               }}
+                              disabled={
+                                !selectedIngredients.includes(ingredient) &&
+                                selectedIngredients.length >= 2
+                              }
                             />{' '}
                             {ingredient}
                           </label>
@@ -1232,10 +1210,6 @@ export default function BrowseContent() {
                                     ...selectedIngredients,
                                     ingredient,
                                   ]);
-                                } else {
-                                  toast.info(
-                                    'You can only select up to 2 ingredients.'
-                                  );
                                 }
                               } else {
                                 setSelectedIngredients(
@@ -1245,6 +1219,10 @@ export default function BrowseContent() {
                                 );
                               }
                             }}
+                            disabled={
+                              !selectedIngredients.includes(ingredient) &&
+                              selectedIngredients.length >= 2
+                            }
                           />{' '}
                           {ingredient}
                         </label>
@@ -1267,10 +1245,6 @@ export default function BrowseContent() {
                                     ...selectedIngredients,
                                     ingredient,
                                   ]);
-                                } else {
-                                  toast.info(
-                                    'You can only select up to 2 ingredients.'
-                                  );
                                 }
                               } else {
                                 setSelectedIngredients(
@@ -1280,6 +1254,10 @@ export default function BrowseContent() {
                                 );
                               }
                             }}
+                            disabled={
+                              !selectedIngredients.includes(ingredient) &&
+                              selectedIngredients.length >= 2
+                            }
                           />{' '}
                           {ingredient}
                         </label>
@@ -1378,14 +1356,12 @@ export default function BrowseContent() {
                         >
                           {/* Image */}
                           <div className="relative w-full h-[120px] lg:w-[48%] lg:h-full flex-shrink-0">
-                            <Image
-                              src={
-                                recipe.image?.url || '/assets/placeholder.jpg'
-                              }
+                            <img
+                              src={recipe.image?.url || '/assets/placeholder.jpg'}
                               alt={recipe.image?.alt || recipe.title}
-                              fill
                               className="object-cover w-full h-full lg:rounded-r-[2.5rem] lg:rounded-l-[2.5rem] rounded-t-[2.5rem] lg:rounded-t-none"
                               style={{ minHeight: 0, maxHeight: '100%' }}
+                              loading="lazy"
                             />
                           </div>
                           {/* Content */}
@@ -1443,10 +1419,11 @@ export default function BrowseContent() {
                               />
                             </div>
                             <hr className="border-t border-white/30 my-2" />
-                            <Link href={`/recipe/${recipe.slug}`}>
-                              <button className="bg-white text-black px-4 py-2 rounded-lg font-bold w-fit text-sm shadow transition hover:bg-[#3CB371] hover:text-white">
-                                View Recipe
-                              </button>
+                            <Link
+                              href={`/recipe/${recipe.slug}`}
+                              className="bg-white text-black px-4 py-2 rounded-lg font-bold w-fit text-sm shadow transition hover:bg-[#3CB371] hover:text-white"
+                            >
+                              View Recipe
                             </Link>
                           </div>
                         </div>
