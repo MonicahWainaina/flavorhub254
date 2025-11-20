@@ -15,30 +15,28 @@ jest.mock('next/server', () => ({
   },
 }));
 
-// Mock Firestore and admin
-const FieldValue = { serverTimestamp: jest.fn() };
-const Timestamp = { fromDate: jest.fn(() => 'mocked-timestamp') };
-const firestoreMock = jest.fn(() => ({
-  collection: jest.fn(() => ({
-    doc: jest.fn(() => ({
-      set: jest.fn(),
-      update: jest.fn(),
-    })),
-  })),
+// Mock Firestore JS SDK
+jest.mock('../../../../lib/firebase', () => ({
+  db: {},
 }));
-firestoreMock.FieldValue = FieldValue;
-firestoreMock.Timestamp = Timestamp;
 
-jest.mock('firebase-admin', () => ({
-  apps: [],
-  initializeApp: jest.fn(),
-  credential: { cert: jest.fn() },
-  firestore: firestoreMock,
+jest.mock('firebase/firestore', () => ({
+  addDoc: jest.fn(),
+  collection: jest.fn(),
+  setDoc: jest.fn(),
+  doc: jest.fn(),
+  updateDoc: jest.fn(),
+  serverTimestamp: jest.fn(() => 'mocked-server-timestamp'),
+  Timestamp: { fromDate: jest.fn(() => 'mocked-timestamp') },
 }));
 
 const { POST } = require('./route');
 
 describe('Paystack Webhook Route', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should reject invalid signature', async () => {
     const fakeSecret = 'test_secret';
     process.env.PAYSTACK_SECRET_KEY = fakeSecret;
