@@ -33,33 +33,76 @@ export async function POST(req) {
   // Compute hash
   const hash = crypto.createHmac('sha512', secret).update(body).digest('hex');
   if (hash !== signature) {
+    // Log error
+    await db.collection('error_logs').add({
+      error: 'Invalid signature',
+      message: 'Webhook signature mismatch',
+      details: { signature, hash },
+      raw: body,
+      timestamp: admin.firestore.FieldValue.serverTimestamp(),
+    });
     return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
   }
 
-  const event = JSON.parse(body);
+  let event;
+  try {
+    event = JSON.parse(body);
+  } catch (err) {
+    // Log error
+    await db.collection('error_logs').add({
+      error: 'Invalid JSON',
+      message: err.message,
+      details: {},
+      raw: body,
+      timestamp: admin.firestore.FieldValue.serverTimestamp(),
+    });
+    return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
+  }
+
+  // Log every webhook event
+  await db.collection('paystack_webhook_logs').add({
+    event: event.event || null,
+    reference: event.data?.reference || null,
+    status: event.data?.status || null,
+    userId: event.data?.metadata?.uid || null,
+    raw: event,
+    timestamp: admin.firestore.FieldValue.serverTimestamp(),
+  });
 
   if (event.event === 'charge.success') {
     const data = event.data;
-    // Save or update payment record (deduplicated by reference)
-    await db.collection('payments').doc(data.reference).set({
-      uid: data.metadata?.uid || null,
-      reference: data.reference,
-      amount: data.amount / 100,
-      currency: data.currency,
-      channel: data.channel,
-      status: data.status,
-      paid_at: parsePaidAt(data),
-      raw: data,
-    }, { merge: true });
+    try {
+      // Save or update payment record (deduplicated by reference)
+      await db.collection('payments').doc(data.reference).set({
+        uid: data.metadata?.uid || null,
+        reference: data.reference,
+        amount: data.amount / 100,
+        currency: data.currency,
+        channel: data.channel,
+        status: data.status,
+        paid_at: parsePaidAt(data),
+        raw: data,
+      }, { merge: true });
 
-    // Optionally update user if you have uid in metadata
-    if (data.metadata?.uid) {
-      await db.collection('users').doc(data.metadata.uid).update({
-        isPremium: true,
-        premiumSince: admin.firestore.FieldValue.serverTimestamp(),
-        premiumExpires: admin.firestore.Timestamp.fromDate(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)),
-        lastPaymentRef: data.reference,
+      // Optionally update user if you have uid in metadata
+      if (data.metadata?.uid) {
+        await db.collection('users').doc(data.metadata.uid).update({
+          isPremium: true,
+          premiumSince: admin.firestore.FieldValue.serverTimestamp(),
+          premiumExpires: admin.firestore.Timestamp.fromDate(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)),
+          lastPaymentRef: data.reference,
+        });
+      }
+    } catch (err) {
+      // Log error
+      await db.collection('error_logs').add({
+        error: 'Firestore write error',
+        message: err.message,
+        details: { event: event.event, reference: data.reference },
+        raw: data,
+        timestamp: admin.firestore.FieldValue.serverTimestamp(),
       });
+      return NextResponse.json({ error: 'Firestore error' }, { status: 500 });
     }
   }
 
