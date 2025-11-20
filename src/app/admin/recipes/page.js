@@ -39,7 +39,6 @@ function emptyRecipe(selectedCategory) {
     rating: 0,
     ingredients: [{ name: "", amount: "", unit: "", editable: false, min: "", max: "" }],
     instructions: [""],
-    premium_feature: false,
     editable_ingredients: false,
     adjustable_servings: false,
     scaling_step: 10,
@@ -300,7 +299,6 @@ export default function AdminRecipesPage() {
                         <th className="px-2 sm:px-4 py-2 text-left">Image</th>
                         <th className="px-2 sm:px-4 py-2 text-left">Title</th>
                         <th className="px-2 sm:px-4 py-2 text-left">Tags</th>
-                        <th className="px-2 sm:px-4 py-2 text-left">Premium</th>
                         <th className="px-2 sm:px-4 py-2 text-left">PDF</th>
                         <th className="px-2 sm:px-4 py-2 text-left">Audio</th>
                         <th className="px-2 sm:px-4 py-2 text-left">Smart</th>
@@ -324,13 +322,6 @@ export default function AdminRecipesPage() {
                           <td className="px-2 sm:px-4 py-2 font-semibold">{recipe.title}</td>
                           <td className="px-2 sm:px-4 py-2">
                             {recipe.tags ? recipe.tags.join(", ") : "-"}
-                          </td>
-                          <td className="px-2 sm:px-4 py-2">
-                            {recipe.premium_feature ? (
-                              <span className="text-yellow-400 font-semibold">Yes</span>
-                            ) : (
-                              <span className="text-gray-400">No</span>
-                            )}
                           </td>
                           <td className="px-2 sm:px-4 py-2">
                             {recipe.pdf?.url ? (
@@ -361,17 +352,14 @@ export default function AdminRecipesPage() {
                             )}
                           </td>
                           <td className="px-2 sm:px-4 py-2">
-                            {recipe.smart_cooking?.enabled ? (
-                              <span className="text-green-400 font-semibold">Yes</span>
-                            ) : (
-                              <span className="text-gray-400">No</span>
-                            )}
+                            <span className="text-gray-400 text-xs italic">
+                              Browser-enabled (Premium only)
+                            </span>
                           </td>
                           <td className="px-2 sm:px-4 py-2">
                             <div className="flex gap-2">
                               <button
-                                onClick={() => handleEditRecipe(recipe)
-                                }
+                                onClick={() => handleEditRecipe(recipe)}
                                 className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded text-xs"
                               >
                                 Edit
@@ -820,26 +808,16 @@ export default function AdminRecipesPage() {
                       + Add Step
                     </button>
                   </div>
-                  {/* Premium, PDF, Audio, Smart toggles */}
-                  <div>
-                    <label className="block text-sm mb-1">Premium Feature</label>
-                    <input
-                      type="checkbox"
-                      checked={!!selectedRecipe.premium_feature}
-                      onChange={e =>
-                        setSelectedRecipe(r => ({
-                          ...r,
-                          premium_feature: e.target.checked,
-                        }))
-                      }
-                    /> Premium
-                  </div>
+
+                  {/* PDF (read-only, browser-generated info) */}
                   <div>
                     <label className="block text-sm mb-1">PDF</label>
                     <span className="text-gray-400 text-xs italic">
                       PDFs are generated on demand in the browser and are not stored.
                     </span>
                   </div>
+
+                  {/* Audio (read-only, show URL if present) */}
                   <div>
                     <label className="block text-sm mb-1">Audio Instruction</label>
                     {selectedRecipe.audio?.has_audio_instruction && selectedRecipe.audio?.mp3_url ? (
@@ -857,17 +835,13 @@ export default function AdminRecipesPage() {
                       </span>
                     )}
                   </div>
+
+                  {/* Smart Cooking (read-only, browser-enabled for premium) */}
                   <div>
                     <label className="block text-sm mb-1">Smart Cooking</label>
-                    {selectedRecipe.smart_cooking?.enabled ? (
-                      <span className="text-green-400 text-xs font-semibold">
-                        Enabled by backend
-                      </span>
-                    ) : (
-                      <span className="text-gray-400 text-xs italic">
-                        Not enabled
-                      </span>
-                    )}
+                    <span className="text-gray-400 text-xs italic">
+                      Browser-enabled (Premium only)
+                    </span>
                   </div>
 
                   {/* ...rest of your modal fields (created_by, version, etc.) ... */}

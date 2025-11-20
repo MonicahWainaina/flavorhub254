@@ -432,13 +432,15 @@ export default function FlavorBotPage() {
   return (
     <div className="relative min-h-screen flex flex-col bg-[#181818]">
       {/* Chat count badge (top right, below navbar) */}
-      <div className="fixed right-8 top-24 z-50">
-        <span className="bg-[#232323] text-white border-2 border-[#3CB371] rounded-xl px-4 py-2 font-semibold shadow-lg text-sm">
-          {user
-            ? `Chats started today: ${chatsToday} / ${USER_CHAT_LIMIT}`
-            : `Chats left today: ${Math.max(0, GUEST_CHAT_LIMIT - chatsToday)} / ${GUEST_CHAT_LIMIT}`}
-        </span>
-      </div>
+      {(!user || !user.isPremium) && (
+        <div className="fixed right-8 top-24 z-50">
+          <span className="bg-[#232323] text-white border-2 border-[#3CB371] rounded-xl px-4 py-2 font-semibold shadow-lg text-sm">
+            {user
+              ? `Chats started today: ${chatsToday} / ${USER_CHAT_LIMIT}`
+              : `Chats left today: ${Math.max(0, GUEST_CHAT_LIMIT - chatsToday)} / ${GUEST_CHAT_LIMIT}`}
+          </span>
+        </div>
+      )}
       {/* Background image */}
       <div className="absolute inset-0 z-0">
         <img
