@@ -4,6 +4,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import FloatingFlavorBotButton from "@/components/FloatingFlavorBotButton";
+import EmailVerificationGuard from "@/components/EmailVerificationGuard";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,9 +29,10 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
-          {children}
-          {/* Floating Ask Flavorbot button and modal must be INSIDE AuthProvider */}
-          <FloatingFlavorBotButton />
+          <EmailVerificationGuard>
+            {children}
+            <FloatingFlavorBotButton />
+          </EmailVerificationGuard>
         </AuthProvider>
         <ToastContainer
           position="top-center"

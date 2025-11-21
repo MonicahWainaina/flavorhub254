@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { FaUser, FaLock, FaBars, FaTimes } from "react-icons/fa";
+import { FaUser, FaLock } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -9,6 +9,7 @@ import Header from "@/components/Header";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  sendEmailVerification,
 } from "firebase/auth";
 import { setDoc, doc } from "firebase/firestore";
 
@@ -20,6 +21,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [verificationNotice, setVerificationNotice] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e) => {
@@ -46,10 +48,21 @@ export default function LoginPage() {
           email,
           createdAt: new Date(),
         });
+        // Send verification email
+        await sendEmailVerification(userCredential.user);
+        setVerificationNotice(true);
+        // Redirect to verify-email page
+        router.push("/verify-email");
+        return;
       } else {
-        await signInWithEmailAndPassword(auth, email, password);
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        if (!userCredential.user.emailVerified) {
+          // If not verified, redirect to verify-email page
+          router.push("/verify-email");
+          return;
+        }
+        router.push("/");
       }
-      router.push("/");
     } catch (err) {
       setError(err.message.replace("Firebase:", "").replace("auth/", ""));
     } finally {
