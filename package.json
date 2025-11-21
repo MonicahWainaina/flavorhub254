@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "format": "prettier --write .",
-    "test": "jest"
+    "test": "jest",
+    "postbuild": "next-sitemap"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.7",
@@ -17,11 +18,13 @@
     "firebase": "^12.1.0",
     "firebase-admin": "^13.4.0",
     "html2pdf.js": "^0.12.1",
+    "next-sitemap": "^4.2.3",
     "openai": "^5.20.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-hot-toast": "^2.6.0",
     "react-icons": "^5.5.0",
+    "react-markdown": "^10.1.0",
     "react-responsive": "^10.0.1",
     "react-toastify": "^11.0.5",
     "sanitize-html": "^2.17.0",

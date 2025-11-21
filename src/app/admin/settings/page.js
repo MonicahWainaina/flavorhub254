@@ -6,6 +6,7 @@ import AdminHeader from "../../../components/AdminHeader";
 import AdminFooter from "../../../components/AdminFooter";
 import { db } from "../../../lib/firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
+import Link from "next/link";
 
 const SETTINGS_DOC = "global";
 
@@ -207,6 +208,16 @@ export default function AdminSettingsPage() {
               <div>Allowed domains: {settings.allowedDomains || "Any"}</div>
               <div>Verbose logging: {settings.verboseLogging ? "On" : "Off"}</div>
               <div>Analytics Key: {settings.analyticsKey ? "Set" : "Not set"}</div>
+            </div>
+
+            {/* Legal Links */}
+            <div className="mt-8 text-center text-xs">
+              <Link href="/legal/privacy" className="underline mr-4" target="_blank" rel="noopener noreferrer">
+                Privacy Policy
+              </Link>
+              <Link href="/legal/tos" className="underline" target="_blank" rel="noopener noreferrer">
+                Terms of Service
+              </Link>
             </div>
           </div>
         </main>

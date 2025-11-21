@@ -87,7 +87,9 @@ describe('FavoritesPage empty state', () => {
   it('shows empty state if no favorites', async () => {
     render(<FavoritesPage />);
     await waitFor(() =>
-      expect(screen.getByText(/no saved recipes yet!/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/you have not saved any recipes to your favorites/i)
+      ).toBeInTheDocument()
     );
   });
 });
