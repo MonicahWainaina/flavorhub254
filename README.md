@@ -36,6 +36,10 @@ Here are some snapshots of the app’s interface:
 - **Serving Adjustment:** Scale ingredient quantities for different servings.
 - **Responsive Design:** Works on mobile, tablet, and desktop.
 - **Firebase Integration:** Recipes and favourites stored securely.
+- **Email Verification:** Users must verify their email to access premium features.
+- **Rate Limiting:** API endpoints (e.g., FlavorBot) are protected against abuse.
+- **Content Security Policy:** CSP headers added for improved security.
+- **Legal Docs:** Privacy Policy and Terms of Service available and linked in the UI.
 
 ---
 
@@ -44,7 +48,8 @@ Here are some snapshots of the app’s interface:
 - **Downloadable Audio Instructions** (MP3 per recipe).
 - **Smart Cooking Mode**: Step-by-step, timer-enabled, with optional browser-based narration.
 - **FlavorBot (AI Assistant)**: Ask questions about food, cooking, and recipes.
-- **Premium Features**: Audio, Smart Cooking, and PDF downloads for subscribed users.
+- **Premium Features**: Audio, Smart Cooking, and PDF downloads for premium users.
+- **Optional MFA (2FA):** Planned for future security enhancement.
 
 ---
 
@@ -56,6 +61,22 @@ Here are some snapshots of the app’s interface:
 - **Tailwind CSS** (styling)  
 - **Jest** (testing)  
 - **Vercel** (hosting & CI/CD)  
+- **Upstash Redis** (API rate limiting)  
+- **OpenAI API** (AI features)  
+
+---
+
+## 🔒 Security & Infrastructure
+
+- **Email Verification:** Enforced before premium access.
+- **Rate Limiting:** Upstash Redis protects API endpoints from abuse.
+- **CSP Headers:** Content Security Policy set in Next.js config.
+- **Dependency Audits:** Regular `npm audit fix` and updates.
+- **Legal Compliance:** Privacy Policy and Terms of Service in `/legal/`, rendered as site pages.
+- **Firestore Backups:** Scheduled backups enabled in Firebase Console.
+- **Firebase Security Rules:** Only authenticated users can access their data; only admins can access admin/payment routes.
+- **HTTPS:** Enforced by Vercel and Firebase Hosting.
+- **External Scripts:** Audited and minimized for security.
 
 ---
 
@@ -95,6 +116,14 @@ To run this app locally:
     npm test
     npm run lint
     ```
+
+---
+
+## 🗄️ Backups & Recovery
+
+- **Firestore:** Scheduled backups are enabled in the Firebase Console (daily/weekly, retained for 90 days).
+- **Storage:** Important files should be periodically exported using gsutil or Google Cloud Console.
+- **Recovery:** To restore, use the Firebase Console to select and restore a backup, or upload files from backup storage.
 
 ---
 
