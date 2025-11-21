@@ -20,13 +20,17 @@ export const metadata = {
   title: "flavorHUB254",
   description: "Discover and share amazing recipes on flavorHUB254!",
   icons: {
-    icon: "/assets/favicon.png",
+    icon: "/favicon.png", // <-- Correct path for favicon
   },
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        {/* Favicon for browsers and Google */}
+        <link rel="icon" href="/favicon.png" type="image/png" />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
           <EmailVerificationGuard>
