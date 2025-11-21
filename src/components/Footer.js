@@ -71,6 +71,10 @@ export default function Footer() {
             </div>
           </div>
         </div>
+        <div className="text-center text-xs mt-4">
+          <a href="/legal/privacy" className="underline mr-4">Privacy Policy</a>
+          <a href="/legal/tos" className="underline">Terms of Service</a>
+        </div>
       </footer>
   );
 }

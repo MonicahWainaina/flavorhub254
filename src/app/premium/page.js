@@ -3,12 +3,10 @@ import Header from '@/components/Header';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 
 export default function PremiumPage() {
-    const { user, loading, refreshUser } = useAuth();
+    const { user, loading } = useAuth();
     const router = useRouter();
-    const [cancelLoading, setCancelLoading] = useState(false);
 
     // Helper: check if premium expired
     const premiumExpired = user?.premiumExpires
@@ -18,45 +16,12 @@ export default function PremiumPage() {
     // Helper: show expiry date
     const showExpiry = user?.isPremium && user?.premiumExpires;
 
-    // Helper: show cancel button only for Stripe auto-renewal
-    const canCancel =
-        user?.isPremium &&
-        user?.subscriptionType === 'stripe' &&
-        user?.stripeSubscriptionActive &&
-        !premiumExpired;
-
     // Helper: show upgrade button if not premium or expired
     const showUpgrade =
         !user?.isPremium || premiumExpired;
 
     // Helper: is premium user
     const isPremium = user?.isPremium && !premiumExpired;
-
-    // Cancel subscription handler with confirmation and toast
-    async function handleCancelSubscription() {
-        if (!user?.uid) return;
-        if (!window.confirm('Are you sure you want to cancel your premium subscription?')) {
-            return;
-        }
-        setCancelLoading(true);
-        try {
-            const res = await fetch('/api/premium/cancel', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ uid: user.uid }),
-            });
-            const data = await res.json();
-            if (data.success) {
-                toast.success('Subscription cancelled. You will remain premium until expiry.');
-                if (refreshUser) await refreshUser();
-            } else {
-                toast.error(data.message || 'Failed to cancel subscription.');
-            }
-        } catch (err) {
-            toast.error('Error cancelling subscription.');
-        }
-        setCancelLoading(false);
-    }
 
     if (loading) {
         return (
@@ -157,15 +122,6 @@ export default function PremiumPage() {
                                                         Expires on: {new Date(user.premiumExpires.seconds * 1000).toLocaleDateString()}
                                                     </span>
                                                 )}
-                                                {canCancel && (
-                                                    <button
-                                                        className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-bold text-sm mt-2"
-                                                        onClick={handleCancelSubscription}
-                                                        disabled={cancelLoading}
-                                                    >
-                                                        {cancelLoading ? 'Cancelling...' : 'Cancel Subscription'}
-                                                    </button>
-                                                )}
                                             </div>
                                         ) : (
                                             <button
@@ -207,18 +163,9 @@ export default function PremiumPage() {
                                             Expires on: {new Date(user.premiumExpires.seconds * 1000).toLocaleDateString()}
                                         </span>
                                     )}
-                                    {canCancel && (
-                                        <button
-                                            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-bold text-sm mt-2"
-                                            onClick={handleCancelSubscription}
-                                            disabled={cancelLoading}
-                                        >
-                                            {cancelLoading ? 'Cancelling...' : 'Cancel Subscription'}
-                                        </button>
-                                    )}
                                 </div>
                                 <span className="text-sm text-white text-center mt-6">
-                                    Only <span className="text-green-400 font-bold">KSh 250/month</span> (<span className="text-[#FFD700] font-bold">$1.99 USD/month</span> for international users). Cancel anytime.
+                                    Only <span className="text-green-400 font-bold">KSh 250</span> (<span className="text-[#FFD700] font-bold">$1.99 USD</span> for international users) per premium period. Pay again to renew when expired.
                                 </span>
                             </div>
                         )}
