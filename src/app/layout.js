@@ -5,6 +5,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import FloatingFlavorBotButton from "@/components/FloatingFlavorBotButton";
 import EmailVerificationGuard from "@/components/EmailVerificationGuard";
+import { Analytics } from "@vercel/analytics/react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -57,6 +58,7 @@ export default function RootLayout({ children }) {
             fontSize: "1rem",
           }}
         />
+        <Analytics />
       </body>
     </html>
   );
