@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-      <footer className="w-full text-white py-10 px-4 mt-8 relative">
+      <footer className="w-full text-white py-10 px-4 mt-8 relative pb-20 sm:pb-8">
         <div className="flex justify-center lg:justify-normal">
           <div className="max-w-3xl w-full lg:max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 relative z-10">
             {/* Left: Logo, tagline, burger image */}
@@ -71,9 +71,9 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <div className="text-center text-xs mt-4">
-          <a href="/legal/privacy" className="underline mr-4">Privacy Policy</a>
-          <a href="/legal/tos" className="underline">Terms of Service</a>
+        <div className="flex flex-col items-center gap-2">
+          <a href="/legal/tos" className="text-xs text-gray-400 hover:text-green-500">Terms of Service</a>
+          <a href="/legal/privacy" className="text-xs text-gray-400 hover:text-green-500">Privacy Policy</a>
         </div>
       </footer>
   );

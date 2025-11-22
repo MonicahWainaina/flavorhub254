@@ -295,14 +295,6 @@ export default function RecipePageClient({ params }) {
   return (
     <>
       <div className="relative min-h-screen w-full overflow-x-hidden">
-        {/* Download count badge (top right, below header) */}
-        {user && !user.isPremium && (
-          <div className="absolute right-0.5 md:top-21 top-19 z-20">
-            <span className="bg-[#232323] text-white border-2 border-[#3CB371] rounded-xl px-1 py-2 font-semibold shadow-lg text-sm">
-              PDF downloads left today: {Math.max(0, 3 - downloadsToday)} / 3
-            </span>
-          </div>
-        )}
         {/* Background image and overlay */}
         <div className="fixed inset-0 z-0">
           <img
@@ -315,7 +307,7 @@ export default function RecipePageClient({ params }) {
         </div>
 
         {/* Content (Header, Main, Footer) */}
-        <div className="relative z-10 flex flex-col min-h-screen">
+        <div className="relative z-20 flex flex-col min-h-screen">
           <Header showSearch />
           <ToastContainer
             position="top-center"
@@ -333,7 +325,17 @@ export default function RecipePageClient({ params }) {
             }
             bodyClassName={() => 'text-white text-base'}
           />
-          <main className="flex-1 flex flex-col items-center pt-29 pb-12 px-2 sm:px-4">
+
+          {/* PDF badge: always visible, below header and toast */}
+{user && !user.isPremium && (
+          <div className="absolute right-0.5 md:top-23 top-19 z-20">
+            <span className="bg-[#232323] text-white border-2 border-[#3CB371] rounded-xl px-1 py-2 font-semibold shadow-lg text-sm">
+              PDF downloads left today: {Math.max(0, 3 - downloadsToday)} / 3
+            </span>
+          </div>
+        )}
+
+          <main className="flex-1 flex flex-col items-center pt-28 md:pt-30 pb-12 px-2 sm:px-4">
             <section className="w-full max-w-6xl flex flex-col md:grid md:grid-cols-2 gap-12 bg-[#a94f4f]/90 rounded-3xl shadow-2xl border border-white/20 p-4 sm:p-10 backdrop-blur-sm">
               {/* Right: Image & Actions */}
               <div className="flex flex-col items-center min-w-0 order-1 md:order-2">
