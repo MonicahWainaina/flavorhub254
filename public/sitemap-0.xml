@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-<url><loc>https://flavorhub254.vercel.app/legal/privacy</loc><lastmod>2025-11-22T09:33:23.402Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://flavorhub254.vercel.app/legal/tos</loc><lastmod>2025-11-22T09:33:23.403Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://flavorhub254.vercel.app/test-auth</loc><lastmod>2025-11-22T09:33:23.403Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://flavorhub254.vercel.app/browse</loc><lastmod>2025-11-22T09:33:23.403Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://flavorhub254.vercel.app/flavorbot</loc><lastmod>2025-11-22T09:33:23.403Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://flavorhub254.vercel.app</loc><lastmod>2025-11-22T09:33:23.403Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://flavorhub254.vercel.app/premium</loc><lastmod>2025-11-22T09:33:23.403Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://flavorhub254.com/legal/privacy</loc><lastmod>2025-11-22T19:32:02.605Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://flavorhub254.com/legal/tos</loc><lastmod>2025-11-22T19:32:02.606Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://flavorhub254.com/test-auth</loc><lastmod>2025-11-22T19:32:02.606Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://flavorhub254.com/browse</loc><lastmod>2025-11-22T19:32:02.606Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://flavorhub254.com/flavorbot</loc><lastmod>2025-11-22T19:32:02.606Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://flavorhub254.com</loc><lastmod>2025-11-22T19:32:02.606Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://flavorhub254.com/premium</loc><lastmod>2025-11-22T19:32:02.606Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 </urlset>
