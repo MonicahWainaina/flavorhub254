@@ -1,21 +1,22 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: 'https://flavorhub254.vercel.app', // Change to your production URL if different
+  siteUrl: 'https://flavorhub254.vercel.app',
   generateRobotsTxt: true,
-  // Optional: Exclude admin or test routes from sitemap
+  // Exclude private or login-only routes so Google only sees public URLs
   exclude: [
-    '/admin/*',
-    '/test-auth',
-    '/login',
-    '/checkout',
+    '/admin*',
+    '/verify-email*',
+    '/favourites*',
+    '/login*',
+    '/checkout*',
     '/api/*',
     '/_next/*',
   ],
-  // Optional: Add extra robots.txt policies
   robotsTxtOptions: {
     policies: [
       { userAgent: '*', allow: '/' },
-      { userAgent: '*', disallow: ['/admin', '/api', '/test-auth', '/checkout'] },
+      // Disallow private areas
+      { userAgent: '*', disallow: ['/admin', '/verify-email', '/favourites', '/login', '/checkout', '/api'] },
     ],
   },
 };

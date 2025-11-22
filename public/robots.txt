@@ -5,9 +5,11 @@ Allow: /
 # *
 User-agent: *
 Disallow: /admin
-Disallow: /api
-Disallow: /test-auth
+Disallow: /verify-email
+Disallow: /favourites
+Disallow: /login
 Disallow: /checkout
+Disallow: /api
 
 # Host
 Host: https://flavorhub254.vercel.app
