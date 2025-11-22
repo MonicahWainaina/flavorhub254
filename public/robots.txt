@@ -12,7 +12,7 @@ Disallow: /checkout
 Disallow: /api
 
 # Host
-Host: https://flavorhub254.vercel.app
+Host: https://flavorhub254.com
 
 # Sitemaps
-Sitemap: https://flavorhub254.vercel.app/sitemap.xml
+Sitemap: https://flavorhub254.com/sitemap.xml

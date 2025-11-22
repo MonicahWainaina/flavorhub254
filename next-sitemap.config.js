@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: 'https://flavorhub254.vercel.app',
+  siteUrl: 'https://flavorhub254.com',
   generateRobotsTxt: true,
   // Exclude private or login-only routes so Google only sees public URLs
   exclude: [

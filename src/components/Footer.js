@@ -39,7 +39,7 @@ export default function Footer() {
               <div>
                 <div className="text-xl font-bold mb-4">Contact</div>
                 <div className="flex items-center mb-3">
-                  <span>Email: <a href="mailto:hello@flavorhub254.co.ke" className="underline hover:text-green-400">hello@flavorhub254.co.ke</a></span>
+                  <span>Email: <a href="mailto:hello@flavorhub254.com" className="underline hover:text-green-400">hello@flavorhub254.com</a></span>
                 </div>
                 <div className="flex space-x-4 mb-4">
                   <a href="#" aria-label="Twitter" className="bg-green-700 hover:bg-green-800 rounded-lg p-2 transition">
