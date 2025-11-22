@@ -102,8 +102,8 @@ export default function Header({
           </Link>
         </div>
         {/* Desktop Nav */}
-        <div className="hidden lg:flex flex-1 items-center justify-end gap-x-4 lg:gap-x-8 ml-4 lg:ml-8">
-          <nav className="flex flex-wrap gap-x-3 md:gap-x-4 lg:gap-x-6 items-center">
+        <div className="hidden lg:flex flex-row items-center justify-end flex-grow">
+          <nav className="flex items-center gap-x-4 lg:gap-x-6">
             {filteredLinks.map((link) => (
               <Link
                 key={link.href}
@@ -186,8 +186,7 @@ export default function Header({
               </form>
             )}
           </nav>
-          {/* Login/Signup/Logout and Premium Badge */}
-          <div className="flex items-center gap-x-3">
+          <div className="flex items-center gap-x-3 ml-8">
             {loading ? null : user ? (
               <div className="flex items-center gap-2">
                 <span className="text-white font-semibold">
@@ -195,7 +194,7 @@ export default function Header({
                 </span>
                 {/* Premium badge next to greeting */}
                 {user.isPremium && (
-                  <span className="flex items-center px-2 py-1 bg-yellow-300 text-black rounded-full font-bold text-xs ml-2">
+                  <span className="flex-shrink-0 flex items-center px-2 py-1 bg-yellow-300 text-black rounded-full font-bold text-xs ml-2">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="h-4 w-4 mr-1"
@@ -208,8 +207,8 @@ export default function Header({
                   </span>
                 )}
                 <button
+                  className="flex-shrink-0 px-4 py-2 rounded-lg bg-red-700 text-white hover:bg-red-800 transition text-base font-semibold lowercase"
                   onClick={logOut}
-                  className="px-4 py-2 rounded-lg bg-red-700 text-white hover:bg-red-800 transition text-base font-semibold lowercase"
                 >
                   Logout
                 </button>
@@ -352,7 +351,7 @@ export default function Header({
                   {greeting ? `Hi, ${greeting}` : ''}
                 </span>
                 {user.isPremium && (
-                  <span className="flex items-center px-2 py-1 bg-yellow-300 text-black rounded-full font-bold text-xs mt-1">
+                  <span className="flex-shrink-0 flex items-center px-2 py-1 bg-yellow-300 text-black rounded-full font-bold text-xs mt-1">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="h-4 w-4 mr-1"

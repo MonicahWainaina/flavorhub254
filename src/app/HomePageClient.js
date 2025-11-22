@@ -329,7 +329,7 @@ export default function HomePageClient() {
       </section>
 
       {/* Featured Recipes Carousel Section */}
-      <section className=" w-full mt-3 sm:mt-10 px-4 sm:mb-7">
+      <section className="w-full mt-3 sm:mt-10 px-4 sm:mb-7">
         <div className="max-w-7xl mx-auto">
           {/* Section Title */}
           <div className="flex items-center mb-6">
@@ -344,10 +344,11 @@ export default function HomePageClient() {
             />
           </div>
           {/* Carousel */}
-          <div className="relative">
-            {/* Carousel Controls */}
+          <div className="relative flex items-center">
+            {/* Left Arrow */}
             <button
-              className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-[#a8323e] bg-opacity-90 rounded-full p-3 shadow hover:bg-[#d32f2f] transition hidden sm:block"
+              className="absolute left-0 z-10 bg-[#a8323e] bg-opacity-90 rounded-full p-3 shadow hover:bg-[#d32f2f] transition hidden sm:flex items-center justify-center"
+              style={{ top: '50%', transform: 'translateY(-50%)' }}
               onClick={() => scrollCarousel('left')}
               type="button"
             >
@@ -365,30 +366,11 @@ export default function HomePageClient() {
                 />
               </svg>
             </button>
-            <button
-              className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-[#a8323e] bg-opacity-90 rounded-full p-3 shadow hover:bg-[#d32f2f] transition hidden sm:block"
-              onClick={() => scrollCarousel('right')}
-              type="button"
-            >
-              <svg
-                className="w-7 h-7 text-white"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </button>
             {/* Carousel Items */}
             <div
               ref={carouselRef}
               onScroll={handleCarouselScroll}
-              className="flex gap-9 overflow-x-auto scrollbar-hide pb-2 pl-4 pr-4 sm:pl-16 sm:pr-16 snap-x snap-mandatory"
+              className="flex gap-6 overflow-x-auto scrollbar-hide pb-2 w-full"
               style={{ scrollSnapType: 'x mandatory' }}
             >
               {carouselRecipes.length === 0 ? (
@@ -438,23 +420,44 @@ export default function HomePageClient() {
                 ))
               )}
             </div>
-            {/* Pagination Dots */}
-            <div className="flex justify-center mt-3 gap-2 sm:hidden">
-              {carouselRecipes.map((_, i) => (
-                <span
-                  key={i}
-                  className={`h-2 w-2 rounded-full transition-all duration-200 ${i === carouselIndex ? 'bg-[#a8323e] scale-125' : 'bg-gray-400'}`}
+            {/* Right Arrow */}
+            <button
+              className="absolute right-0 z-10 bg-[#a8323e] bg-opacity-90 rounded-full p-3 shadow hover:bg-[#d32f2f] transition hidden sm:flex items-center justify-center"
+              style={{ top: '50%', transform: 'translateY(-50%)' }}
+              onClick={() => scrollCarousel('right')}
+              type="button"
+            >
+              <svg
+                className="w-7 h-7 text-white"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 5l7 7-7 7"
                 />
-              ))}
-            </div>
-            {/* Browse More Recipes Button */}
-            <div className="flex justify-center mt-6">
-              <Link href="/browse">
-                <button className="bg-[#a8323e] hover:bg-[#d32f2f] text-white px-6 py-2 rounded-lg font-semibold text-base shadow transition">
-                  Browse more recipes &raquo;
-                </button>
-              </Link>
-            </div>
+              </svg>
+            </button>
+          </div>
+          {/* Pagination Dots */}
+          <div className="flex justify-center mt-3 gap-2 sm:hidden">
+            {carouselRecipes.map((_, i) => (
+              <span
+                key={i}
+                className={`h-2 w-2 rounded-full transition-all duration-200 ${i === carouselIndex ? 'bg-[#a8323e] scale-125' : 'bg-gray-400'}`}
+              />
+            ))}
+          </div>
+          {/* Browse More Recipes Button */}
+          <div className="flex justify-center mt-6">
+            <Link href="/browse">
+              <button className="bg-[#a8323e] hover:bg-[#d32f2f] text-white px-6 py-2 rounded-lg font-semibold text-base shadow transition">
+                Browse more recipes &raquo;
+              </button>
+            </Link>
           </div>
         </div>
       </section>

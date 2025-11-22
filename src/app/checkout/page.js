@@ -135,10 +135,10 @@ export default function CheckoutPage() {
                 </div>
               )}
               <span className="text-sm text-white text-center mt-4">
-                Only{' '}
-                <span className="text-green-400 font-bold">KSh 250/month</span> (
-                <span className="text-[#FFD700] font-bold">$1.99 USD/month</span>
-                ). Cancel anytime.
+                One-time payment of{' '}
+                <span className="text-green-400 font-bold">KSh 250</span> (
+                <span className="text-[#FFD700] font-bold">$1.99 USD</span>
+                ). Enjoy premium features instantly!
               </span>
               <div className="flex justify-center mt-4">
                 <img src="/assets/paystack.png" alt="Paystack" className="h-6 mr-2" />
