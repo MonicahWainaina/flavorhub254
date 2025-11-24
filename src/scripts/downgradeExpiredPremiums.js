@@ -1,5 +1,13 @@
 const admin = require('firebase-admin');
-const serviceAccount = require('./serviceAccountKey.json'); // path to your service account
+
+// Build service account object from environment variables
+const serviceAccount = {
+  project_id: process.env.FIREBASE_PROJECT_ID,
+  client_email: process.env.FIREBASE_CLIENT_EMAIL,
+  private_key: process.env.FIREBASE_PRIVATE_KEY
+    ? process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
+    : undefined,
+};
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
