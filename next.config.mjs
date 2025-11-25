@@ -28,6 +28,15 @@ const nextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        destination: 'https://flavorhub254.com/:path*',
+        permanent: true,
+      },
+    ];
+  },
   // ...other config
 };
 
