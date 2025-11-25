@@ -31,6 +31,8 @@ export default function RootLayout({ children }) {
       <head>
         {/* Favicon for browsers and Google */}
         <link rel="icon" href="/favicon.png" type="image/png" />
+        {/* Canonical link for SEO */}
+        <link rel="canonical" href="https://flavorhub254.com/" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
