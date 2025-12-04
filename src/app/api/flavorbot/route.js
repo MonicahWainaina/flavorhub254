@@ -11,6 +11,7 @@ import { randomUUID } from "crypto";
 // --- CORS setup ---
 const ALLOWED_ORIGINS = [
   "http://localhost:3000",
+  "https://flavorhub254.com",
   "https://flavorhub254.vercel.app",
   "https://flavorhub254-git-feature-homepage-monicahwainainas-projects.vercel.app",
 ];
@@ -67,7 +68,6 @@ const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL,
   token: process.env.UPSTASH_REDIS_REST_TOKEN,
 });
-
 
 function getClientIp(req) {
   return (
@@ -165,7 +165,7 @@ export async function POST(req) {
         NextResponse.json({
           role: "assistant",
           content:
-            "Hi! I’m FlavorBot — your smart kitchen companion. I can help you find recipes, answer cooking questions, and share tips on ingredients and nutrition. What’s cooking in your mind today?",
+            "Hi! I’m FlavorBot — your smart kitchen companion at flavorhub254.com. I can help you find recipes, answer cooking questions, and share tips on ingredients and nutrition. What’s cooking in your mind today?",
         }),
         origin
       );
@@ -213,8 +213,12 @@ export async function POST(req) {
       return res;
     }
 
-    // Step 2: classify message for recipe mode
-    const isRecipe = /recipe|cook|make|prepare|bake|ingredients/i.test(latestPrompt);
+    // Step 2: classify message for recipe mode (improved triggers)
+    const recipeTriggers = [
+      /^(give me|show me|i want|can i get|how do i make|recipe for|how to make|make|prepare|bake)\b.*recipe?/i,
+      /\b(recipe|ingredients|steps)\b.*\?/i
+    ];
+    const isRecipe = recipeTriggers.some((regex) => regex.test(latestPrompt));
 
     // Step 3: Recipe Mode
     if (isRecipe) {
@@ -306,28 +310,25 @@ Do not add extra text.`,
       return res;
     }
 
-    // Step 4: Food Q&A Mode
-    // Build the message history for context, or just use the latest prompt if not provided
+    // Step 4: Food Q&A Mode (improved system prompt)
     const qaMessages = messages && messages.length
       ? [
           {
             role: "system",
-            content: `You are FlavorBot — FlavorHUB254’s Smart Cooking Assistant.
+            content: `You are FlavorBot — FlavorHUB254’s Smart Cooking Assistant at flavorhub254.com.
 You ONLY answer food-related questions: cooking methods, substitutions, nutrition, cultural food context, ingredients.
-Answer clearly and concisely (2–4 sentences).
-Expand with more detail only if the user asks for it.
-If the prompt is not food-related, politely refuse.`,
+Answer clearly and concisely (2–4 sentences). Be friendly and conversational.
+If the prompt is not food-related, politely refuse and suggest a food-related topic.`,
           },
           ...messages,
         ]
       : [
           {
             role: "system",
-            content: `You are FlavorBot — FlavorHUB254’s Smart Cooking Assistant.
+            content: `You are FlavorBot — FlavorHUB254’s Smart Cooking Assistant at flavorhub254.com.
 You ONLY answer food-related questions: cooking methods, substitutions, nutrition, cultural food context, ingredients.
-Answer clearly and concisely (2–4 sentences).
-Expand with more detail only if the user asks for it.
-If the prompt is not food-related, politely refuse.`,
+Answer clearly and concisely (2–4 sentences). Be friendly and conversational.
+If the prompt is not food-related, politely refuse and suggest a food-related topic.`,
           },
           { role: "user", content: latestPrompt },
         ];

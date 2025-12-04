@@ -1,7 +1,12 @@
 [
   {
-    "origin": ["http://localhost:3000", "https://flavorhub254.vercel.app","https://flavorhub254-git-feature-homepage-monicahwainainas-projects.vercel.app"],
-    "method": ["GET"],
+    "origin": [
+      "http://localhost:3000",
+      "https://flavorhub254.com",
+      "https://flavorhub254.vercel.app",
+      "https://flavorhub254-git-feature-homepage-monicahwainainas-projects.vercel.app"
+    ],
+    "method": ["GET", "HEAD"],
     "maxAgeSeconds": 3600,
     "responseHeader": ["Content-Type"]
   }
