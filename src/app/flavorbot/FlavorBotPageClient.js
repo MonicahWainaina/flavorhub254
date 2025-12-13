@@ -37,7 +37,7 @@ function BotIcon({ className = "w-10 h-10" }) {
 
 const MESSAGES_PAGE_SIZE = 20;
 const GUEST_CHAT_LIMIT = 5;
-const USER_CHAT_LIMIT = 20;
+const USER_CHAT_LIMIT = 10;
 
 function getTodayString() {
   return new Date().toISOString().slice(0, 10);
