@@ -146,29 +146,20 @@ export default function FlavorBotPageClient() {
     }
   }, [messages, loading]);
 
-  // --- Chat count logic for badge ---
+  // --- Chat count logic for badge (adjusted for free users) ---
   useEffect(() => {
     const today = getTodayString();
     if (user) {
-      // Logged-in: count sessions created today
-      const fetchChatsToday = async () => {
-        const startOfDay = new Date(today + "T00:00:00Z");
-        const endOfDay = new Date(today + "T23:59:59Z");
-        const q = query(
-          collection(db, "users", user.uid, "sessions"),
-          where("createdAt", ">=", startOfDay),
-          where("createdAt", "<=", endOfDay)
-        );
-        const snapshot = await getDocs(q);
-        setChatsToday(snapshot.size);
-      };
-      fetchChatsToday();
+      if (user.isPremium) return; // Premium: no limit
+      // Free user: get from localStorage
+      const freeChats = Number(localStorage.getItem(`freeChats_${user.uid}_${today}`) || 0);
+      setChatsToday(freeChats);
     } else {
       // Guest: get from localStorage
       const guestChats = Number(localStorage.getItem(`guestChats_${today}`) || 0);
       setChatsToday(guestChats);
     }
-  }, [user, sessions]);
+  }, [user]);
 
   // When a guest submits a chat, increment the count
   const handleGuestChatIncrement = () => {
@@ -177,6 +168,17 @@ export default function FlavorBotPageClient() {
       const guestChats = Number(localStorage.getItem(`guestChats_${today}`) || 0) + 1;
       localStorage.setItem(`guestChats_${today}`, guestChats);
       setChatsToday(guestChats);
+    }
+  };
+
+  // When a free user submits a chat, increment the count
+  const handleFreeUserChatIncrement = () => {
+    if (user && !user.isPremium) {
+      const today = getTodayString();
+      const key = `freeChats_${user.uid}_${today}`;
+      const freeChats = Number(localStorage.getItem(key) || 0) + 1;
+      localStorage.setItem(key, freeChats);
+      setChatsToday(freeChats);
     }
   };
 
@@ -221,8 +223,8 @@ export default function FlavorBotPageClient() {
       return;
     }
 
-    // --- User chat limit check ---
-    if (user && chatsToday >= USER_CHAT_LIMIT) {
+    // --- User chat limit check (adjusted for free users) ---
+    if (user && !user.isPremium && chatsToday >= USER_CHAT_LIMIT) {
       toast.error("You’ve hit your free daily chat limit. Upgrade to Premium for unlimited access!");
       return;
     }
@@ -291,9 +293,11 @@ export default function FlavorBotPageClient() {
           }
         }
 
-        // --- Increment guest chat count after successful chat ---
+        // --- Increment guest/free user chat count after successful chat ---
         if (!user) {
           handleGuestChatIncrement();
+        } else if (user && !user.isPremium) {
+          handleFreeUserChatIncrement();
         }
       } else {
         // Fine-tuned toast messages for rate limits
@@ -433,11 +437,11 @@ export default function FlavorBotPageClient() {
   return (
     <div className="relative min-h-screen flex flex-col bg-[#181818]">
       {/* Chat count badge (top right, below navbar) */}
-      {(!user || !user.isPremium) && (
+      {(!user || (user && !user.isPremium)) && (
         <div className="fixed right-8 top-24 z-50">
           <span className="bg-[#232323] text-white border-2 border-[#3CB371] rounded-xl px-4 py-2 font-semibold shadow-lg text-sm">
             {user
-              ? `Chats started today: ${chatsToday} / ${USER_CHAT_LIMIT}`
+              ? `Chats today: ${chatsToday} / ${USER_CHAT_LIMIT}`
               : `Chats left today: ${Math.max(0, GUEST_CHAT_LIMIT - chatsToday)} / ${GUEST_CHAT_LIMIT}`}
           </span>
         </div>
