@@ -135,4 +135,4 @@ See the [NOTICE](./NOTICE) file for attribution information.
 ---
 
 *Built with ❤️ by Monicah Wainaina*  
-[Live Demo → flavorhub254.vercel.app](https://flavorhub254.vercel.app)
+[Live Demo → flavorhub254.vercel.app](https://flavorhub254.com)
