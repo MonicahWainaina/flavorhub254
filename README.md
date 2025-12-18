@@ -43,13 +43,13 @@ Here are some snapshots of the app’s interface:
 
 ---
 
-## 🚀 Upcoming Features (Post-MVP Roadmap)
+## 🚀 Premium Features (Post-MVP Complete)
 
 - **Downloadable Audio Instructions** (MP3 per recipe).
 - **Smart Cooking Mode**: Step-by-step, timer-enabled, with optional browser-based narration.
 - **FlavorBot (AI Assistant)**: Ask questions about food, cooking, and recipes.
 - **Premium Features**: Audio, Smart Cooking, and PDF downloads for premium users.
-- **Optional MFA (2FA):** Planned for future security enhancement.
+- **MFA (2FA):** Planned for future security enhancement.
 
 ---
 
