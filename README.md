@@ -24,7 +24,6 @@ Here are some snapshots of the app’s interface:
 |-----------|----------------|----------------|
 | ![Home](https://res.cloudinary.com/djlcnpdtn/image/upload/v1757619486/recipe/Homepage.png) | ![Browse](https://res.cloudinary.com/djlcnpdtn/image/upload/v1756908810/recipe/Browse.png) | ![Recipe](https://res.cloudinary.com/djlcnpdtn/image/upload/v1756908449/recipe/Recipepage.png) |
 
-*(Replace with your own screenshots for best results.)*
 
 ---
 
@@ -135,4 +134,4 @@ See the [NOTICE](./NOTICE) file for attribution information.
 ---
 
 *Built with ❤️ by Monicah Wainaina*  
-[Live Demo → flavorhub254.vercel.app](https://flavorhub254.com)
+[Live Demo → flavorhub254.com](https://flavorhub254.com)
