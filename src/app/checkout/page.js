@@ -34,9 +34,12 @@ export default function CheckoutPage() {
     const handler = window.PaystackPop.setup({
       key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY,
       email: user.email,
-      amount: 250 * 100,
+      amount: 20 * 100,
       currency: 'KES',
       channels: method === 'mpesa' ? ['mobile_money'] : ['card'],
+      metadata: {
+        uid: user.uid, 
+      },
       callback: function(response) {
         setStatus('Payment successful! Upgrading...');
         fetch('/api/paystack/verify', {
