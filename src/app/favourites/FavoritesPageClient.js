@@ -6,7 +6,7 @@ import Link from 'next/link';
 import FavoriteButton from '@/components/FavoriteButton';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { Loader, CarouselRecipeSkeleton } from '@/components/Loaders';
+import { Loader } from '@/components/Loaders';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { db } from '@/lib/firebase';
@@ -100,32 +100,12 @@ export default function FavoritesPageClient() {
     );
   });
 
-  // --- Mobile carousel logic ---
-  const mobileRecipePages = chunkArray(filteredRecipes, 4);
-  const [mobilePage, setMobilePage] = useState(0);
-  const mobileCarouselRef = useRef(null);
-
-  // --- Sync mobilePage with scroll ---
-  useEffect(() => {
-    const ref = mobileCarouselRef.current;
-    if (!ref) return;
-    const handleScroll = () => {
-      const scrollLeft = ref.scrollLeft;
-      const pageWidth = ref.offsetWidth;
-      const idx = Math.round(scrollLeft / pageWidth);
-      setMobilePage(idx);
-    };
-    ref.addEventListener('scroll', handleScroll, { passive: true });
-    return () => ref.removeEventListener('scroll', handleScroll);
-  }, [mobileRecipePages.length]);
-
-  // --- Reset scroll on filter/sort/search ---
-  useEffect(() => {
-    setMobilePage(0);
-    if (mobileCarouselRef.current) {
-      mobileCarouselRef.current.scrollTo({ left: 0, behavior: 'auto' });
-    }
-  }, [filteredRecipes.length, searchTerm, sortBy]);
+  // --- Pagination for desktop ---
+  const totalPages = Math.ceil(filteredRecipes.length / recipesPerPage);
+  const paginatedRecipes = filteredRecipes.slice(
+    recipePage * recipesPerPage,
+    (recipePage + 1) * recipesPerPage
+  );
 
   // --- Remove from favorites ---
   const handleToggleFavorite = async (recipe) => {
@@ -135,13 +115,6 @@ export default function FavoritesPageClient() {
     setFavoriteRecipes((recipes) => recipes.filter((r) => r.id !== recipe.id));
     setFavoriteIds((ids) => ids.filter((id) => id !== recipe.id));
   };
-
-  // --- Pagination for desktop ---
-  const totalPages = Math.ceil(filteredRecipes.length / recipesPerPage);
-  const paginatedRecipes = filteredRecipes.slice(
-    recipePage * recipesPerPage,
-    (recipePage + 1) * recipesPerPage
-  );
 
   // --- PROTECT PAGE: redirect if not logged in ---
   useEffect(() => {
@@ -203,6 +176,7 @@ export default function FavoritesPageClient() {
             </button>
           </Link>
         </main>
+        <Footer />
       </>
     );
   }
@@ -211,8 +185,9 @@ export default function FavoritesPageClient() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-[#181818] flex flex-col items-center py-10">
-        <h1 className="text-3xl font-extrabold text-white mb-6 text-center">
+      <main className="min-h-screen bg-[#181818] flex flex-col items-center py-10 pt-20">
+        {/* ↑↑↑ Add pt-16 for padding-top (or use mt-16 on the h1 if you prefer) */}
+        <h1 className="text-3xl font-extrabold text-white mb-6 text-center w-full">
           {username
             ? `${username}'s Favourite Recipes`
             : 'Your Favourite Recipes'}
@@ -295,71 +270,75 @@ export default function FavoritesPageClient() {
               ))}
             </div>
           )}
-          {/* Mobile Carousel */}
-          <div className="sm:hidden">
-            <div
-              ref={mobileCarouselRef}
-              className="flex overflow-x-auto gap-4 snap-x snap-mandatory pb-4"
-              style={{ scrollSnapType: 'x mandatory' }}
-            >
-              {mobileRecipePages[mobilePage]?.map((recipe) => (
-                <div
-                  key={recipe.id}
-                  className="bg-[#232323] rounded-xl shadow-lg p-4 flex flex-col items-center min-w-[80vw] max-w-[80vw] snap-center"
-                >
-                  <Image
-                    src={recipe.image?.url || '/assets/placeholder.jpg'}
-                    alt={recipe.image?.alt || recipe.title}
-                    width={240}
-                    height={180}
-                    className="rounded-lg mb-3 object-cover w-full h-40"
-                  />
-                  <h3 className="text-lg font-bold text-white mb-2 text-center">
-                    {recipe.title}
-                  </h3>
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-yellow-400 text-xl">★</span>
-                    <span className="text-white font-semibold">
-                      {recipe.rating?.toFixed(1) || 'N/A'}
-                    </span>
+          {/* Mobile Grid (like Browse) */}
+          <div className="sm:hidden w-full px-2 mt-4">
+            {filteredRecipes.length === 0 ? (
+              <div className="text-white text-center py-20">
+                No favorites found.
+                <br />
+                <Link href="/browse">
+                  <button className="mt-4 bg-[#3CB371] text-white px-4 py-2 rounded-lg font-bold hover:bg-[#2e8b57] transition">
+                    Browse Recipes
+                  </button>
+                </Link>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-3">
+                {filteredRecipes.map((recipe) => (
+                  <div
+                    key={recipe.id}
+                    className="bg-[#232323] rounded-2xl shadow-lg overflow-hidden flex flex-col min-h-[180px] relative transition"
+                  >
+                    {/* Image */}
+                    <div className="relative w-full h-[90px]">
+                      <img
+                        src={recipe.image?.url || '/assets/placeholder.jpg'}
+                        alt={recipe.image?.alt || recipe.title}
+                        className="object-cover rounded-t-2xl w-full h-full"
+                        loading="lazy"
+                      />
+                    </div>
+                    {/* Content */}
+                    <div className="flex flex-col justify-between p-2 flex-1 relative">
+                      <span className="font-bold text-white text-sm mb-1 truncate">
+                        {recipe.title}
+                      </span>
+                      <div className="flex items-center gap-2 mb-1">
+                        {/* Star SVG */}
+                        <svg width="14" height="14" fill="#FFD700" viewBox="0 0 20 20">
+                          <path d="M10 15l-5.878 3.09 1.122-6.545L.488 6.91l6.561-.955L10 0l2.951 5.955 6.561.955-4.756 4.635 1.122 6.545z" />
+                        </svg>
+                        <span className="text-yellow-300 font-bold text-xs">
+                          ({recipe.rating?.toFixed(1) || 'N/A'})
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {/* Clock SVG */}
+                        <svg width="12" height="12" fill="none" stroke="#fff" strokeWidth="2" viewBox="0 0 24 24">
+                          <circle cx="12" cy="12" r="10" />
+                          <path d="M12 6v6l4 2" />
+                        </svg>
+                        <span className="text-white text-xs">
+                          {recipe.time || 'N/A'} mins
+                        </span>
+                      </div>
+                      {/* Favorite Icon at bottom right */}
+                      <div
+                        className="absolute bottom-2 right-2 z-10"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleToggleFavorite(recipe);
+                        }}
+                      >
+                        <FavoriteButton
+                          isFav={true}
+                          onClick={() => {}}
+                          size={28}
+                        />
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex gap-2">
-                    <Link href={`/recipe/${recipe.slug}`}>
-                      <button className="bg-green-700 hover:bg-green-800 text-white px-4 py-1 rounded-lg font-semibold text-sm">
-                        View
-                      </button>
-                    </Link>
-                    <FavoriteButton
-                      isFav={true}
-                      onClick={() => handleToggleFavorite(recipe)}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-            {/* Mobile Pagination */}
-            {mobileRecipePages.length > 1 && (
-              <div className="flex justify-center gap-2 mt-2">
-                {mobileRecipePages.map((_, idx) => (
-                  <button
-                    key={idx}
-                    className={`w-3 h-3 rounded-full ${
-                      idx === mobilePage
-                        ? 'bg-green-700'
-                        : 'bg-gray-500'
-                    }`}
-                    onClick={() => {
-                      setMobilePage(idx);
-                      if (mobileCarouselRef.current) {
-                        mobileCarouselRef.current.scrollTo({
-                          left:
-                            idx *
-                            (mobileCarouselRef.current.offsetWidth || 1),
-                          behavior: 'smooth',
-                        });
-                      }
-                    }}
-                  />
                 ))}
               </div>
             )}
