@@ -13,35 +13,27 @@ admin.initializeApp({
 const db = admin.firestore();
 
 // Path to your recipe folders
-const RECIPES_DIR = path.join(__dirname, "recipes");
+const RECIPES_DIR = path.join(__dirname, "../../recipes");
 
 async function uploadRecipes() {
-  const categories = fs.readdirSync(RECIPES_DIR);
+  const files = fs.readdirSync(RECIPES_DIR);
 
-  for (const category of categories) {
-    const categoryPath = path.join(RECIPES_DIR, category);
+  for (const file of files) {
+    if (file.endsWith(".json")) {
+      const filePath = path.join(RECIPES_DIR, file);
+      const recipeData = JSON.parse(fs.readFileSync(filePath, "utf-8"));
 
-    if (fs.lstatSync(categoryPath).isDirectory()) {
-      const files = fs.readdirSync(categoryPath);
+      // Optionally, set a default category or leave as is
+      // recipeData.category = "Uncategorized";
 
-      for (const file of files) {
-        if (file.endsWith(".json")) {
-          const filePath = path.join(categoryPath, file);
-          const recipeData = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+      // Use filename (without .json) as document ID
+      const docId = path.basename(file, ".json");
 
-          // Add category field
-          recipeData.category = category;
+      // Upload to Firestore
+      const docRef = db.collection("recipes").doc(docId);
+      await docRef.set(recipeData);
 
-          // Use filename (without .json) as document ID
-          const docId = path.basename(file, ".json");
-
-          // Upload to Firestore
-          const docRef = db.collection("recipes").doc(docId);
-          await docRef.set(recipeData);
-
-          console.log(`Uploaded: ${file} under ${category} as ${docId}`);
-        }
-      }
+      console.log(`Uploaded: ${file} as ${docId}`);
     }
   }
 

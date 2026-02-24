@@ -539,6 +539,18 @@ export default function HomePageClient() {
                     with FlavorBot.
                   </span>
                 </li>
+                {/* New feature line */}
+                <li className="flex items-center">
+                  <span
+                    className="text-green-500 mr-4"
+                    style={{ fontSize: '2.2rem', lineHeight: 1 }}
+                  >
+                    ★
+                  </span>
+                  <span className="block text-white">
+                    Explore our premium features such as unlimited PDF downloads, unlimited audio downloads, and Smart Audio Cooking Guide.
+                  </span>
+                </li>
               </ul>
             </div>
           </div>

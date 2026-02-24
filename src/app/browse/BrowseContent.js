@@ -48,6 +48,47 @@ function chunkArray(array, size) {
   return result;
 }
 
+// Collapsible ingredient category
+function IngredientCategory({ name, color, items, selectedIngredients, setSelectedIngredients, maxSelect = 2 }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="mb-2">
+      <button
+        type="button"
+        className="flex items-center w-full justify-between py-2"
+        onClick={() => setOpen((v) => !v)}
+      >
+        <span className={`font-semibold ${color}`}>{name}</span>
+        <span className="text-white">{open ? '▲' : '▼'}</span>
+      </button>
+      {open && (
+        <div className="flex flex-col gap-2 mt-1">
+          {items.map((ingredient) => (
+            <label className="text-white text-base flex items-center gap-2" key={ingredient}>
+              <input
+                type="checkbox"
+                checked={selectedIngredients.includes(ingredient)}
+                onChange={e => {
+                  if (e.target.checked) {
+                    if (selectedIngredients.length < maxSelect) {
+                      setSelectedIngredients([...selectedIngredients, ingredient]);
+                    } else {
+                      toast.info(`You can only select up to ${maxSelect} ingredients.`);
+                    }
+                  } else {
+                    setSelectedIngredients(selectedIngredients.filter(ing => ing !== ingredient));
+                  }
+                }}
+              />
+              {ingredient}
+            </label>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function BrowseContent() {
   const carouselRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -63,6 +104,33 @@ export default function BrowseContent() {
   // --- Fetch categories from Firestore ---
   const [categories, setCategories] = useState([]);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
+
+  // Ingredient categories
+  const VEGETABLES = [
+    'Tomato', 'Spinach', 'Kale', 'Potatoes', 'Carrot', 'Beetroot', 'Lettuce',
+    'Cucumber', 'Onion', 'Garlic', 'Managu', 'Terere'
+  ];
+  const MEATS = [
+    'Chicken', 'Beef', 'Goat', 'Fish', 'Lamb', 'Oxtail', 
+  ];
+  const DAIRY = [
+    'Eggs', 'Milk', 'Cheese', 'Butter', 'Cream', 'Yoghurt','Whipped cream','Custard'
+  ];
+  const GRAINS = [
+    'Rice', 'Cassava', 'Bread', 'Pasta','Millet','Maize',
+  ];
+  const FRUITS = [
+    'Apple', 'Mango', 'Banana', 'Grape', 'Avocado', 'Kiwi', 'Pineapple'
+  ];
+  const CONDIMENTS = [
+    'Bbq sauce', 'Chutney', 'Ganache', 'Caramel', 'Pilipili', 'Gravy'
+  ];
+  const SPICES = [
+    'Tea Masala', 'Salt', 'Pepper', 'Cinnamon', 'Cumin', 'Turmeric', 'Paprika', 'Cardamom'
+  ];
+  const LEGUMES = [
+  'Beans', 'Lentils', 'Peas', 'Chickpeas' 
+];
 
   useEffect(() => {
     async function fetchCategories() {
@@ -333,7 +401,7 @@ export default function BrowseContent() {
           <>
             {/* --- MOBILE CATEGORY CAROUSEL & FILTER BUTTON --- */}
             {!searchTerm.trim() && (
-              <div className="sm:hidden w-full bg-[#181818] flex flex-col gap-3 px-2 py-3 border-b border-[#3CB371]/30">
+              <div className="sm:hidden w-full bg-[#181818] flex flex-col gap-3 px-2 py-3 border-b border-[#3CB371]/30 mb-8">
                 <span className="text-[#3CB371] font-bold text-base mb-1 flex items-center gap-2">
                   <svg
                     width="20"
@@ -542,175 +610,76 @@ export default function BrowseContent() {
             {/* --- FILTER MODAL FOR MOBILE --- */}
             {showFilterModal && (
               <div className="sm:hidden fixed inset-0 z-50 flex items-end justify-center">
-                <div
-                  className="fixed inset-0 bg-black/40"
-                  onClick={() => setShowFilterModal(false)}
-                />
-                <div className="bg-[#181818] w-full rounded-t-2xl p-6 max-h-[60vh] overflow-y-auto relative z-50 animate-slideUp">
+                <div className="fixed inset-0 bg-black/40" onClick={() => setShowFilterModal(false)} />
+                <div className="bg-[#181818] w-full rounded-t-2xl p-6 pb-28 max-h-[60vh] overflow-y-auto relative z-50 animate-slideUp">
                   <div className="w-12 h-1.5 bg-gray-400 rounded-full mx-auto mb-4" />
-                  <button
-                    className="absolute top-2 right-4 text-white text-2xl"
-                    onClick={() => setShowFilterModal(false)}
-                    aria-label="Close"
-                  >
-                    &times;
-                  </button>
-                  <h3 className="text-lg font-bold text-white mb-1">
-                    Filter Recipes By Ingredients
-                  </h3>
-                  <p className="text-gray-300 text-sm mb-3">
-                    Select up to 2 ingredients to narrow your results.
-                  </p>
+                  <button className="absolute top-2 right-4 text-white text-2xl" onClick={() => setShowFilterModal(false)} aria-label="Close">&times;</button>
+                  <h3 className="text-lg font-bold text-white mb-1">Filter Recipes By Ingredients</h3>
+                  <p className="text-gray-300 text-sm mb-3">Select up to 2 ingredients to narrow your results.</p>
                   {selectedIngredients.length > 0 && (
-                    <p className="text-white text-sm mb-2">
-                      {filteredRecipes.length} recipes found
-                    </p>
+                    <p className="text-white text-sm mb-2">{filteredRecipes.length} recipes found</p>
                   )}
                   <hr className="border-t border-white/30 mb-2" />
-                  <form
-                    className="flex flex-col gap-4"
-                    onSubmit={(e) => e.preventDefault()}
-                  >
-                    {/* Vegetables */}
-                    <div>
-                      <span className="font-semibold text-white">
-                        Vegetables
-                      </span>
-                      <div className="flex flex-col gap-2 mt-2">
-                        {['Tomato', 'Spinach', 'Kale', 'Potatoes'].map(
-                          (ingredient) => (
-                            <label
-                              className="text-white text-base flex items-center gap-2"
-                              key={ingredient}
-                            >
-                              <input
-                                type="checkbox"
-                                checked={selectedIngredients.includes(
-                                  ingredient
-                                )}
-                                onChange={(e) => {
-                                  if (e.target.checked) {
-                                    if (selectedIngredients.length < 2) {
-                                      setSelectedIngredients([
-                                        ...selectedIngredients,
-                                        ingredient,
-                                      ]);
-                                    } else {
-                                      toast.info(
-                                        'You can only select up to 2 ingredients.'
-                                      );
-                                    }
-                                  } else {
-                                    setSelectedIngredients(
-                                      selectedIngredients.filter(
-                                        (ing) => ing !== ingredient
-                                      )
-                                    );
-                                  }
-                                }}
-                              />
-                              {ingredient}
-                            </label>
-                          )
-                        )}
-                      </div>
-                    </div>
-                    {/* Meats */}
-                    <div>
-                      <span className="font-semibold text-white">Meats</span>
-                      <div className="flex flex-col gap-2 mt-2">
-                        {['Chicken', 'Beef', 'Goat', 'Fish'].map(
-                          (ingredient) => (
-                            <label
-                              className="text-white text-base flex items-center gap-2"
-                              key={ingredient}
-                            >
-                              <input
-                                type="checkbox"
-                                checked={selectedIngredients.includes(
-                                  ingredient
-                                )}
-                                onChange={(e) => {
-                                  if (e.target.checked) {
-                                    if (selectedIngredients.length < 2) {
-                                      setSelectedIngredients([
-                                        ...selectedIngredients,
-                                        ingredient,
-                                      ]);
-                                    } else {
-                                      toast.info(
-                                        'You can only select up to 2 ingredients.'
-                                      );
-                                    }
-                                  } else {
-                                    setSelectedIngredients(
-                                      selectedIngredients.filter(
-                                        (ing) => ing !== ingredient
-                                      )
-                                    );
-                                  }
-                                }}
-                              />
-                              {ingredient}
-                            </label>
-                          )
-                        )}
-                      </div>
-                    </div>
-                    {/* Dairy */}
-                    <div>
-                      <span className="font-semibold text-white">Dairy</span>
-                      <div className="flex flex-col gap-2 mt-2">
-                        {['Eggs', 'Milk', 'Cheese'].map((ingredient) => (
-                          <label
-                            className="text-white text-base flex items-center gap-2"
-                            key={ingredient}
-                          >
-                            <input
-                              type="checkbox"
-                              checked={selectedIngredients.includes(ingredient)}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  if (selectedIngredients.length < 2) {
-                                    setSelectedIngredients([
-                                      ...selectedIngredients,
-                                      ingredient,
-                                    ]);
-                                  } else {
-                                    toast.info(
-                                      'You can only select up to 2 ingredients.'
-                                    );
-                                  }
-                                } else {
-                                  setSelectedIngredients(
-                                    selectedIngredients.filter(
-                                      (ing) => ing !== ingredient
-                                    )
-                                  );
-                                }
-                              }}
-                            />
-                            {ingredient}
-                          </label>
-                        ))}
-                      </div>
-                    </div>
+                  <form className="flex flex-col gap-2" onSubmit={e => e.preventDefault()}>
+                    <IngredientCategory
+                      name="Vegetables"
+                      color="text-green-400"
+                      items={VEGETABLES}
+                      selectedIngredients={selectedIngredients}
+                      setSelectedIngredients={setSelectedIngredients}
+                    />
+                    <IngredientCategory
+                      name="Meats"
+                      color="text-red-400"
+                      items={MEATS}
+                      selectedIngredients={selectedIngredients}
+                      setSelectedIngredients={setSelectedIngredients}
+                    />
+                    <IngredientCategory
+                      name="Dairy"
+                      color="text-yellow-300"
+                      items={DAIRY}
+                      selectedIngredients={selectedIngredients}
+                      setSelectedIngredients={setSelectedIngredients}
+                    />
+                    <IngredientCategory
+                      name="Grains & Starches"
+                      color="text-orange-300"
+                      items={GRAINS}
+                      selectedIngredients={selectedIngredients}
+                      setSelectedIngredients={setSelectedIngredients}
+                    />
+                    <IngredientCategory
+  name="Legumes"
+  color="text-teal-300"
+  items={LEGUMES}
+  selectedIngredients={selectedIngredients}
+  setSelectedIngredients={setSelectedIngredients}
+/>
+                    <IngredientCategory
+                      name="Fruits"
+                      color="text-pink-300"
+                      items={FRUITS}
+                      selectedIngredients={selectedIngredients}
+                      setSelectedIngredients={setSelectedIngredients}
+                    />
+                    <IngredientCategory
+                      name="Condiments & Sauces"
+                      color="text-blue-300"
+                      items={CONDIMENTS}
+                      selectedIngredients={selectedIngredients}
+                      setSelectedIngredients={setSelectedIngredients}
+                    />
+                    <IngredientCategory
+                      name="Spices & Herbs"
+                      color="text-purple-300"
+                      items={SPICES}
+                      selectedIngredients={selectedIngredients}
+                      setSelectedIngredients={setSelectedIngredients}
+                    />
                     <div className="flex gap-2 mt-4">
-                      <button
-                        type="button"
-                        className="flex-1 bg-[#3CB371] text-white px-4 py-2 rounded-lg font-bold hover:bg-[#2e8b57] transition"
-                        onClick={() => setShowFilterModal(false)}
-                      >
-                        Apply
-                      </button>
-                      <button
-                        type="button"
-                        className="flex-1 bg-gray-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-gray-700 transition"
-                        onClick={() => setSelectedIngredients([])}
-                        disabled={selectedIngredients.length === 0}
-                      >
-                        Clear
-                      </button>
+                      <button type="button" className="flex-1 bg-[#3CB371] text-white px-4 py-2 rounded-lg font-bold hover:bg-[#2e8b57] transition" onClick={() => setShowFilterModal(false)}>Apply</button>
+                      <button type="button" className="flex-1 bg-gray-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-gray-700 transition" onClick={() => setSelectedIngredients([])} disabled={selectedIngredients.length === 0}>Clear</button>
                     </div>
                   </form>
                 </div>
@@ -732,66 +701,49 @@ export default function BrowseContent() {
                 className="flex flex-col gap-4"
                 onSubmit={(e) => e.preventDefault()}
               >
-                {/* Vegetables */}
                 <div>
-                  <span className="font-semibold text-white">Vegetables</span>
+                  <span className="font-semibold text-green-400">Vegetables</span>
                   <div className="flex flex-col gap-1 mt-1">
-                    {['Tomato', 'Spinach', 'Kale', 'Potatoes'].map(
-                      (ingredient) => (
-                        <label className="text-white" key={ingredient}>
-                          <input
-                            type="checkbox"
-                            checked={selectedIngredients.includes(ingredient)}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                if (selectedIngredients.length < 2) {
-                                  setSelectedIngredients([
-                                    ...selectedIngredients,
-                                    ingredient,
-                                  ]);
-                                }
-                              } else {
-                                setSelectedIngredients(
-                                  selectedIngredients.filter(
-                                    (ing) => ing !== ingredient
-                                  )
-                                );
-                              }
-                            }}
-                            disabled={
-                              !selectedIngredients.includes(ingredient) &&
-                              selectedIngredients.length >= 2
-                            }
-                          />{' '}
-                          {ingredient}
-                        </label>
-                      )
-                    )}
-                  </div>
-                </div>
-                {/* Meats */}
-                <div>
-                  <span className="font-semibold text-white">Meats</span>
-                  <div className="flex flex-col gap-1 mt-1">
-                    {['Chicken', 'Beef', 'Goat', 'Fish'].map((ingredient) => (
+                    {VEGETABLES.map(ingredient => (
                       <label className="text-white" key={ingredient}>
                         <input
                           type="checkbox"
                           checked={selectedIngredients.includes(ingredient)}
-                          onChange={(e) => {
+                          onChange={e => {
                             if (e.target.checked) {
                               if (selectedIngredients.length < 2) {
-                                setSelectedIngredients([
-                                  ...selectedIngredients,
-                                  ingredient,
-                                ]);
+                                setSelectedIngredients([...selectedIngredients, ingredient]);
                               }
                             } else {
-                              setSelectedIngredients(
-                                selectedIngredients.filter(
-                                  (ing) => ing !== ingredient
-                                )
-                              );
+                              setSelectedIngredients(selectedIngredients.filter(ing => ing !== ingredient));
+                            }
+                          }}
+                          disabled={
+                            !selectedIngredients.includes(ingredient) &&
+                            selectedIngredients.length >= 2
+                          }
+                        />{' '}
+                        {ingredient}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                {/* Meats */}
+                <div>
+                  <span className="font-semibold text-red-400">Meats</span>
+                  <div className="flex flex-col gap-1 mt-1">
+                    {MEATS.map(ingredient => (
+                      <label className="text-white" key={ingredient}>
+                        <input
+                          type="checkbox"
+                          checked={selectedIngredients.includes(ingredient)}
+                          onChange={e => {
+                            if (e.target.checked) {
+                              if (selectedIngredients.length < 2) {
+                                setSelectedIngredients([...selectedIngredients, ingredient]);
+                              }
+                            } else {
+                              setSelectedIngredients(selectedIngredients.filter(ing => ing !== ingredient));
                             }
                           }}
                           disabled={
@@ -806,27 +758,160 @@ export default function BrowseContent() {
                 </div>
                 {/* Dairy */}
                 <div>
-                  <span className="font-semibold text-white">Dairy</span>
+                  <span className="font-semibold text-yellow-300">Dairy</span>
                   <div className="flex flex-col gap-1 mt-1">
-                    {['Eggs', 'Milk', 'Cheese'].map((ingredient) => (
+                    {DAIRY.map(ingredient => (
                       <label className="text-white" key={ingredient}>
                         <input
                           type="checkbox"
                           checked={selectedIngredients.includes(ingredient)}
-                          onChange={(e) => {
+                          onChange={e => {
                             if (e.target.checked) {
                               if (selectedIngredients.length < 2) {
-                                setSelectedIngredients([
-                                  ...selectedIngredients,
-                                  ingredient,
-                                ]);
+                                setSelectedIngredients([...selectedIngredients, ingredient]);
                               }
                             } else {
-                              setSelectedIngredients(
-                                selectedIngredients.filter(
-                                  (ing) => ing !== ingredient
-                                )
-                              );
+                              setSelectedIngredients(selectedIngredients.filter(ing => ing !== ingredient));
+                            }
+                          }}
+                          disabled={
+                            !selectedIngredients.includes(ingredient) &&
+                            selectedIngredients.length >= 2
+                          }
+                        />{' '}
+                        {ingredient}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                {/* Grains & Starches */}
+                <div>
+                  <span className="font-semibold text-orange-300">Grains & Starches</span>
+                  <div className="flex flex-col gap-1 mt-1">
+                    {GRAINS.map(ingredient => (
+                      <label className="text-white" key={ingredient}>
+                        <input
+                          type="checkbox"
+                          checked={selectedIngredients.includes(ingredient)}
+                          onChange={e => {
+                            if (e.target.checked) {
+                              if (selectedIngredients.length < 2) {
+                                setSelectedIngredients([...selectedIngredients, ingredient]);
+                              }
+                            } else {
+                              setSelectedIngredients(selectedIngredients.filter(ing => ing !== ingredient));
+                            }
+                          }}
+                          disabled={
+                            !selectedIngredients.includes(ingredient) &&
+                            selectedIngredients.length >= 2
+                          }
+                        />{' '}
+                        {ingredient}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                {/* Legumes */}
+                <div>
+                  <span className="font-semibold text-teal-300">Legumes</span>
+                  <div className="flex flex-col gap-1 mt-1">
+                    {LEGUMES.map(ingredient => (
+                      <label className="text-white" key={ingredient}>
+                        <input
+                          type="checkbox"
+                          checked={selectedIngredients.includes(ingredient)}
+                          onChange={e => {
+                            if (e.target.checked) {
+                              if (selectedIngredients.length < 2) {
+                                setSelectedIngredients([...selectedIngredients, ingredient]);
+                              }
+                            } else {
+                              setSelectedIngredients(selectedIngredients.filter(ing => ing !== ingredient));
+                            }
+                          }}
+                          disabled={
+                            !selectedIngredients.includes(ingredient) &&
+                            selectedIngredients.length >= 2
+                          }
+                        />{' '}
+                        {ingredient}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                {/* Fruits */}
+                <div>
+                  <span className="font-semibold text-pink-300">Fruits</span>
+                  <div className="flex flex-col gap-1 mt-1">
+                    {FRUITS.map(ingredient => (
+                      <label className="text-white" key={ingredient}>
+                        <input
+                          type="checkbox"
+                          checked={selectedIngredients.includes(ingredient)}
+                          onChange={e => {
+                            if (e.target.checked) {
+                              if (selectedIngredients.length < 2) {
+                                setSelectedIngredients([...selectedIngredients, ingredient]);
+                              }
+                            } else {
+                              setSelectedIngredients(selectedIngredients.filter(ing => ing !== ingredient));
+                            }
+                          }}
+                          disabled={
+                            !selectedIngredients.includes(ingredient) &&
+                            selectedIngredients.length >= 2
+                          }
+                        />{' '}
+                        {ingredient}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                {/* Condiments & Sauces */}
+                <div>
+                  <span className="font-semibold text-blue-300">Condiments & Sauces</span>
+                  <div className="flex flex-col gap-1 mt-1">
+                    {CONDIMENTS.map(ingredient => (
+                      <label className="text-white" key={ingredient}>
+                        <input
+                          type="checkbox"
+                          checked={selectedIngredients.includes(ingredient)}
+                          onChange={e => {
+                            if (e.target.checked) {
+                              if (selectedIngredients.length < 2) {
+                                setSelectedIngredients([...selectedIngredients, ingredient]);
+                              }
+                            } else {
+                              setSelectedIngredients(selectedIngredients.filter(ing => ing !== ingredient));
+                            }
+                          }}
+                          disabled={
+                            !selectedIngredients.includes(ingredient) &&
+                            selectedIngredients.length >= 2
+                          }
+                        />{' '}
+                        {ingredient}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                {/* Spices & Herbs */}
+                <div>
+                  <span className="font-semibold text-purple-300">Spices & Herbs</span>
+                  <div className="flex flex-col gap-1 mt-1">
+                    {SPICES.map(ingredient => (
+                      <label className="text-white" key={ingredient}>
+                        <input
+                          type="checkbox"
+                          checked={selectedIngredients.includes(ingredient)}
+                          onChange={e => {
+                            if (e.target.checked) {
+                              if (selectedIngredients.length < 2) {
+                                setSelectedIngredients([...selectedIngredients, ingredient]);
+                              }
+                            } else {
+                              setSelectedIngredients(selectedIngredients.filter(ing => ing !== ingredient));
                             }
                           }}
                           disabled={
@@ -849,6 +934,7 @@ export default function BrowseContent() {
                 </button>
               </form>
             </aside>
+
             {/* Recipe Cards Grid */}
             <div className="sm:w-3/4 w-full flex flex-col">
               {/* Pagination Dots (optional, you can remove this if not needed) */}
@@ -995,7 +1081,7 @@ export default function BrowseContent() {
                           <hr className="border-t border-white/30 my-2" />
                           <Link
                             href={`/recipe/${recipe.slug}`}
-                            className="bg-white text-black px-4 py-2 rounded-lg font-bold w-fit text-sm shadow transition hover:bg-[#3CB371] hover:text-white inline-block text-center"
+                            className="bg-white text-black px-4 py-2 rounded-lg font-bold w-fit text-sm shadow transition hover:bg-[#3CB371] hover:text-white"
                           >
                             View Recipe
                           </Link>
@@ -1100,7 +1186,8 @@ export default function BrowseContent() {
                         />
                       </button>
                     ))
-                  )}
+                  )
+            }
                 </div>
                 {/* Right Arrow */}
                 <button
@@ -1153,126 +1240,72 @@ export default function BrowseContent() {
                   Filter By Ingredients
                 </h3>
                 <hr className="border-t border-white/30 mb-2" />
-                <form
-                  className="flex flex-col gap-4"
-                  onSubmit={(e) => e.preventDefault()}
-                >
-                  {/* Vegetables */}
-                  <div>
-                    <span className="font-semibold text-white">Vegetables</span>
-                    <div className="flex flex-col gap-1 mt-1">
-                      {['Tomato', 'Spinach', 'Kale', 'Potatoes'].map(
-                        (ingredient) => (
-                          <label className="text-white" key={ingredient}>
-                            <input
-                              type="checkbox"
-                              checked={selectedIngredients.includes(ingredient)}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  if (selectedIngredients.length < 2) {
-                                    setSelectedIngredients([
-                                      ...selectedIngredients,
-                                      ingredient,
-                                    ]);
-                                  }
-                                } else {
-                                  setSelectedIngredients(
-                                    selectedIngredients.filter(
-                                      (ing) => ing !== ingredient
-                                    )
-                                  );
-                                }
-                              }}
-                              disabled={
-                                !selectedIngredients.includes(ingredient) &&
-                                selectedIngredients.length >= 2
-                              }
-                            />{' '}
-                            {ingredient}
-                          </label>
-                        )
-                      )}
-                    </div>
-                  </div>
-                  {/* Meats */}
-                  <div>
-                    <span className="font-semibold text-white">Meats</span>
-                    <div className="flex flex-col gap-1 mt-1">
-                      {['Chicken', 'Beef', 'Goat', 'Fish'].map((ingredient) => (
-                        <label className="text-white" key={ingredient}>
-                          <input
-                            type="checkbox"
-                            checked={selectedIngredients.includes(ingredient)}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                if (selectedIngredients.length < 2) {
-                                  setSelectedIngredients([
-                                    ...selectedIngredients,
-                                    ingredient,
-                                  ]);
-                                }
-                              } else {
-                                setSelectedIngredients(
-                                  selectedIngredients.filter(
-                                    (ing) => ing !== ingredient
-                                  )
-                                );
-                              }
-                            }}
-                            disabled={
-                              !selectedIngredients.includes(ingredient) &&
-                              selectedIngredients.length >= 2
-                            }
-                          />{' '}
-                          {ingredient}
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-                  {/* Dairy */}
-                  <div>
-                    <span className="font-semibold text-white">Dairy</span>
-                    <div className="flex flex-col gap-1 mt-1">
-                      {['Eggs', 'Milk', 'Cheese'].map((ingredient) => (
-                        <label className="text-white" key={ingredient}>
-                          <input
-                            type="checkbox"
-                            checked={selectedIngredients.includes(ingredient)}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                if (selectedIngredients.length < 2) {
-                                  setSelectedIngredients([
-                                    ...selectedIngredients,
-                                    ingredient,
-                                  ]);
-                                }
-                              } else {
-                                setSelectedIngredients(
-                                  selectedIngredients.filter(
-                                    (ing) => ing !== ingredient
-                                  )
-                                );
-                              }
-                            }}
-                            disabled={
-                              !selectedIngredients.includes(ingredient) &&
-                              selectedIngredients.length >= 2
-                            }
-                          />{' '}
-                          {ingredient}
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    className="mt-4 bg-[#3CB371] text-white px-4 py-2 rounded-lg font-bold hover:bg-[#2e8b57] transition"
-                    onClick={() => setSelectedIngredients([])}
-                    disabled={selectedIngredients.length === 0}
-                  >
-                    Clear Filter
-                  </button>
-                </form>
+<form className="flex flex-col gap-2" onSubmit={e => e.preventDefault()}>
+  <IngredientCategory
+    name="Vegetables"
+    color="text-green-400"
+    items={VEGETABLES}
+    selectedIngredients={selectedIngredients}
+    setSelectedIngredients={setSelectedIngredients}
+  />
+  <IngredientCategory
+    name="Meats"
+    color="text-red-400"
+    items={MEATS}
+    selectedIngredients={selectedIngredients}
+    setSelectedIngredients={setSelectedIngredients}
+  />
+  <IngredientCategory
+    name="Dairy"
+    color="text-yellow-300"
+    items={DAIRY}
+    selectedIngredients={selectedIngredients}
+    setSelectedIngredients={setSelectedIngredients}
+  />
+  <IngredientCategory
+    name="Grains & Starches"
+    color="text-orange-300"
+    items={GRAINS}
+    selectedIngredients={selectedIngredients}
+    setSelectedIngredients={setSelectedIngredients}
+  />
+  <IngredientCategory
+  name="Legumes"
+  color="text-teal-300"
+  items={LEGUMES}
+  selectedIngredients={selectedIngredients}
+  setSelectedIngredients={setSelectedIngredients}
+/>
+  <IngredientCategory
+    name="Fruits"
+    color="text-pink-300"
+    items={FRUITS}
+    selectedIngredients={selectedIngredients}
+    setSelectedIngredients={setSelectedIngredients}
+  />
+  <IngredientCategory
+    name="Condiments & Sauces"
+    color="text-blue-300"
+    items={CONDIMENTS}
+    selectedIngredients={selectedIngredients}
+    setSelectedIngredients={setSelectedIngredients}
+  />
+  <IngredientCategory
+    name="Spices & Herbs"
+    color="text-purple-300"
+    items={SPICES}
+    selectedIngredients={selectedIngredients}
+    setSelectedIngredients={setSelectedIngredients}
+  />
+  <button
+    type="button"
+    className="mt-4 bg-[#3CB371] text-white px-4 py-2 rounded-lg font-bold hover:bg-[#2e8b57] transition"
+    onClick={() => setSelectedIngredients([])}
+    disabled={selectedIngredients.length === 0}
+  >
+    Clear Filter
+  </button>
+</form>
               </aside>
 
               {/* Recipe Cards Grid Carousel */}

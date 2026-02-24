@@ -159,7 +159,7 @@ export default function LoginPageClient() {
                   Already have an account?{" "}
                   <button
                     type="button"
-                    className="font-bold hover:underline"
+                    className="font-bold hover:underline text-green-400"
                     onClick={() => setIsSignup(false)}
                   >
                     Login
@@ -170,7 +170,7 @@ export default function LoginPageClient() {
                   Don’t have an account?{" "}
                   <button
                     type="button"
-                    className="font-bold hover:underline"
+                    className="font-bold hover:underline text-green-400"
                     onClick={() => setIsSignup(true)}
                   >
                     Sign Up
