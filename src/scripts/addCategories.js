@@ -8,7 +8,7 @@ const { getFirestore } = require('firebase-admin/firestore');
 
 // Initialize Firebase Admin
 initializeApp({
-  credential: applicationDefault(),
+  credential: require('firebase-admin').credential.cert(require('./serviceAccountKey.json')),
 });
 
 const db = getFirestore();
@@ -72,11 +72,46 @@ const categories = [
     order: 8,
   },
   {
-    id: 'Sweet Treats',
-    title: 'Sweet Treats',
+    id: 'Baked Goods',
+    title: 'Baked Goods',
     imageUrl: 'https://res.cloudinary.com/djlcnpdtn/image/upload/v1755777167/recipe/sweet_treats_mojait.png',
     description: 'Desserts and bakes',
     order: 9,
+  },
+    {
+    id: 'Chilled & Drinks',
+    title: 'Chilled & Drinks',
+    imageUrl: 'https://res.cloudinary.com/djlcnpdtn/image/upload/v1771935980/Oreo_milkshake_x85z9z.png',
+    description: 'Desserts and drinks',
+    order: 10,
+  },
+    {
+    id: 'Salads',
+    title: 'Salads',
+    imageUrl: 'https://res.cloudinary.com/djlcnpdtn/image/upload/v1771935800/Avocado_Tomato_Salad_jajptr.png',
+    description: 'Fresh and healthy',
+    order: 11,
+  },
+    {
+    id: 'Soups',
+    title: 'Soups',
+    imageUrl: 'https://res.cloudinary.com/djlcnpdtn/image/upload/v1771935805/Butternut_Squash_Soup_be8lal.png',
+    description: 'Warm and comforting',
+    order: 12,
+  },
+    {
+    id: 'Condiments',
+    title: 'Condiments',
+    imageUrl: 'https://res.cloudinary.com/djlcnpdtn/image/upload/v1771935819/Caramel_qwfksx.png',
+    description: 'Flavor boosters',
+    order: 13,
+  },
+    {
+    id: 'African',
+    title: 'African',
+    imageUrl: 'https://res.cloudinary.com/djlcnpdtn/image/upload/v1771935887/Fufu_xkl9fg.png',
+    description: 'Traditional African flavors',
+    order: 14,
   },
 ];
 

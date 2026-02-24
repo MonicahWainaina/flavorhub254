@@ -74,7 +74,7 @@ export default function PremiumPageClient() {
                     <ul className="text-white text-sm space-y-2 mb-6">
                       <li>✅ Access all public recipes</li>
                       <li>✅ Adjust ingredient amounts/servings</li>
-                      <li>✅ Chat with FlavorBot (20 queries/day)</li>
+                      <li>✅ Chat with FlavorBot (10 queries/day)</li>
                       <li>✅ Up to 3 PDF downloads/day</li>
                     </ul>
                     <button
