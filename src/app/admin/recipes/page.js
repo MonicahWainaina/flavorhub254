@@ -153,7 +153,9 @@ export default function AdminRecipesPage() {
       );
     } else {
       const docRef = await addDoc(collection(db, "recipes"), updated);
-      setRecipes(recipes => [...recipes, { ...updated, id: docRef.id }]);
+      // Fetch the new doc to get all fields (including id)
+      const newDoc = await getDoc(docRef);
+      setRecipes(recipes => [...recipes, { id: docRef.id, ...newDoc.data() }]);
     }
     setActionLoading(prev => ({ ...prev, [updated.id || "new"]: false }));
     setShowRecipeModal(false);
@@ -359,7 +361,8 @@ export default function AdminRecipesPage() {
                           <td className="px-2 sm:px-4 py-2">
                             <div className="flex gap-2">
                               <button
-                                onClick={() => handleEditRecipe(recipe)}
+                                onClick={() => handleEditRecipe(recipe)
+                                }
                                 className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded text-xs"
                               >
                                 Edit
