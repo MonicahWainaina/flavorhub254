@@ -133,33 +133,41 @@ export default function AdminRecipesPage() {
     setShowRecipeModal(true);
   }
 
-  // Save recipe (add or update)
+  // Save recipe (add or update) with error handling and correct Firestore ID usage
   async function handleSaveRecipe(updated) {
     setActionLoading(prev => ({ ...prev, [updated.id || "new"]: true }));
 
-    // Always generate slug from title
-    updated.slug = slugify(updated.title);
+    try {
+      // Always generate slug from title
+      updated.slug = slugify(updated.title);
 
-    // Features array for compatibility
-    updated.features = [];
-    if (updated.smart_cooking?.enabled) updated.features.push("smart_cooking");
-    if (updated.pdf?.enabled) updated.features.push("pdf_download");
-    if (updated.audio?.has_audio_instruction) updated.features.push("audio_instruction");
+      // Features array for compatibility
+      updated.features = [];
+      if (updated.smart_cooking?.enabled) updated.features.push("smart_cooking");
+      if (updated.pdf?.enabled) updated.features.push("pdf_download");
+      if (updated.audio?.has_audio_instruction) updated.features.push("audio_instruction");
 
-    if (updated.id) {
-      await updateDoc(doc(db, "recipes", updated.id), updated);
-      setRecipes(recipes =>
-        recipes.map(r => (r.id === updated.id ? { ...r, ...updated } : r))
-      );
-    } else {
-      const docRef = await addDoc(collection(db, "recipes"), updated);
-      // Fetch the new doc to get all fields (including id)
-      const newDoc = await getDoc(docRef);
-      setRecipes(recipes => [...recipes, { id: docRef.id, ...newDoc.data() }]);
+      // Remove id from the data to be saved (Firestore manages the document ID)
+      const { id, ...recipeData } = updated;
+
+      if (id) {
+        await updateDoc(doc(db, "recipes", id), recipeData);
+        setRecipes(recipes =>
+          recipes.map(r => (r.id === id ? { ...r, ...recipeData, id } : r))
+        );
+      } else {
+        const docRef = await addDoc(collection(db, "recipes"), recipeData);
+        const newDoc = await getDoc(docRef);
+        setRecipes(recipes => [...recipes, { id: docRef.id, ...newDoc.data() }]);
+      }
+      setShowRecipeModal(false);
+      setSelectedRecipe(null);
+    } catch (err) {
+      alert("Failed to save recipe: " + (err.message || err));
+      console.error(err);
+    } finally {
+      setActionLoading(prev => ({ ...prev, [updated.id || "new"]: false }));
     }
-    setActionLoading(prev => ({ ...prev, [updated.id || "new"]: false }));
-    setShowRecipeModal(false);
-    setSelectedRecipe(null);
   }
 
   // Add new category (open modal)

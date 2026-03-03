@@ -12,32 +12,26 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-// Path to your recipe folders
+// Path to your recipe folder
 const RECIPES_DIR = path.join(__dirname, "../../recipes");
 
-async function uploadRecipes() {
+async function patchRecipeIds() {
   const files = fs.readdirSync(RECIPES_DIR);
 
   for (const file of files) {
     if (file.endsWith(".json")) {
-      const filePath = path.join(RECIPES_DIR, file);
-      const recipeData = JSON.parse(fs.readFileSync(filePath, "utf-8"));
-
-      // Use filename (without .json) as document ID
       const docId = path.basename(file, ".json");
-
-      // Ensure the id field matches the document ID
-      recipeData.id = docId;
-
-      // Upload to Firestore
       const docRef = db.collection("recipes").doc(docId);
-      await docRef.set(recipeData);
-
-      console.log(`Uploaded: ${file} as ${docId}`);
+      const docSnap = await docRef.get();
+      if (docSnap.exists) {
+        await docRef.update({ id: docId });
+        console.log(`Patched id for: ${docId}`);
+      } else {
+        console.log(`Skipped (not found): ${docId}`);
+      }
     }
   }
-
-  console.log("✅ All recipes uploaded!");
+  console.log("✅ Finished patching new recipe ids!");
 }
 
-uploadRecipes().catch(console.error);
+patchRecipeIds().catch(console.error);
